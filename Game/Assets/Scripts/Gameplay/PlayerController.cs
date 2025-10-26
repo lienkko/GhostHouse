@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float MoveSpeed;
-    private Vector2 MoveDir;
+    private bool _isSneaking;
+    private bool _isCrouching;
     private Rigidbody2D _playerRB;
+    private Vector2 _moveDir;
+
+
+    public float MoveSpeed;
+    public Vector2 MoveDir { get => _moveDir; }
+    public bool IsCrouching { get => _isCrouching; }
 
     private void Awake()
     {
@@ -21,19 +26,29 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        Move(); 
     }
 
     private void InputMovement()
     {
+
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
+        _isCrouching = Input.GetKey(KeyCode.C);
+        _isSneaking = Input.GetKey(KeyCode.LeftShift);
 
-        MoveDir = new Vector2(moveH, moveV).normalized;
+
+        _moveDir = new Vector2(moveH, moveV).normalized;
     }
 
     private void Move()
     {
-        _playerRB.velocity = MoveDir*MoveSpeed;
+        if (_isCrouching)
+            MoveSpeed = 1.5f;
+        else if (_isSneaking)
+            MoveSpeed = 2f;
+        else
+            MoveSpeed = 5f;
+        _playerRB.velocity = _moveDir * MoveSpeed;
     }
 }
