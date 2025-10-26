@@ -49,7 +49,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -105,10 +105,10 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SymbolPlayer_Default
+      name: SymbolHero_Default
       rect:
         serializedVersion: 2
-        x: 6
+        x: 1
         y: 0
         width: 22
         height: 31
@@ -126,10 +126,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SymbolPlayer_Small
+      name: SymbolHero_Small
       rect:
         serializedVersion: 2
-        x: 41
+        x: 49
         y: 0
         width: 19
         height: 19
@@ -146,6 +146,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: SymbolHero_Default1
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 0
+        width: 22
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31b5310bbfda62749b87e4ca3a293872
+      internalID: 2115168066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -157,8 +178,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SymbolPlayer_Default: 2094335260
-      SymbolPlayer_Small: 2044317475
+      SymbolHero_Default: 2094335260
+      SymbolHero_Default1: 2115168066
+      SymbolHero_Small: 2044317475
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
