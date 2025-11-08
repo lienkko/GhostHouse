@@ -15,6 +15,15 @@ public class GameManager : MonoBehaviour
     private bool _isWraithWaiting = false;
     //-------------
 
+    //PlayerHandler
+    [SerializeField] private GameObject _gameOverText;
+
+    //-------------
+
+    private void Awake()
+    {
+        PlayerController.OnDeath += OnPlayerDeath;
+    }
 
 
     private void Update()
@@ -45,5 +54,10 @@ public class GameManager : MonoBehaviour
     private void EndWraithFlight()
     {
         _isWraithWaiting = false;
+    }
+
+    private void OnPlayerDeath()
+    {
+        _gameOverText.SetActive(true);
     }
 }

@@ -37,5 +37,12 @@ public class Wraith : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<PlayerController>())
+        {
+            collision.gameObject.GetComponent<PlayerController>().InflictDamage(100);
+        }
+    }
 
 }
