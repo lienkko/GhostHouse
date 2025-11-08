@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Wraith : MonoBehaviour
 {
-    public Vector3 startPoint;
-    public Vector3 endPoint;
-    public bool isMoving = false;
+    [HideInInspector] public Vector3 startPoint;
+    [HideInInspector] public Vector3 endPoint;
+    [HideInInspector] public bool isMoving = false;
     private float _distance;
     private float _remDsitance;
     public delegate void OnDestAction();
