@@ -1,6 +1,6 @@
 {
     "name" : "com.merry-yellow.code-assist",
-    "version" : "1.4.18",
+    "version" : "1.4.19",
     "displayName" : "Code Assist",
     "description" : "Code Assist improves your coding experience with Visual Studio and VS Code by adding more features for Unity projects. Coding Unity scripts becomes easier and more efficient and with fewer bugs.",
     "unity"       : "2021.2",
