@@ -1620,10 +1620,10 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_72
       rect:
         serializedVersion: 2
-        x: 1
-        y: 102
-        width: 21
-        height: 21
+        x: 133
+        y: 140
+        width: 9
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1641,7 +1641,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_73
       rect:
         serializedVersion: 2
-        x: 23
+        x: 1
         y: 102
         width: 21
         height: 21
@@ -1662,7 +1662,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_74
       rect:
         serializedVersion: 2
-        x: 45
+        x: 23
         y: 102
         width: 21
         height: 21
@@ -1683,7 +1683,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_75
       rect:
         serializedVersion: 2
-        x: 67
+        x: 45
         y: 102
         width: 21
         height: 21
@@ -1704,8 +1704,8 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_76
       rect:
         serializedVersion: 2
-        x: 1
-        y: 79
+        x: 67
+        y: 102
         width: 21
         height: 21
       alignment: 0
@@ -1725,7 +1725,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_77
       rect:
         serializedVersion: 2
-        x: 23
+        x: 1
         y: 79
         width: 21
         height: 21
@@ -1746,7 +1746,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_78
       rect:
         serializedVersion: 2
-        x: 45
+        x: 23
         y: 79
         width: 21
         height: 21
@@ -1767,7 +1767,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_79
       rect:
         serializedVersion: 2
-        x: 67
+        x: 45
         y: 79
         width: 21
         height: 21
@@ -1788,8 +1788,8 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_80
       rect:
         serializedVersion: 2
-        x: 1
-        y: 56
+        x: 67
+        y: 79
         width: 21
         height: 21
       alignment: 0
@@ -1809,7 +1809,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_81
       rect:
         serializedVersion: 2
-        x: 23
+        x: 1
         y: 56
         width: 21
         height: 21
@@ -1830,7 +1830,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_82
       rect:
         serializedVersion: 2
-        x: 45
+        x: 23
         y: 56
         width: 21
         height: 21
@@ -1851,7 +1851,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_83
       rect:
         serializedVersion: 2
-        x: 67
+        x: 45
         y: 56
         width: 21
         height: 21
@@ -1872,10 +1872,10 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_84
       rect:
         serializedVersion: 2
-        x: 2
-        y: 34
-        width: 19
-        height: 19
+        x: 67
+        y: 56
+        width: 21
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1893,7 +1893,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_85
       rect:
         serializedVersion: 2
-        x: 24
+        x: 2
         y: 34
         width: 19
         height: 19
@@ -1914,7 +1914,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_86
       rect:
         serializedVersion: 2
-        x: 46
+        x: 24
         y: 34
         width: 19
         height: 19
@@ -1935,7 +1935,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_87
       rect:
         serializedVersion: 2
-        x: 68
+        x: 46
         y: 34
         width: 19
         height: 19
@@ -1956,8 +1956,8 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_88
       rect:
         serializedVersion: 2
-        x: 2
-        y: 11
+        x: 68
+        y: 34
         width: 19
         height: 19
       alignment: 0
@@ -1977,7 +1977,7 @@ TextureImporter:
       name: Pixelart arrow icon pack 1.0_89
       rect:
         serializedVersion: 2
-        x: 24
+        x: 2
         y: 11
         width: 19
         height: 19
@@ -1990,6 +1990,27 @@ TextureImporter:
       bones: []
       spriteID: f0416e2d4b1a0a84bab1e13c9aa9f3b7
       internalID: -365936503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixelart arrow icon pack 1.0_90
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 11
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31696f423ce2ce340b155488e54db360
+      internalID: 153378522
       vertices: []
       indices: 
       edges: []
@@ -2095,6 +2116,7 @@ TextureImporter:
       Pixelart arrow icon pack 1.0_88: -2002974328
       Pixelart arrow icon pack 1.0_89: -365936503
       Pixelart arrow icon pack 1.0_9: -1898961317
+      Pixelart arrow icon pack 1.0_90: 153378522
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
