@@ -1,155 +1,191 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PuzzleCircles : MonoBehaviour
 {
-    [SerializeField] private RectTransform[] _dots = new RectTransform[12];
-    private Vector3[] _dotsPos;
-    private int[,] _dotsInCircle; // Хранит номера точек, которые находятся в кажом кругу
-    private Vector3[] _dotsStartPos = new Vector3[6];
-    public bool _isMoving;
-    private int _circ;
-    private float _dist;
-    public float _remDist;
+    private const float _circlesRadius = 167.2f;
+
+    [SerializeField] private RectTransform[] _dotsTransforms = new RectTransform[12];
+    
+    private int[,] _dotsInCircles = new [,] {{5,1,0,3,7,8},{6,2,1,4,8,9},{9,5,4,7,10,11}};
+    private Vector2[] _centersDots = new Vector2[3] {new Vector2(-85,60), new Vector2(85,60), new Vector2(0,-88)};
+
+    private bool _isMoving;
+    private bool _isMovingLeft;
+
+    private int _movingCircle;
+    
+    private float _angle = 0f;
+    private float _dotsMoveSpeed = 200f;
+
+    private string _rotateDirection;
+    
 
     private void Awake()
     {
-        _dotsPos = new Vector3[12];
-        _dotsPos[0] = new Vector3(-170,204,0);
-        _dotsPos[1] = new Vector3(0,204,0);
-        _dotsPos[2] = new Vector3(170,204,0);
-        _dotsPos[3] = new Vector3(-254,60,0);
-        _dotsPos[4] = new Vector3(-85,60,0);
-        _dotsPos[5] = new Vector3(85,60,0);
-        _dotsPos[6] = new Vector3(254, 60, 0);
-        _dotsPos[7] = new Vector3(-170,-88,0);
-        _dotsPos[8] = new Vector3(0,-88,0);
-        _dotsPos[9] = new Vector3(170,-88,0);
-        _dotsPos[10] = new Vector3(-85,-233,0);
-        _dotsPos[11] = new Vector3(85,-233,0);
-        _dotsInCircle = new [,] {{0,1,5,8,7,3},{2,6,9,8,4,1},{10,7,4,5,9,11}};
-        for (int i = 0; i<12;i++)
-        {
-            _dots[i].anchoredPosition = _dotsPos[i];
-        }
-        _isMoving = false;
-        _dist = Vector3.Distance(_dots[0].anchoredPosition, _dots[1].anchoredPosition);
-        _remDist = _dist;
+        _dotsTransforms[0].anchoredPosition = new Vector3(-170, 204, 0);
+        _dotsTransforms[1].anchoredPosition = new Vector3(0, 204, 0);
+        _dotsTransforms[2].anchoredPosition = new Vector3(170, 204, 0);
+        _dotsTransforms[3].anchoredPosition = new Vector3(-254, 60, 0);
+        _dotsTransforms[4].anchoredPosition = new Vector3(-85, 60, 0);
+        _dotsTransforms[5].anchoredPosition = new Vector3(85, 60, 0);
+        _dotsTransforms[6].anchoredPosition = new Vector3(254, 60, 0);
+        _dotsTransforms[7].anchoredPosition = new Vector3(-170, -88, 0);
+        _dotsTransforms[8].anchoredPosition = new Vector3(0, -88, 0);
+        _dotsTransforms[9].anchoredPosition = new Vector3(170, -88, 0);
+        _dotsTransforms[10].anchoredPosition = new Vector3(-85, -233, 0);
+        _dotsTransforms[11].anchoredPosition = new Vector3(85, -233, 0);
     }
 
-    private void Update()
+
+    private void FixedUpdate()
     {
         if (_isMoving)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                _dots[_dotsInCircle[_circ, i]].anchoredPosition = Vector3.Lerp(_dotsStartPos[i], _dotsPos[_dotsInCircle[_circ, i]], 1 - (_remDist / _dist));
-                _remDist -= 120 * Time.deltaTime;
-            }
-            if (_remDist <= 0)
-            {
-                _isMoving = false;
-                _remDist = _dist;
-            }
+            RotateDots();
         }
     }
 
-    //private void MoveDots(int circ)
-    //{
-    //    int dotIndex;
-    //    for (int i = 0; i < 6;i++)
-    //    {
-    //        dotIndex = _dotsInCircle[circ, i]; //индекс точки которая должна двигаться
-    //        _dots[dotIndex].anchoredPosition = _dotsPos[dotIndex];
-    //    }
-    //}
 
-    public void MoveCircle(string d)
+    private void RotateDots()
     {
+        Vector2 center = _centersDots[_movingCircle];
+        _angle += _dotsMoveSpeed * Time.deltaTime;
+        if (_angle >= 60){_angle = 60;}
+        int direction = _isMovingLeft ? 1 : -1;
+        for (int dot = 0; dot < 6; dot++)
+        {
+            float angleRad = ((_angle * direction + 60 * dot) * (MathF.PI / 180));
+            float x = center.x + Mathf.Cos(angleRad) * _circlesRadius;
+            float y = center.y + Mathf.Sin(angleRad) * _circlesRadius;
+            _dotsTransforms[_dotsInCircles[_movingCircle,dot]].anchoredPosition = new Vector3(x, y,0);
+        }
+        if (_angle == 60)
+        {
+            _isMoving = false;
+            _angle = 0;
+            MoveDotsInList();
+        }
+    }
+
+    public void ArrowClicked(string d)
+    {
+        if (_isMoving)
+            return;
+        _rotateDirection = d;
+        _isMoving = true;
         switch (d)
         {
             case "LR":
                 {
-                    RectTransform dot = _dots[0];
-                    _dots[0] = _dots[3];
-                    _dots[3] = _dots[7];
-                    _dots[7] = _dots[8];
-                    _dots[8] = _dots[5];
-                    _dots[5] = _dots[1];
-                    _dots[1] = dot;
-                    _circ = 0;
+                    _movingCircle = 0;
+                    _isMovingLeft = false;
                     break;
                 }
             case "LL":
                 {
-                    RectTransform dot = _dots[0];
-                    _dots[0] = _dots[1];
-                    _dots[1] = _dots[5];
-                    _dots[5] = _dots[8];
-                    _dots[8] = _dots[7];
-                    _dots[7] = _dots[3];
-                    _dots[3] = dot;
-                    _circ = 0;
+                    _movingCircle = 0;
+                    _isMovingLeft = true;
                     break;
                 }
             case "RL":
                 {
-                    RectTransform dot = _dots[2];
-                    _dots[2] = _dots[6];
-                    _dots[6] = _dots[9];
-                    _dots[9] = _dots[8];
-                    _dots[8] = _dots[4];
-                    _dots[4] = _dots[1];
-                    _dots[1] = dot;
-                    _circ = 1;
+                    _movingCircle = 1;
+                    _isMovingLeft = true;
                     break;
                 }
             case "RR":
                 {
-                    RectTransform dot = _dots[2];
-                    _dots[2] = _dots[1];
-                    _dots[1] = _dots[4];
-                    _dots[4] = _dots[8];
-                    _dots[8] = _dots[9];
-                    _dots[9] = _dots[6];
-                    _dots[6] = dot;
-                    _circ = 1;
+                    _movingCircle = 1;
+                    _isMovingLeft = false;
                     break;
                 }
             case "BR":
                 {
-                    RectTransform dot = _dots[10];
-                    _dots[10] = _dots[11];
-                    _dots[11] = _dots[9];
-                    _dots[9] = _dots[5];
-                    _dots[5] = _dots[4];
-                    _dots[4] = _dots[7];
-                    _dots[7] = dot;
-                    _circ = 2;
+                    _movingCircle = 2;
+                    _isMovingLeft = false;
                     break;
                 }
             case "BL":
                 {
-                    RectTransform dot = _dots[10];
-                    _dots[10] = _dots[7];
-                    _dots[7] = _dots[4];
-                    _dots[4] = _dots[5];
-                    _dots[5] = _dots[9];
-                    _dots[9] = _dots[11];
-                    _dots[11] = dot;
-                    _circ = 2;
+                    _movingCircle = 2;
+                    _isMovingLeft = true;
                     break;
                 }
         }
-        for (int i = 0; i< 6; i++)
+    }
+
+    public void MoveDotsInList()
+    {
+        switch (_rotateDirection)
         {
-            _dotsStartPos[i] = _dots[_dotsInCircle[_circ, i]].anchoredPosition;
+            case "LR":
+                {
+                    RectTransform dot = _dotsTransforms[0];
+                    _dotsTransforms[0] = _dotsTransforms[3];
+                    _dotsTransforms[3] = _dotsTransforms[7];
+                    _dotsTransforms[7] = _dotsTransforms[8];
+                    _dotsTransforms[8] = _dotsTransforms[5];
+                    _dotsTransforms[5] = _dotsTransforms[1];
+                    _dotsTransforms[1] = dot;
+                    break;
+                }
+            case "LL":
+                {
+                    RectTransform dot = _dotsTransforms[0];
+                    _dotsTransforms[0] = _dotsTransforms[1];
+                    _dotsTransforms[1] = _dotsTransforms[5];
+                    _dotsTransforms[5] = _dotsTransforms[8];
+                    _dotsTransforms[8] = _dotsTransforms[7];
+                    _dotsTransforms[7] = _dotsTransforms[3];
+                    _dotsTransforms[3] = dot;
+                    break;
+                }
+            case "RL":
+                {
+                    RectTransform dot = _dotsTransforms[2];
+                    _dotsTransforms[2] = _dotsTransforms[6];
+                    _dotsTransforms[6] = _dotsTransforms[9];
+                    _dotsTransforms[9] = _dotsTransforms[8];
+                    _dotsTransforms[8] = _dotsTransforms[4];
+                    _dotsTransforms[4] = _dotsTransforms[1];
+                    _dotsTransforms[1] = dot;
+                    break;
+                }
+            case "RR":
+                {
+                    RectTransform dot = _dotsTransforms[2];
+                    _dotsTransforms[2] = _dotsTransforms[1];
+                    _dotsTransforms[1] = _dotsTransforms[4];
+                    _dotsTransforms[4] = _dotsTransforms[8];
+                    _dotsTransforms[8] = _dotsTransforms[9];
+                    _dotsTransforms[9] = _dotsTransforms[6];
+                    _dotsTransforms[6] = dot;
+                    break;
+                }
+            case "BR":
+                {
+                    RectTransform dot = _dotsTransforms[10];
+                    _dotsTransforms[10] = _dotsTransforms[11];
+                    _dotsTransforms[11] = _dotsTransforms[9];
+                    _dotsTransforms[9] = _dotsTransforms[5];
+                    _dotsTransforms[5] = _dotsTransforms[4];
+                    _dotsTransforms[4] = _dotsTransforms[7];
+                    _dotsTransforms[7] = dot;
+                    break;
+                }
+            case "BL":
+                {
+                    RectTransform dot = _dotsTransforms[10];
+                    _dotsTransforms[10] = _dotsTransforms[7];
+                    _dotsTransforms[7] = _dotsTransforms[4];
+                    _dotsTransforms[4] = _dotsTransforms[5];
+                    _dotsTransforms[5] = _dotsTransforms[9];
+                    _dotsTransforms[9] = _dotsTransforms[11];
+                    _dotsTransforms[11] = dot;
+                    break;
+                }
         }
-        _isMoving = true;
-        
-        //MoveDots(c);
-        
     }
 }
