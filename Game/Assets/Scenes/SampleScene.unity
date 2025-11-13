@@ -351,7 +351,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -484,7 +484,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1200,7 +1200,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1475,7 +1475,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1760,7 +1760,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1849,22 +1849,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1797348862}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c22f4e0e21271e94fb64af0bcb3e3e16, type: 3}
+  m_Script: {fileID: 11500000, guid: 50876f98b2befdb4f99279e0df87a81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dots:
-  - {fileID: 2042449550}
+  _dotsTransforms:
   - {fileID: 747798657}
-  - {fileID: 1206239861}
-  - {fileID: 2033775046}
-  - {fileID: 580474395}
-  - {fileID: 1819418603}
-  - {fileID: 56110276}
   - {fileID: 1356353292}
-  - {fileID: 304867600}
+  - {fileID: 2033775046}
   - {fileID: 755275701}
-  - {fileID: 893915756}
+  - {fileID: 1819418603}
   - {fileID: 791606654}
+  - {fileID: 893915756}
+  - {fileID: 580474395}
+  - {fileID: 304867600}
+  - {fileID: 1206239861}
+  - {fileID: 56110276}
+  - {fileID: 2042449550}
+  _dotsMoveSpeed: 100
 --- !u!1 &1819418602
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,7 +2209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1797348864}
         m_TargetAssemblyTypeName: PuzzleCircles, Assembly-CSharp
-        m_MethodName: MoveCircle
+        m_MethodName: ArrowClicked
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
