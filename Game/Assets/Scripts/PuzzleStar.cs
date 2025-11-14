@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
@@ -41,7 +39,7 @@ public class PuzzleStar : MonoBehaviour
                 _buttonImage.sprite = _buttonSprites[1];
                 _buttonB.enabled = true;
             }
-            else
+            else if (_buttonB.enabled)
             {
                 _buttonImage.sprite = _buttonSprites[0];
                 _buttonB.enabled = false;

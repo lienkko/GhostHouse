@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+
 
 public class PuzzleCircles : MonoBehaviour
 {
     private const float _circlesRadius = 167.2f;
 
     [SerializeField] private RectTransform[] _dotsTransforms = new RectTransform[12];
-    
+    [SerializeField] private GameObject _completeButton;
+    [SerializeField] private Sprite[] _buttonSprites = new Sprite[2];
+    private Image _buttonImage;
+    private Button _buttonB;
+
     private int[,] _dotsInCircles = new [,] {{5,1,0,3,7,8},{6,2,1,4,8,9},{9,5,4,7,10,11}};
     private Vector2[] _centersDots = new Vector2[3] {new Vector2(-85,60), new Vector2(85,60), new Vector2(0,-88)};
 
@@ -36,8 +41,23 @@ public class PuzzleCircles : MonoBehaviour
         _dotsTransforms[9].anchoredPosition = new Vector3(170, -88, 0);
         _dotsTransforms[10].anchoredPosition = new Vector3(-85, -233, 0);
         _dotsTransforms[11].anchoredPosition = new Vector3(85, -233, 0);
+        _buttonImage = _completeButton.GetComponent<Image>();
+        _buttonB = _completeButton.GetComponent<Button>();
     }
 
+    private void Update()
+    {
+        if ((_dotsTransforms[1].name.Contains("GreenDot")) && (_dotsTransforms[4].name.Contains("GreenDot")) && (_dotsTransforms[5].name.Contains("GreenDot")) && (_dotsTransforms[7].name.Contains("GreenDot")) && (_dotsTransforms[8].name.Contains("GreenDot")) && (_dotsTransforms[9].name.Contains("GreenDot")))
+        {
+            _buttonImage.sprite = _buttonSprites[1];
+            _buttonB.enabled = true;
+        }
+        else if (_buttonB)
+        {
+            _buttonImage.sprite = _buttonSprites[0];
+            _buttonB.enabled = false;
+        }
+    }
 
     private void FixedUpdate()
     {
