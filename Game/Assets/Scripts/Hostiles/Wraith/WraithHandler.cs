@@ -52,7 +52,7 @@ public class WraithHandler : MonoBehaviour
     private IEnumerator WaitForWraith()
     {
         _isWraithWaiting = true;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(5); //RANDOM TIME
         StartCoroutine(WraithWarning());
     }
 
