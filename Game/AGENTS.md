@@ -2,7 +2,7 @@
 - Project name: Game
 - Unity version: Unity 2021.3.45f2
 - Active game object:
-  - Name: WraithHandler
+  - Name: HushHandler
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

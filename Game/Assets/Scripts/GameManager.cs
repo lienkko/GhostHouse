@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //PlayerHandler
     [SerializeField] private GameObject _gameOverText;
-
-    //-------------
 
     private void Awake()
     {
