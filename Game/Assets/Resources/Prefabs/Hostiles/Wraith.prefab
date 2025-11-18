@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 6020706684285506417}
   - component: {fileID: 6020706684285506418}
   - component: {fileID: 6020706684285506415}
-  - component: {fileID: 6020706684285506414}
+  - component: {fileID: 2763634191097912913}
   m_Layer: 0
   m_Name: WraithModel
   m_TagString: Untagged
@@ -146,7 +146,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6, y: 6}
   m_EdgeRadius: 0
---- !u!114 &6020706684285506414
+--- !u!114 &2763634191097912913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,9 +155,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6020706684285506419}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f051bfc4f2e0ea498ce91661f07eccd, type: 3}
+  m_Script: {fileID: 11500000, guid: 1adb35020ac196640b75738c0fbe9514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 100
 --- !u!1 &6020706684784410881
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +340,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textWarning: {fileID: 6020706684784410881}
   _wraithModel: {fileID: 6020706684285506419}
-  wraithCol: {fileID: 0}
 --- !u!1 &6020706686127527193
 GameObject:
   m_ObjectHideFlags: 0
