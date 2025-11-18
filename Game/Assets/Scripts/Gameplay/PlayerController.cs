@@ -15,8 +15,13 @@ public class PlayerController : MonoBehaviour
     public float MoveSpeed;
     public Vector2 MoveDir { get => _moveDir; }
     public bool IsCrouching { get => _isCrouching; }
+
     public delegate void NoArgs();
     public static event NoArgs OnDeath;
+
+    public delegate void DamageDelegate(int damage,int hp);
+    public static event DamageDelegate OnDamage;
+
 
     
     
@@ -72,6 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             _healthPoints = 0;
         }
+        OnDamage?.Invoke(dmg, _healthPoints);
     }
 
     private void Die()
