@@ -5,4 +5,7 @@
   - Name: Star
   - Tag: Untagged
   - Layer: UI
+  - Name: GameManager
+  - Tag: Untagged
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
