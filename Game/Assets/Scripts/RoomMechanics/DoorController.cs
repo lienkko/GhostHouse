@@ -1,25 +1,46 @@
 ﻿using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class DoorController : MonoBehaviour
 {
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
-    public GameObject OutlineVisual;
 
+    public GameObject OutlineVisual;
+    public TMP_Text RoomNumberText;
     private RoomGenerator _generator;
     private DoorSide _doorSide;
     private bool _leadsToPreviousRoom;
+    private int _targetRoomNumber = 0;
 
     public Transform ReturnTargetPoint;
     private GameObject _previousRoomRoot;
 
     public Transform TargetEntrySpawnPoint;
-
     private GameObject _nextRoomRoot;
+
     private bool _playerIsNear = false;
 
     public DoorSide GetSide() { return _doorSide; }
+
+    void Start()
+    {
+        if (IsStartingDoor)
+        {
+            SetTargetRoomNumber(1);
+        }
+    }
+
+    public void SetTargetRoomNumber(int number)
+    {
+        _targetRoomNumber = number;
+
+        if (RoomNumberText != null)
+        {
+            RoomNumberText.text = number > 1 ? number.ToString() : "1";
+        }
+    }
 
     public void Initialize(RoomGenerator generator, DoorSide side, bool leadsBack, GameObject previousRoomRoot = null)
     {
@@ -31,7 +52,7 @@ public class DoorController : MonoBehaviour
 
     private void Update()
     {
-        if (_playerIsNear && Input.GetKeyDown(KeyCode.E))
+        if (this.enabled && _playerIsNear && Input.GetKeyDown(KeyCode.E))
         {
             ActivateDoor();
         }
@@ -44,33 +65,46 @@ public class DoorController : MonoBehaviour
             OutlineVisual.SetActive(false);
         }
 
-        GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
+        Transform parentTransform = gameObject.transform.parent;
+        if (parentTransform == null)
+        {
+            Debug.LogError("Объект двери не является дочерним элементом комнаты.");
+            return;
+        }
+        GameObject currentRoomRoot = parentTransform.gameObject;
 
         if (_generator == null)
         {
             _generator = FindObjectOfType<RoomGenerator>();
-            if (_generator == null) return;
+            if (_generator == null)
+            {
+                Debug.LogError("RoomGenerator не найден в сцене!");
+                return;
+            }
         }
 
         if (IsStartingDoor)
         {
+            DoorSide exitSide = DoorSide.East;
+            DoorSide entrySideForNextRoom = _generator.GetOppositeSide(exitSide);
+
             if (_nextRoomRoot == null)
             {
                 _nextRoomRoot = _generator.GenerateNextRoom(
-                    Vector3.zero,
-                    DoorSide.East,
-                    currentRoomRoot,
-                    gameObject.transform
+                    Vector3.zero, exitSide, currentRoomRoot, gameObject.transform
                 );
 
                 if (_nextRoomRoot != null)
                 {
-                    DoorSide oppositeSide = _generator.GetOppositeSide(DoorSide.East);
+                    DoorSide oppositeSide = _generator.GetOppositeSide(exitSide);
+
                     DoorController backDoorInstance = _nextRoomRoot.GetComponentsInChildren<DoorController>()
                          .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == oppositeSide);
+
                     if (backDoorInstance != null)
                     {
                         this.TargetEntrySpawnPoint = backDoorInstance.transform;
+                        this.enabled = false;
                     }
                 }
             }
@@ -80,12 +114,17 @@ public class DoorController : MonoBehaviour
                 {
                     currentRoomRoot.SetActive(false);
                     _nextRoomRoot.SetActive(true);
-                    _generator.Player.position = TargetEntrySpawnPoint.position;
+
+                    _generator.SetPlayerPositionWithOffset(
+                        TargetEntrySpawnPoint.position,
+                        entrySideForNextRoom
+                    );
+
+                    this.enabled = false;
                 }
             }
             return;
         }
-
 
         if (_leadsToPreviousRoom)
         {
@@ -93,26 +132,36 @@ public class DoorController : MonoBehaviour
             {
                 currentRoomRoot.SetActive(false);
                 _previousRoomRoot.SetActive(true);
-                _generator.Player.position = ReturnTargetPoint.position;
+
+                DoorSide entrySideForPreviousRoom = _generator.GetOppositeSide(_doorSide);
+
+                DoorController targetDoorController = ReturnTargetPoint.GetComponent<DoorController>();
+                if (targetDoorController != null)
+                {
+                    targetDoorController.enabled = true;
+                }
+
+                _generator.SetPlayerPositionWithOffset(
+                    ReturnTargetPoint.position,
+                    entrySideForPreviousRoom
+                );
             }
         }
 
         else
         {
+            DoorSide entrySideForNextRoom = _generator.GetOppositeSide(_doorSide);
+
             if (_nextRoomRoot == null)
             {
                 _nextRoomRoot = _generator.GenerateNextRoom(
-                    currentRoomRoot.transform.position,
-                    _doorSide,
-                    currentRoomRoot,
-                    gameObject.transform
+                    currentRoomRoot.transform.position, _doorSide, currentRoomRoot, gameObject.transform
                 );
 
                 if (_nextRoomRoot != null)
                 {
-                    DoorSide oppositeSide = _generator.GetOppositeSide(_doorSide);
                     DoorController backDoorInstance = _nextRoomRoot.GetComponentsInChildren<DoorController>()
-                         .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == oppositeSide);
+                         .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == entrySideForNextRoom);
                     if (backDoorInstance != null)
                     {
                         this.TargetEntrySpawnPoint = backDoorInstance.transform;
@@ -125,7 +174,11 @@ public class DoorController : MonoBehaviour
                 {
                     currentRoomRoot.SetActive(false);
                     _nextRoomRoot.SetActive(true);
-                    _generator.Player.position = TargetEntrySpawnPoint.position;
+
+                    _generator.SetPlayerPositionWithOffset(
+                        TargetEntrySpawnPoint.position,
+                        entrySideForNextRoom
+                    );
                 }
             }
         }
@@ -135,8 +188,11 @@ public class DoorController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            _playerIsNear = true;
-            if (OutlineVisual != null) OutlineVisual.SetActive(true);
+            if (this.enabled)
+            {
+                _playerIsNear = true;
+                if (OutlineVisual != null) OutlineVisual.SetActive(true);
+            }
         }
     }
 
