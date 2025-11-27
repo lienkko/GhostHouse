@@ -1,0 +1,11 @@
+This package is a free version of the Background for mobile games update for the Forest package.
+Visit the publisher's page for other packages, including the Forest package.
+
+All images are in PNG format in high resolution, you can drastically reduce the build size if you want, just set the sprites in Unity with lower resolution.
+
+Perfect for mobile or desktop games, perfect for quickly prototyping and presenting to your client or to use in your final game.
+
+e-mail: lerrmar@mail.ru
+Instagram: @lerrmar
+You can also leave your wishes in the comments.
+P.S. Thank you for buying my models.
