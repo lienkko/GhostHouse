@@ -2,10 +2,7 @@
 - Project name: Game
 - Unity version: Unity 2021.3.45f2
 - Active game object:
-  - Name: Star
-  - Tag: Untagged
-  - Layer: UI
-  - Name: GameManager
-  - Tag: Untagged
+  - Name: SymbolHero
+  - Tag: Player
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

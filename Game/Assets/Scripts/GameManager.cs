@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject _gameOverText;
     [SerializeField] private Text _healthPointsField;
+    public Image OpenText;
+    public Image LockedText;
 
     private void Awake()
     {

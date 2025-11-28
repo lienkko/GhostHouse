@@ -4,11 +4,15 @@ using TMPro;
 
 public class DoorController : MonoBehaviour
 {
+    private GameManager _gm;
+
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
 
-    public GameObject OutlineVisual;
-    public TMP_Text RoomNumberText;
+
+    public SpriteRenderer SecondDigit;
+    public SpriteRenderer FirstDigit;
+    public Sprite[] NumbersSprites;
     private RoomGenerator _generator;
     private DoorSide _doorSide;
     private bool _leadsToPreviousRoom;
@@ -22,12 +26,20 @@ public class DoorController : MonoBehaviour
 
     private bool _playerIsNear = false;
 
+    private bool _isLocked = false;
+
     public DoorSide GetSide() { return _doorSide; }
+
+    private void Awake()
+    {
+        _gm = FindAnyObjectByType<GameManager>();
+    }
 
     void Start()
     {
         if (IsStartingDoor)
         {
+            //IsLocked = true;
             SetTargetRoomNumber(1);
         }
     }
@@ -36,14 +48,16 @@ public class DoorController : MonoBehaviour
     {
         _targetRoomNumber = number;
 
-        if (RoomNumberText != null)
+        if ((SecondDigit != null) && (FirstDigit != null) && (NumbersSprites != null))
         {
-            RoomNumberText.text = number > 1 ? number.ToString() : "1";
+            SecondDigit.sprite = NumbersSprites[_targetRoomNumber/10];
+            FirstDigit.sprite = NumbersSprites[_targetRoomNumber%10];
         }
     }
 
-    public void Initialize(RoomGenerator generator, DoorSide side, bool leadsBack, GameObject previousRoomRoot = null)
+    public void Initialize(RoomGenerator generator, DoorSide side, bool leadsBack,bool isLocked, GameObject previousRoomRoot = null)
     {
+        _isLocked = isLocked;
         _generator = generator;
         _doorSide = side;
         _leadsToPreviousRoom = leadsBack;
@@ -52,7 +66,7 @@ public class DoorController : MonoBehaviour
 
     private void Update()
     {
-        if (this.enabled && _playerIsNear && Input.GetKeyDown(KeyCode.E))
+        if (this.enabled && _playerIsNear && Input.GetKeyDown(KeyCode.E) && !_isLocked)
         {
             ActivateDoor();
         }
@@ -60,9 +74,9 @@ public class DoorController : MonoBehaviour
 
     private void ActivateDoor()
     {
-        if (OutlineVisual != null)
+        if (_gm.OpenText != null)
         {
-            OutlineVisual.SetActive(false);
+            _gm.OpenText.gameObject.SetActive(false);
         }
 
         Transform parentTransform = gameObject.transform.parent;
@@ -85,7 +99,7 @@ public class DoorController : MonoBehaviour
 
         if (IsStartingDoor)
         {
-            DoorSide exitSide = DoorSide.East;
+            DoorSide exitSide = DoorSide.North;
             DoorSide entrySideForNextRoom = _generator.GetOppositeSide(exitSide);
 
             if (_nextRoomRoot == null)
@@ -184,6 +198,12 @@ public class DoorController : MonoBehaviour
         }
     }
 
+
+    public void UnlockDoor()
+    {
+        _isLocked = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -191,7 +211,11 @@ public class DoorController : MonoBehaviour
             if (this.enabled)
             {
                 _playerIsNear = true;
-                if (OutlineVisual != null) OutlineVisual.SetActive(true);
+                if (_gm.OpenText != null && !_isLocked) _gm.OpenText.gameObject.SetActive(true);
+                else if (_isLocked)
+                {
+                    _gm.LockedText.gameObject.SetActive(true);
+                }
             }
         }
     }
@@ -201,7 +225,11 @@ public class DoorController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _playerIsNear = false;
-            if (OutlineVisual != null) OutlineVisual.SetActive(false);
+            if (_gm.OpenText != null && !_isLocked) _gm.OpenText.gameObject.SetActive(false);
+            else if (_isLocked)
+            {
+                _gm.LockedText.gameObject.SetActive(false);
+            }
         }
     }
 }

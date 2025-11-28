@@ -12,4 +12,7 @@ public class RoomData : MonoBehaviour
 
     [Tooltip("Список всех доступных мест для размещения дверей в этой комнате.")]
     public DoorSpawnPoint[] AvailableDoorSpawns;
+
+    [Tooltip("Список всех доступных мест для размещения сейфа в этой комнате.")]
+    public Transform[] AvailableSafeSpawns;
 }
