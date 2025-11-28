@@ -4,14 +4,25 @@ using UnityEngine.UI;
 
 public class Safe : MonoBehaviour
 {
+    private GameManager _gm;
+
     private string[] _puzzleNames = new string[] { "Circles", "Star" };
-    [SerializeField] private GameObject _openText;
     private bool _mayOpen = false;
     private bool _isInPuzzle = false;
     private GameObject _puzzle;
     private Button _puzzleButton;
     private PlayerController _playerController;
+    private DoorController _doorToOpen;
 
+    public Sprite RightLeftSafeSprite;
+    public Sprite TopSafeSprite;
+    public Sprite BotSafeSprite;
+
+
+    private void Awake()
+    {
+        _gm = FindAnyObjectByType<GameManager>();
+    }
 
     private void Update()
     {
@@ -24,6 +35,29 @@ public class Safe : MonoBehaviour
         {
             ClosePuzzle();
             return;
+        }
+    }
+
+    public void Initialize(string pointTag, DoorController door)
+    {
+        _doorToOpen = door;
+        switch (tag)
+        {
+            case "TopPoint":
+                GetComponent<SpriteRenderer>().sprite = TopSafeSprite;
+                break;
+            case "BotPoint":
+                GetComponent<SpriteRenderer>().sprite = BotSafeSprite;
+                break;
+            case "RightPoint":
+                GetComponent<SpriteRenderer>().sprite = RightLeftSafeSprite;
+                break;
+            case "LeftPoint":
+                {
+                    GetComponent<SpriteRenderer>().flipX = true;
+                    GetComponent<SpriteRenderer>().sprite = RightLeftSafeSprite;
+                    break;
+                }
         }
     }
 
@@ -41,7 +75,7 @@ public class Safe : MonoBehaviour
 
     private void ShowOpenText(bool state)
     {
-        _openText.SetActive(state);
+        _gm.OpenText.gameObject.SetActive(state);
         _mayOpen = state;
     }
 
@@ -74,8 +108,8 @@ public class Safe : MonoBehaviour
     {
         ClosePuzzle();
         _puzzleButton.onClick.RemoveAllListeners();
-        GetComponent<SpriteRenderer>().color = Color.white; // —имул€ци€ открыти€ сейфа
-        Destroy(_openText);
+        _doorToOpen.UnlockDoor();
+        _gm.OpenText.gameObject.SetActive(false);
         Destroy(_puzzle);
         Destroy(this);
     }

@@ -8,7 +8,11 @@ public class RoomGenerator : MonoBehaviour
     public GameObject EastWestDoorPrefab;
     public GameObject NorthDoorPrefab;
     public GameObject SouthDoorPrefab;
+
+    public GameObject SafePrefab;
+
     public Transform Player;
+    public Transform RoomsParent;
 
     public float NorthEntryOffset = -1.0f;
     public float SouthEntryOffset = 1.0f;
@@ -48,7 +52,7 @@ public class RoomGenerator : MonoBehaviour
         int newRoomNumber = _roomDepth;
 
         GameObject selectedRoomPrefab = RoomPrefabs[Random.Range(0, RoomPrefabs.Length)];
-        GameObject newRoomInstance = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity);
+        GameObject newRoomInstance = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, RoomsParent);
 
         RoomData roomData = newRoomInstance.GetComponent<RoomData>();
         if (roomData == null)
@@ -70,7 +74,7 @@ public class RoomGenerator : MonoBehaviour
         if (entryCandidates.Count == 0)
         {
             Destroy(newRoomInstance);
-            return null;
+            return GenerateNextRoom(spawnPosition,previousDoorSide,previousRoomRoot, lastDoorTransform);
         }
         RoomData.DoorSpawnPoint finalEntryPoint = entryCandidates[Random.Range(0, entryCandidates.Count)];
 
@@ -97,6 +101,8 @@ public class RoomGenerator : MonoBehaviour
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
+
+
 
         return newRoomInstance;
     }
@@ -131,9 +137,19 @@ public class RoomGenerator : MonoBehaviour
         GameObject doorInstance = Instantiate(doorPrefabToUse, spawnPoint.position, Quaternion.identity, roomData.transform);
 
         DoorController doorController = doorInstance.GetComponent<DoorController>();
+        
         if (doorController != null)
         {
-            doorController.Initialize(this, targetSide, isPreviousRoomDoor, previousRoomRoot);
+            bool isDoorLocked = false;
+            if (!isPreviousRoomDoor)
+            {
+                isDoorLocked = Random.Range(1, 11) < 8;
+                if (isDoorLocked)
+                {
+                    SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], doorController);
+                }
+            }
+            doorController.Initialize(this, targetSide, isPreviousRoomDoor, isDoorLocked, previousRoomRoot);
 
             if (isPreviousRoomDoor)
             {
@@ -141,7 +157,9 @@ public class RoomGenerator : MonoBehaviour
             }
 
             doorController.SetTargetRoomNumber(doorTargetRoomNumber);
+            
         }
+        
     }
 
     private void SpawnDoor(RoomData roomData, DoorSide targetSide, bool isPreviousRoomDoor, int doorTargetRoomNumber = 0)
@@ -155,6 +173,13 @@ public class RoomGenerator : MonoBehaviour
         RoomData.DoorSpawnPoint finalCandidate = candidates[Random.Range(0, candidates.Count)];
 
         SpawnDoor(roomData, finalCandidate, isPreviousRoomDoor, null, null, doorTargetRoomNumber);
+    }
+
+    private void SpawnSafe(Transform spawnPoint, DoorController door)
+    {
+        GameObject safeObject = Instantiate(SafePrefab, spawnPoint.position,Quaternion.identity, _currentRoomInstance.transform);
+        
+        safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
