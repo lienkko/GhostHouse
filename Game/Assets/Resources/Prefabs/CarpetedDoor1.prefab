@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 950032051972538310}
   - component: {fileID: 950032051972538313}
   - component: {fileID: 950032051972538312}
+  - component: {fileID: -6240703548239069084}
   m_Layer: 0
   m_Name: CarpetedDoor1
   m_TagString: Untagged
@@ -111,7 +112,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.30454075, y: 0.6356618}
+  m_Size: {x: 0.30454075, y: 0.45}
   m_EdgeRadius: 0
 --- !u!114 &950032051972538312
 MonoBehaviour:
@@ -141,6 +142,19 @@ MonoBehaviour:
   - {fileID: -532782780, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   ReturnTargetPoint: {fileID: 0}
   TargetEntrySpawnPoint: {fileID: 0}
+--- !u!114 &-6240703548239069084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3876304005829112623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25afff67658c27439ea3a9700c05b89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractive: 0
 --- !u!1 &6577877987590660174
 GameObject:
   m_ObjectHideFlags: 0

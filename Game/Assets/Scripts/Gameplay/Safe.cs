@@ -7,7 +7,6 @@ public class Safe : MonoBehaviour
     private GameManager _gm;
 
     private string[] _puzzleNames = new string[] { "Circles", "Star" };
-    private bool _mayOpen = false;
     private bool _isInPuzzle = false;
     private GameObject _puzzle;
     private Button _puzzleButton;
@@ -22,15 +21,12 @@ public class Safe : MonoBehaviour
     private void Awake()
     {
         _gm = FindAnyObjectByType<GameManager>();
+        GetComponent<Interactive>().SetListener(OpenPuzzle);
+        GetComponent<Interactive>().isInteractive = true;
     }
 
     private void Update()
     {
-        if (_mayOpen && Input.GetKeyDown(KeyCode.E))
-        {
-            OpenPuzzle();
-            return;
-        }
         if (_isInPuzzle && Input.GetKeyDown(KeyCode.Escape))
         {
             ClosePuzzle();
@@ -61,27 +57,22 @@ public class Safe : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        ShowOpenText(true);
-        _playerController = collision.GetComponent<PlayerController>();
-    }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
-        ShowOpenText(false);
-        _playerController = null;
-        ClosePuzzle();
+        if (collision.GetComponent<PlayerController>())
+        {
+            _playerController = null;
+        }
     }
 
     private void ShowOpenText(bool state)
     {
-        _gm.OpenText.gameObject.SetActive(state);
-        _mayOpen = state;
+        _gm.OpenSafeText.gameObject.SetActive(state);
     }
 
-    private void OpenPuzzle()
+    private void OpenPuzzle(GameObject player)
     {
+        _playerController = player.GetComponent<PlayerController>();
         ShowOpenText(false);
         _isInPuzzle = true;
         if (_puzzle)
@@ -92,6 +83,7 @@ public class Safe : MonoBehaviour
         string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
         _playerController.MoveSpeed = 0;
         _playerController.enabled = false;
+        _playerController.GetComponent<Interact>().CanInteract = false;
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzleButton = _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>();
@@ -104,14 +96,17 @@ public class Safe : MonoBehaviour
         _isInPuzzle = false;
         _puzzle.SetActive(false);
         _playerController.enabled = true;
+        _playerController.GetComponent<Interact>().CanInteract = true;
     }
 
     public void OpenSafe()
     {
+        GetComponent<Interactive>().isInteractive = false;
+        GetComponent<Interactive>().RemoveListener();
         ClosePuzzle();
+        ShowOpenText(false);
         _puzzleButton.onClick.RemoveAllListeners();
         _doorToOpen.UnlockDoor();
-        _gm.OpenText.gameObject.SetActive(false);
         Destroy(_puzzle);
         Destroy(this);
     }

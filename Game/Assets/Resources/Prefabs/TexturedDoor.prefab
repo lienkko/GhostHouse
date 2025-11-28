@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 950032051972538310}
   - component: {fileID: 950032051972538313}
   - component: {fileID: 950032051972538312}
+  - component: {fileID: -8645681672451331376}
   m_Layer: 0
   m_Name: TexturedDoor
   m_TagString: Untagged
@@ -269,7 +270,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00009056926, y: 0.0064502284}
+  m_Offset: {x: -0.00009056926, y: 0.06212168}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -280,7 +281,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.63136667, y: 0.33092278}
+  m_Size: {x: 0.63136667, y: 0.2195799}
   m_EdgeRadius: 0
 --- !u!114 &950032051972538312
 MonoBehaviour:
@@ -310,6 +311,19 @@ MonoBehaviour:
   - {fileID: -532782780, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   ReturnTargetPoint: {fileID: 0}
   TargetEntrySpawnPoint: {fileID: 0}
+--- !u!114 &-8645681672451331376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3876304005829112623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25afff67658c27439ea3a9700c05b89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractive: 0
 --- !u!1 &3958721138917845634
 GameObject:
   m_ObjectHideFlags: 0

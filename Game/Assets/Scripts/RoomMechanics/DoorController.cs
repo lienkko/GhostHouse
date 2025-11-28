@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Linq;
-using TMPro;
 
 public class DoorController : MonoBehaviour
 {
@@ -24,15 +23,18 @@ public class DoorController : MonoBehaviour
     public Transform TargetEntrySpawnPoint;
     private GameObject _nextRoomRoot;
 
-    private bool _playerIsNear = false;
-
-    private bool _isLocked = false;
 
     public DoorSide GetSide() { return _doorSide; }
 
     private void Awake()
     {
+        if (IsStartingDoor)
+        {
+            GetComponent<Interactive>().SetListener(ActivateDoor);
+            GetComponent<Interactive>().isInteractive = true;
+        }
         _gm = FindAnyObjectByType<GameManager>();
+        
     }
 
     void Start()
@@ -57,27 +59,19 @@ public class DoorController : MonoBehaviour
 
     public void Initialize(RoomGenerator generator, DoorSide side, bool leadsBack,bool isLocked, GameObject previousRoomRoot = null)
     {
-        _isLocked = isLocked;
+        if (!isLocked)
+        {
+            GetComponent<Interactive>().isInteractive = true;
+        }
         _generator = generator;
         _doorSide = side;
         _leadsToPreviousRoom = leadsBack;
         _previousRoomRoot = previousRoomRoot;
+        GetComponent<Interactive>().SetListener(ActivateDoor);
     }
 
-    private void Update()
+    private void ActivateDoor(GameObject player)
     {
-        if (this.enabled && _playerIsNear && Input.GetKeyDown(KeyCode.E) && !_isLocked)
-        {
-            ActivateDoor();
-        }
-    }
-
-    private void ActivateDoor()
-    {
-        if (_gm.OpenText != null)
-        {
-            _gm.OpenText.gameObject.SetActive(false);
-        }
 
         Transform parentTransform = gameObject.transform.parent;
         if (parentTransform == null)
@@ -201,35 +195,6 @@ public class DoorController : MonoBehaviour
 
     public void UnlockDoor()
     {
-        _isLocked = false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (this.enabled)
-            {
-                _playerIsNear = true;
-                if (_gm.OpenText != null && !_isLocked) _gm.OpenText.gameObject.SetActive(true);
-                else if (_isLocked)
-                {
-                    _gm.LockedText.gameObject.SetActive(true);
-                }
-            }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            _playerIsNear = false;
-            if (_gm.OpenText != null && !_isLocked) _gm.OpenText.gameObject.SetActive(false);
-            else if (_isLocked)
-            {
-                _gm.LockedText.gameObject.SetActive(false);
-            }
-        }
+        GetComponent<Interactive>().isInteractive = true;
     }
 }

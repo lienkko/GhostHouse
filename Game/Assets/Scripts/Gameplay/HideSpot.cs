@@ -4,7 +4,6 @@ public class HideSpot : MonoBehaviour
 {
     private Transform _hidingPlayer;
     private bool _isHidingSomeone = false;
-    private bool _isInteractive = false;
     private GameManager _gm;
 
 
@@ -14,10 +13,12 @@ public class HideSpot : MonoBehaviour
     [SerializeField] private Sprite _backSprite;
 
 
+
     public void Initialize()
     {
         _gm = FindAnyObjectByType<GameManager>();
-        _isInteractive = true;
+        GetComponent<Interactive>().isInteractive = true;
+        GetComponent<Interactive>().SetListener(Hide);
         switch (tag)
         {
             case "TopLeftPoint":
@@ -47,22 +48,15 @@ public class HideSpot : MonoBehaviour
         }
     }
 
-    public bool canHide()
-    {
-        if (!_isInteractive || _isHidingSomeone)
-            return false;
-        return true;
-    }
-
     private void Update()
     {
         if (_isHidingSomeone && Input.GetKeyDown(KeyCode.Space))
             Unhide();
     }
 
-    public void Hide(Transform player)
+    public void Hide(GameObject player)
     {
-        _hidingPlayer = player;
+        _hidingPlayer = player.transform;
         player.gameObject.SetActive(false);
         _isHidingSomeone = true;
     }
