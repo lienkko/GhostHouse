@@ -3,8 +3,14 @@ using UnityEngine;
 public class PlayerHide : MonoBehaviour
 {
     private HideSpot _nearestHideSpot;
+    GameManager _gm;
 
-    void Update()
+    private void Awake()
+    {
+        _gm = FindAnyObjectByType<GameManager>();
+    }
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -14,16 +20,25 @@ public class PlayerHide : MonoBehaviour
             }
         }
     }
-    void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         var hs = collision.gameObject.GetComponent<HideSpot>();
-        if (hs)
-            _nearestHideSpot = collision.gameObject.GetComponent<HideSpot>();
+        if (hs && hs.canHide())
+        {
+            _nearestHideSpot = hs;
+            _gm.OpenText.gameObject.SetActive(true);
+        }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        _nearestHideSpot = null;
+        var hs = collision.gameObject.GetComponent<HideSpot>();
+        if (hs && hs.enabled)
+        {
+            _nearestHideSpot = null;
+            _gm.OpenText.gameObject.SetActive(false);
+        }
     }
 
     

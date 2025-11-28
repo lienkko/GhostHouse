@@ -71,6 +71,7 @@ public class Safe : MonoBehaviour
     {
         ShowOpenText(false);
         _playerController = null;
+        ClosePuzzle();
     }
 
     private void ShowOpenText(bool state)
@@ -89,6 +90,7 @@ public class Safe : MonoBehaviour
             return;
         }
         string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
+        _playerController.MoveSpeed = 0;
         _playerController.enabled = false;
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
