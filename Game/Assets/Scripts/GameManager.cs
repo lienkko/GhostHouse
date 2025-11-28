@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +6,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject _gameOverText;
     [SerializeField] private Text _healthPointsField;
-    public Image OpenText;
+    public TextMeshProUGUI OpenDoorText;
+    public TextMeshProUGUI OpenSafeText;
+    public TextMeshProUGUI HideText;
     public Image LockedText;
 
     private void Awake()

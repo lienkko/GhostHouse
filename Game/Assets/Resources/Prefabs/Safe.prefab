@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7884531472750873162}
   - component: {fileID: 7884531472750873163}
   - component: {fileID: 7884531472750873161}
+  - component: {fileID: -6819880405985330731}
   m_Layer: 0
   m_Name: Safe
   m_TagString: Untagged
@@ -155,6 +156,19 @@ MonoBehaviour:
   RightLeftSafeSprite: {fileID: 985846784, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
   TopSafeSprite: {fileID: 1484379940, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
   BotSafeSprite: {fileID: -1592321752, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
+--- !u!114 &-6819880405985330731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7884531472750873166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25afff67658c27439ea3a9700c05b89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractive: 0
 --- !u!1 &7884531473947942459
 GameObject:
   m_ObjectHideFlags: 0
