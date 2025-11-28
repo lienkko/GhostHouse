@@ -8,6 +8,10 @@ TagManager:
   - TopPoint
   - LeftPoint
   - RightPoint
+  - TopLeftPoint
+  - TopRightPoint
+  - BotLeftPoint
+  - BotRightPoint
   layers:
   - Default
   - TransparentFX

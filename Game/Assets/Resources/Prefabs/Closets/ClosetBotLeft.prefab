@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 583069119188711422}
   - component: {fileID: 6734100488830735182}
   m_Layer: 0
-  m_Name: ClosetFaceBooks2 3
-  m_TagString: TopRightPoint
+  m_Name: ClosetBotLeft
+  m_TagString: BotLeftPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,9 +74,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 923780143, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
+  m_Sprite: {fileID: -650945219, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.9375, y: 2.9375}
@@ -98,16 +98,16 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.47465312}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0625, y: 2.9375}
+    oldSize: {x: 0.90625, y: 1.9375}
     newSize: {x: 1.9375, y: 2.9375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.88, y: 1.9881938}
+  m_Size: {x: 0.90625, y: 1.9375}
   m_EdgeRadius: 0
