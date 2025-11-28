@@ -431,6 +431,9 @@ MonoBehaviour:
     SpawnPoint: {fileID: 3824912276161610734}
   AvailableSafeSpawns:
   - {fileID: 7071777734007013492}
+  Closets:
+  - {fileID: 3713130790503258925}
+  - {fileID: 7632656543375018005}
 --- !u!1 &7776394585594519210
 GameObject:
   m_ObjectHideFlags: 0
@@ -3092,6 +3095,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20eecaaa2ff91ce4bb2b0401c7c34f98, type: 3}
+--- !u!1 &3713130790503258925 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 583069119188711421, guid: 20eecaaa2ff91ce4bb2b0401c7c34f98, type: 3}
+  m_PrefabInstance: {fileID: 4292153103441800400}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3713130790503258927 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 583069119188711423, guid: 20eecaaa2ff91ce4bb2b0401c7c34f98, type: 3}
@@ -3154,6 +3162,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03aeca0002d570e45b3478a1daea2e2c, type: 3}
+--- !u!1 &7632656543375018005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 583069119188711421, guid: 03aeca0002d570e45b3478a1daea2e2c, type: 3}
+  m_PrefabInstance: {fileID: 7060481935706161128}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7632656543375018007 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 583069119188711423, guid: 03aeca0002d570e45b3478a1daea2e2c, type: 3}

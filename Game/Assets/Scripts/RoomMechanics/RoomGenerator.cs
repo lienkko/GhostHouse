@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -102,7 +103,7 @@ public class RoomGenerator : MonoBehaviour
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
 
-
+        SetHideSpots(roomData);
 
         return newRoomInstance;
     }
@@ -143,7 +144,7 @@ public class RoomGenerator : MonoBehaviour
             bool isDoorLocked = false;
             if (!isPreviousRoomDoor)
             {
-                isDoorLocked = Random.Range(1, 11) < 8;
+                isDoorLocked = Random.Range(1, 11) > 8;
                 if (isDoorLocked)
                 {
                     SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], doorController);
@@ -180,6 +181,35 @@ public class RoomGenerator : MonoBehaviour
         GameObject safeObject = Instantiate(SafePrefab, spawnPoint.position,Quaternion.identity, _currentRoomInstance.transform);
         
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
+    }
+
+    private void SetHideSpots(RoomData roomData)
+    {
+        int numOfSafeSpots = 0;
+        bool[] boxOfClosetsIsHideSpot = new bool[roomData.Closets.Length];
+
+        for (int i = 0; i < roomData.Closets.Length;i++)
+        {
+            if (Random.Range(1, 11) > 8)
+            {
+                boxOfClosetsIsHideSpot[i] = true;
+                numOfSafeSpots++;
+            }
+        }
+        if (numOfSafeSpots < 1)
+        {
+            SetHideSpots(roomData);
+            return;
+        }
+        for (int i = 0; i < roomData.Closets.Length; i++)
+        {
+            if (boxOfClosetsIsHideSpot[i])
+            {
+                GameObject hideSpotCloset = roomData.Closets[i];
+                hideSpotCloset.GetComponent<HideSpot>().enabled = true;
+                hideSpotCloset.GetComponent <HideSpot>().Initialize();
+            }
+        }
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
