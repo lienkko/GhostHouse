@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro.EditorUtilities;
 
 public class RoomGenerator : MonoBehaviour
 {
@@ -21,8 +22,11 @@ public class RoomGenerator : MonoBehaviour
 
     private int _roomDepth = 1;
 
+    private GameManager _gm;
+
     void Start()
     {
+        _gm = FindAnyObjectByType<GameManager>();
         if (Player == null)
         {
             Debug.LogError("Игрок не назначен в генераторе!");
@@ -103,7 +107,9 @@ public class RoomGenerator : MonoBehaviour
         }
 
         SetHideSpots(roomData);
-
+        if (Random.Range(1,11) < 8)
+            _gm.SummonWraith(newRoomInstance);
+        
         return newRoomInstance;
     }
 
@@ -189,7 +195,7 @@ public class RoomGenerator : MonoBehaviour
 
         for (int i = 0; i < roomData.Closets.Length;i++)
         {
-            if (Random.Range(1, 11) > 8)
+            if (Random.Range(1, 11) > 7)
             {
                 boxOfClosetsIsHideSpot[i] = true;
                 numOfSafeSpots++;
@@ -229,6 +235,7 @@ public class RoomGenerator : MonoBehaviour
         }
 
         Player.position = finalPosition;
+        
     }
 
     public DoorSide GetOppositeSide(DoorSide side)

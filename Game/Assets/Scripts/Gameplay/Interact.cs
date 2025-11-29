@@ -92,11 +92,7 @@ public class Interact : MonoBehaviour
         {
             _gm.HideText.gameObject.SetActive(false);
             _hideSpotInteractive = null;
-            if(_safeInteractive)
-            {
-                _gm.OpenSafeText.gameObject.SetActive(true);
-            }
-            else if(_doorInteractive)
+            if(_doorInteractive)
             {
                 _gm.HideText.gameObject.SetActive(true);
             }

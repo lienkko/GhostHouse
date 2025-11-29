@@ -1,81 +1,93 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class WraithHandler : MonoBehaviour
 {
     [SerializeField] private GameObject _textWarning;
     [SerializeField] private GameObject _wraithModel;
+    [SerializeField] private AudioClip _whispers;
+    [SerializeField] private AudioClip _iSeeYouWhisper;
 
+
+
+    private AudioSource _audioSource;
     private float _distance = 0;
     private float _remainingDsitance = 0;
     private Vector3 _startPoint = Vector3.zero;
     private Vector3 _endPoint = Vector3.zero;
     private bool _isMoving = false;
-    private bool _isWraithWaiting = false;
+    private bool _isWhispering;
+    private DoorController[] _doors;
 
-    
-
-    private void Update()
+    private void Awake()
     {
-        if (!_isWraithWaiting)
-            StartCoroutine(WaitForWraith());
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.volume = 0.3f;
     }
 
     private void FixedUpdate()
     {
         if (_isMoving)
         {
-            setPoints();
-
             _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1-(_remainingDsitance/_distance));
-            _remainingDsitance -= 3f * Time.deltaTime;
+            _remainingDsitance -= 5f * Time.deltaTime;
+            if (_remainingDsitance < 0.2 * _distance && !_isWhispering)
+            {
+                FindAnyObjectByType<GameManager>().GetComponent<AudioSource>().PlayOneShot(_iSeeYouWhisper);
+                
+                _isWhispering = true;
+            }
+            if (_remainingDsitance < 0.8 * _distance && !_isWhispering)
+            {
+                FindAnyObjectByType<RoomData>().transform.Find("Lights").gameObject.SetActive(false);
+            }
         }
+        
         if (_isMoving && _wraithModel.transform.position == _endPoint)
         {
             _isMoving = false;
-            EndWraithFlight();
+            _isWhispering = false;
+            foreach (var door in _doors)
+            {
+                if (door.isActiveAndEnabled && !door.isDoorLocked)
+                    door.GetComponent<Interactive>().isInteractive = true;
+            }
             _wraithModel.SetActive(false);
         }
     }
 
-    private void setPoints()
+    public void StartWraith(Vector3 point1, Vector3 point2, DoorController[] doors)
     {
-        Camera cam = Camera.main;
-        float offset = cam.orthographicSize * cam.aspect + 5;
-        _startPoint.x = cam.transform.position.x - offset;
-        _endPoint.x = cam.transform.position.x + offset;
-        _startPoint.y = _endPoint.y = cam.transform.position.y;
+        _doors = doors;
+        foreach (var door in doors)
+        {
+            if (door.isActiveAndEnabled)
+                door.GetComponent<Interactive>().isInteractive = false;
+        }
+        _startPoint = point1;
+        _endPoint = point2;
+        StartCoroutine(WraithWaiting());
     }
 
-    private IEnumerator WaitForWraith()
+    public IEnumerator WraithWaiting()
     {
-        _isWraithWaiting = true;
-        yield return new WaitForSeconds(5); //RANDOM TIME
-        StartCoroutine(WraithWarning());
-    }
-
-    private IEnumerator WraithWarning()
-    {
-
-        _textWarning.SetActive(true);
         yield return new WaitForSeconds(5);
-        _textWarning.SetActive(false);
 
         _wraithModel.SetActive(true);
+
+        _audioSource.PlayOneShot(_whispers);
         StartMoving();
     }
 
     public void StartMoving()
     {
-        setPoints();
         _distance = _remainingDsitance = Vector3.Distance(_startPoint, _endPoint);
         _isMoving = true;
     }
 
-    private void EndWraithFlight()
-    {
-        _isWraithWaiting = false;
-    }
+
 }

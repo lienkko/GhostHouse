@@ -22,7 +22,7 @@ public class DoorController : MonoBehaviour
 
     public Transform TargetEntrySpawnPoint;
     private GameObject _nextRoomRoot;
-
+    public bool isDoorLocked = true; 
 
     public DoorSide GetSide() { return _doorSide; }
 
@@ -60,6 +60,7 @@ public class DoorController : MonoBehaviour
         if (!isLocked)
         {
             GetComponent<Interactive>().isInteractive = true;
+            isDoorLocked = false;
         }
         _generator = generator;
         _doorSide = side;
@@ -70,7 +71,6 @@ public class DoorController : MonoBehaviour
 
     private void ActivateDoor(GameObject player)
     {
-
         Transform parentTransform = gameObject.transform.parent;
         if (parentTransform == null)
         {
@@ -188,11 +188,13 @@ public class DoorController : MonoBehaviour
                 }
             }
         }
+        
     }
 
 
     public void UnlockDoor()
     {
         GetComponent<Interactive>().isInteractive = true;
+        isDoorLocked = false;
     }
 }
