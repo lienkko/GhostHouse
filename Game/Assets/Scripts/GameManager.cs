@@ -68,15 +68,22 @@ public class GameManager : MonoBehaviour
             countOfBlinks++;
             yield return new WaitForSeconds(Time.deltaTime*10);
         }
+        TurnOffLights(turnOff);
+    }
+    
+    public void TurnOffLights(bool state)
+    {
+        Transform lightsTransform = _currentRoom.transform.Find("Lights");
+        int numOfChilds = lightsTransform.childCount;
         for (int i = 0; i < numOfChilds; i++)
         {
-            if (turnOff)
+            if (state)
                 lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = 0;
             else
                 lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = 0.9f;
         }
     }
-    
+
     public void SummonWraith(GameObject currentRoom)
     {
         _currentRoom = currentRoom;

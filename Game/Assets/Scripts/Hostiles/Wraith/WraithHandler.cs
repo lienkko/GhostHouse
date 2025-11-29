@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class WraithHandler : MonoBehaviour
             }
             if (_remainingDsitance < 0.8 * _distance && !_isWhispering)
             {
-                FindAnyObjectByType<RoomData>().transform.Find("Lights").gameObject.SetActive(false);
+                FindAnyObjectByType<GameManager>().TurnOffLights(true);
             }
         }
         
@@ -88,6 +89,4 @@ public class WraithHandler : MonoBehaviour
         _distance = _remainingDsitance = Vector3.Distance(_startPoint, _endPoint);
         _isMoving = true;
     }
-
-
 }
