@@ -11,12 +11,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text _healthPointsField;
     [SerializeField] private Ghost _ghost;
     [SerializeField] private AudioClip _blinkLightsSound;
+    [SerializeField] private WraithHandler _wraith;
 
     
     private AudioSource _audioSource;
     private GameObject _currentRoom;
     private DoorController _startedDoor;
     
+    public GameObject CurrentRoom { get=>_currentRoom; set=>_currentRoom = value; }
+
     public TextMeshProUGUI OpenDoorText;
     public TextMeshProUGUI OpenSafeText;
     public TextMeshProUGUI HideText;
@@ -36,7 +39,7 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         _startedDoor.GetComponent<Interactive>().isInteractive = true;
-        StartCoroutine(BlinkLights(false));
+        StartCoroutine(BlinkLights(true));
     }
 
     private void Death()
@@ -55,14 +58,15 @@ public class GameManager : MonoBehaviour
         Transform lightsTransform = _currentRoom.transform.Find("Lights");
         int numOfChilds = lightsTransform.childCount;
         _audioSource.PlayOneShot(_blinkLightsSound);
-        while (countOfBlinks < 50)
+        _audioSource.loop = true;
+        while (countOfBlinks < 18)
         {
             for(int i = 0; i < numOfChilds; i++)
             {
-                lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.2f,1.2f);
+                lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.3f,1.1f);
             }
             countOfBlinks++;
-            yield return new WaitForSeconds(Time.deltaTime*6);
+            yield return new WaitForSeconds(Time.deltaTime*10);
         }
         for (int i = 0; i < numOfChilds; i++)
         {
@@ -71,7 +75,14 @@ public class GameManager : MonoBehaviour
             else
                 lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = 0.9f;
         }
-        _audioSource.Stop();
     }
     
+    public void SummonWraith(GameObject currentRoom)
+    {
+        _currentRoom = currentRoom;
+        StartCoroutine(BlinkLights());
+        var wraithPoints = _currentRoom.transform.Find("WraithPoints");
+        var doors = FindObjectsOfType<DoorController>();
+        _wraith.StartWraith(wraithPoints.Find("StartPoint").position, wraithPoints.Find("EndPoint").position, doors);
+    }
 }
