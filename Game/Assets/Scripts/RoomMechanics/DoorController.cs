@@ -31,7 +31,6 @@ public class DoorController : MonoBehaviour
         if (IsStartingDoor)
         {
             GetComponent<Interactive>().SetListener(ActivateDoor);
-            GetComponent<Interactive>().isInteractive = true;
         }
         _gm = FindAnyObjectByType<GameManager>();
         
@@ -41,7 +40,6 @@ public class DoorController : MonoBehaviour
     {
         if (IsStartingDoor)
         {
-            //IsLocked = true;
             SetTargetRoomNumber(1);
         }
     }

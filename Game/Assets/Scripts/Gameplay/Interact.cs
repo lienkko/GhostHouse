@@ -10,6 +10,7 @@ public class Interact : MonoBehaviour
     private Interactive _hideSpotInteractive;
     private Interactive _doorInteractive;
     private Interactive _safeInteractive;
+    private Interactive _ghostInteractive;
     private bool _canInteract = true;
 
     public bool CanInteract { get => _canInteract; set => _canInteract = value; }
@@ -22,6 +23,7 @@ public class Interact : MonoBehaviour
     private bool CanHide() { return _canInteract && _hideSpotInteractive && _hideSpotInteractive.isInteractive;}
     private bool CanOpenSafe() { return _canInteract && _safeInteractive && _safeInteractive.isInteractive; }
     private bool CanOpedDoor() { return _canInteract && _doorInteractive &&  _doorInteractive.isInteractive; }
+    private bool CanStartGame() { return _canInteract && _ghostInteractive && _ghostInteractive.isInteractive;  }
 
     private void Update()
     {
@@ -40,7 +42,12 @@ public class Interact : MonoBehaviour
             _doorInteractive.Interact(gameObject);
             return;
         }
-
+        if (Input.GetKeyDown(KeyCode.E) && CanStartGame())
+        {
+            _ghostInteractive.Interact(gameObject);
+            _gm.StartGameText.gameObject.SetActive(false);
+            return;
+        }
     }
 
 
@@ -70,6 +77,11 @@ public class Interact : MonoBehaviour
                 _gm.OpenSafeText.gameObject.SetActive(false);
                 _gm.HideText.gameObject.SetActive(true);
                 _hideSpotInteractive = interactive;
+            }
+            if (collision.GetComponent<Ghost>() && interactive.isInteractive)
+            {
+                _gm.StartGameText.gameObject.SetActive(true);
+                _ghostInteractive = interactive;
             }
         }
     }
@@ -103,6 +115,11 @@ public class Interact : MonoBehaviour
             _gm.OpenDoorText.gameObject.SetActive(false);
             _gm.LockedText.gameObject.SetActive(false);
             _doorInteractive = null;
+        }
+        if(collision.GetComponent<Ghost>())
+        {
+            _gm.StartGameText.gameObject.SetActive(false);
+            _ghostInteractive = null;
         }
     }
 }
