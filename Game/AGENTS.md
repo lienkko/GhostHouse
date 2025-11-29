@@ -2,7 +2,7 @@
 - Project name: Game
 - Unity version: Unity 2021.3.45f2
 - Active game object:
-  - Name: SymbolHero
-  - Tag: Player
+  - Name: EventSystem
+  - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

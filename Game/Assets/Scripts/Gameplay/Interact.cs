@@ -25,12 +25,12 @@ public class Interact : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && CanHide())
+        if (Input.GetKeyDown(KeyCode.E) && CanHide())
         {
             _hideSpotInteractive.Interact(gameObject);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.X) && CanOpenSafe())
+        if (Input.GetKeyDown(KeyCode.Q) && CanOpenSafe())
         {
             _safeInteractive.Interact(gameObject);
             return;
@@ -38,6 +38,7 @@ public class Interact : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && CanOpedDoor())
         {
             _doorInteractive.Interact(gameObject);
+            return;
         }
 
     }
@@ -46,31 +47,31 @@ public class Interact : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var interactive = collision.GetComponent<Interactive>();
-        if (interactive && interactive.isInteractive)
+        if (interactive)
         {
-            if (collision.GetComponent<DoorController>())
-            {
+            if (collision.GetComponent<DoorController>() && interactive.isInteractive)
+            {                
                 _doorInteractive = interactive;
-                if (_doorInteractive.isInteractive)
-                    _gm.OpenDoorText.gameObject.SetActive(true);
-                else
-                    _gm.LockedText.gameObject.SetActive(true);
+                _gm.OpenDoorText.gameObject.SetActive(true);
             }
-            if (collision.GetComponent<Safe>())
+            else if (collision.GetComponent<DoorController>() && !interactive.isInteractive)
             {
-
+                _gm.LockedText.gameObject.SetActive(true);
+            }
+            if (collision.GetComponent<Safe>() && interactive.isInteractive)
+            {
                 _gm.OpenDoorText.gameObject.SetActive(false);
                 _gm.OpenSafeText.gameObject.SetActive(true);
                 _safeInteractive = interactive;
             }
-            if (collision.GetComponent<HideSpot>())
+            if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
             {
                 _gm.OpenDoorText.gameObject.SetActive(false);
                 _gm.OpenSafeText.gameObject.SetActive(false);
                 _gm.HideText.gameObject.SetActive(true);
                 _hideSpotInteractive = interactive;
             }
-        } 
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -100,6 +101,7 @@ public class Interact : MonoBehaviour
         if (collision.GetComponent<DoorController>())
         {
             _gm.OpenDoorText.gameObject.SetActive(false);
+            _gm.LockedText.gameObject.SetActive(false);
             _doorInteractive = null;
         }
     }

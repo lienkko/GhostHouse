@@ -75,15 +75,15 @@ public class Safe : MonoBehaviour
         _playerController = player.GetComponent<PlayerController>();
         ShowOpenText(false);
         _isInPuzzle = true;
+        _playerController.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        _playerController.enabled = false;
+        _playerController.GetComponent<Interact>().CanInteract = false;
         if (_puzzle)
         {
             _puzzle.SetActive(true);
             return;
         }
         string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
-        _playerController.MoveSpeed = 0;
-        _playerController.enabled = false;
-        _playerController.GetComponent<Interact>().CanInteract = false;
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzleButton = _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>();
