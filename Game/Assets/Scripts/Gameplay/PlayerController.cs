@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private int _healthPoints;
 
     public float MoveSpeed;
-    public Vector2 MoveDir { get => _moveDir; }
+    public Vector2 MoveDir { get => _moveDir;}
     public bool IsCrouching { get => _isCrouching; }
 
     public delegate void NoArgs();
