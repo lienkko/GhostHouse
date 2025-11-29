@@ -107,7 +107,7 @@ public class RoomGenerator : MonoBehaviour
         }
 
         SetHideSpots(roomData);
-        if (Random.Range(1,11) < 8)
+        if (Random.Range(1,21) > 17)
             _gm.SummonWraith(newRoomInstance);
         
         return newRoomInstance;

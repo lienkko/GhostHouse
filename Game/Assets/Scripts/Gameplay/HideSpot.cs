@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HideSpot : MonoBehaviour
@@ -5,6 +6,7 @@ public class HideSpot : MonoBehaviour
     private Transform _hidingPlayer;
     private bool _isHidingSomeone = false;
     private GameManager _gm;
+    private Vector3 _unhidePos;
 
 
     [SerializeField] private Sprite _topSideSprite;
@@ -57,6 +59,9 @@ public class HideSpot : MonoBehaviour
     public void Hide(GameObject player)
     {
         _hidingPlayer = player.transform;
+        _unhidePos = _hidingPlayer.position;
+        _hidingPlayer.position = transform.position;
+        _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(false);
         player.gameObject.SetActive(false);
         _isHidingSomeone = true;
     }
@@ -64,6 +69,8 @@ public class HideSpot : MonoBehaviour
     private void Unhide()
     {
         _isHidingSomeone = false;
+        _hidingPlayer.position = _unhidePos;
+        _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
         _hidingPlayer.gameObject.SetActive(true);
         _hidingPlayer = null;
     }
