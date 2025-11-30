@@ -35,7 +35,7 @@ public class WraithHandler : MonoBehaviour
         if (_isMoving)
         {
             _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1-(_remainingDsitance/_distance));
-            _remainingDsitance -= 5f * Time.deltaTime;
+            _remainingDsitance -= 7f * Time.deltaTime;
             if (_remainingDsitance < 0.2 * _distance && !_isWhispering)
             {
                 FindAnyObjectByType<GameManager>().GetComponent<AudioSource>().PlayOneShot(_iSeeYouWhisper);
@@ -76,7 +76,7 @@ public class WraithHandler : MonoBehaviour
 
     public IEnumerator WraithWaiting()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(6);
 
         _wraithModel.SetActive(true);
 
