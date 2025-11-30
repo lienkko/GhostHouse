@@ -95,19 +95,25 @@ public class Safe : MonoBehaviour
         ShowOpenText(true);
         _isInPuzzle = false;
         _puzzle.SetActive(false);
-        _playerController.enabled = true;
-        _playerController.GetComponent<Interact>().CanInteract = true;
+        if (_playerController)
+        {
+            _playerController.enabled = true;
+            _playerController.GetComponent<Interact>().CanInteract = true;
+        }
     }
 
     public void OpenSafe()
     {
         GetComponent<Interactive>().isInteractive = false;
         GetComponent<Interactive>().RemoveListener();
-        ClosePuzzle();
+        if (_puzzle)
+        {
+            ClosePuzzle();
+            _puzzleButton.onClick.RemoveAllListeners();
+            Destroy(_puzzle);
+        }
         ShowOpenText(false);
-        _puzzleButton.onClick.RemoveAllListeners();
         _doorToOpen.UnlockDoor();
-        Destroy(_puzzle);
         Destroy(this);
     }
 

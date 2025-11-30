@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveDir;
     private int _healthPoints;
 
+    public bool IsGodMode = false;
     public float MoveSpeed;
     public Vector2 MoveDir { get => _moveDir;}
     public bool IsCrouching { get => _isCrouching; }
@@ -65,6 +66,10 @@ public class PlayerController : MonoBehaviour
 
     public void InflictDamage(int dmg)
     {
+        if (IsGodMode)
+        {
+            return;
+        }
         if (dmg > 0)
         {
             _healthPoints -= dmg;

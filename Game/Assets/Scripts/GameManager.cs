@@ -13,17 +13,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip _blinkLightsSound;
     [SerializeField] private WraithHandler _wraith;
 
-    
+    [SerializeField] private GameObject _console;
+    private bool _isConsoleOpened = false;
+
     private AudioSource _audioSource;
     private GameObject _currentRoom;
     private DoorController _startedDoor;
-    
+    private PlayerController _playerController;
+    private Interact _interactScript;
     public GameObject CurrentRoom { get=>_currentRoom; set=>_currentRoom = value; }
 
     public TextMeshProUGUI OpenDoorText;
     public TextMeshProUGUI OpenSafeText;
     public TextMeshProUGUI HideText;
     public TextMeshProUGUI StartGameText;
+
     public Image LockedText;
 
     private void Awake()
@@ -34,7 +38,32 @@ public class GameManager : MonoBehaviour
         _startedDoor = FindAnyObjectByType<DoorController>();
         _currentRoom = FindAnyObjectByType<RoomData>().gameObject;
         _audioSource = GetComponent<AudioSource>();
+        _playerController = FindAnyObjectByType<PlayerController>();
+        _interactScript = FindAnyObjectByType<Interact>();
     }
+
+    private void Update()
+    {
+
+        if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !_isConsoleOpened)
+        {
+            _playerController.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            _playerController.enabled = false;
+            _interactScript.CanInteract = false;
+            _isConsoleOpened = true;
+            if (Input.GetKeyDown(KeyCode.Slash))
+                _console.transform.GetComponentInChildren<CommandLine>().isSlash = true;
+            _console.gameObject.SetActive(true);
+        }
+        else if((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && _isConsoleOpened)
+        {
+            _playerController.enabled = true;
+            _isConsoleOpened = false;
+            _interactScript.CanInteract = true;
+            _console.gameObject.SetActive(false);
+        }
+    }
+
 
     private void StartGame()
     {

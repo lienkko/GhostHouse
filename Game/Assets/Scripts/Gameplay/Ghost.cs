@@ -47,7 +47,7 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    private void StartTheGame(GameObject obj)
+    public void StartTheGame(GameObject obj)
     {
         GetComponent<Interactive>().isInteractive = false;
         OnStartGame?.Invoke();
