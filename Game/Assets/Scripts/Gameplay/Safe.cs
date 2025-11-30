@@ -7,7 +7,7 @@ public class Safe : MonoBehaviour
     private GameManager _gm;
 
     private string[] _puzzleNames = new string[] { "Circles", "Star" };
-    private bool _isInPuzzle = false;
+    public bool isInPuzzle = false;
     private GameObject _puzzle;
     private Button _puzzleButton;
     private PlayerController _playerController;
@@ -23,11 +23,12 @@ public class Safe : MonoBehaviour
         _gm = FindAnyObjectByType<GameManager>();
         GetComponent<Interactive>().SetListener(OpenPuzzle);
         GetComponent<Interactive>().isInteractive = true;
+        PlayerController.OnDeath += ClosePuzzle;
     }
 
     private void Update()
     {
-        if (_isInPuzzle && Input.GetKeyDown(KeyCode.Escape))
+        if (isInPuzzle && Input.GetKeyDown(KeyCode.Escape))
         {
             ClosePuzzle();
             return;
@@ -72,11 +73,12 @@ public class Safe : MonoBehaviour
 
     private void OpenPuzzle(GameObject player)
     {
+        Cursor.lockState = CursorLockMode.None;
         _playerController = player.GetComponent<PlayerController>();
         ShowOpenText(false);
-        _isInPuzzle = true;
+        isInPuzzle = true;
         _playerController.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        _playerController.enabled = false;
+        _playerController.CanWalk = false;
         _playerController.GetComponent<Interact>().CanInteract = false;
         if (_puzzle)
         {
@@ -90,14 +92,15 @@ public class Safe : MonoBehaviour
         _puzzleButton.onClick.AddListener(OpenSafe);
     }
 
-    private void ClosePuzzle()
+    public void ClosePuzzle()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         ShowOpenText(true);
-        _isInPuzzle = false;
+        isInPuzzle = false;
         _puzzle.SetActive(false);
         if (_playerController)
         {
-            _playerController.enabled = true;
+            _playerController.CanWalk = true;
             _playerController.GetComponent<Interact>().CanInteract = true;
         }
     }

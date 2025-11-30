@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class HideSpot : MonoBehaviour
@@ -51,7 +52,7 @@ public class HideSpot : MonoBehaviour
 
     private void Update()
     {
-        if (_isHidingSomeone && Input.GetKeyDown(KeyCode.Space))
+        if (_isHidingSomeone && Input.GetKeyDown(KeyCode.E) && !FindAnyObjectByType<CommandLine>())
             Unhide();
     }
 
@@ -62,15 +63,21 @@ public class HideSpot : MonoBehaviour
         _hidingPlayer.position = transform.position;
         _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(false);
         player.gameObject.SetActive(false);
-        _isHidingSomeone = true;
+        StartCoroutine(SwitchIsHidingSomeone(true));
     }
 
     private void Unhide()
     {
-        _isHidingSomeone = false;
+        StartCoroutine(SwitchIsHidingSomeone(false));
         _hidingPlayer.position = _unhidePos;
         _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
         _hidingPlayer.gameObject.SetActive(true);
         _hidingPlayer = null;
+    }
+
+    private IEnumerator SwitchIsHidingSomeone(bool state)
+    {
+        yield return null;
+        _isHidingSomeone = state;
     }
 }

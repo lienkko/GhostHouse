@@ -60,7 +60,7 @@ public class Hush : MonoBehaviour
         _isWaitingForLight = true;
     }
 
-    private void HidePsst(Collision2D collision)
+    private void HidePsst(Collider2D collider)
     {
         _isWaitingForLight = _isPsst = _isDarkness = false;
         GetComponent<WhenCollide>().OnPlayerCollide -= HidePsst;

@@ -7,19 +7,20 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _playerRB;
     private Vector2 _moveDir;
     private int _healthPoints;
+    private bool _canWalk;
 
     public bool IsGodMode = false;
     public float MoveSpeed;
     public Vector2 MoveDir { get => _moveDir;}
     public bool IsCrouching { get => _isCrouching; }
 
-    public delegate void NoArgs();
-    public static event NoArgs OnDeath;
+    public delegate void OnDeathDelegate();
+    public static event OnDeathDelegate OnDeath;
 
     public delegate void DamageDelegate(int damage,int hp);
     public static event DamageDelegate OnDamage;
 
-
+    public bool CanWalk { get => _canWalk; set =>_canWalk = value; }
     
     
     
@@ -28,10 +29,12 @@ public class PlayerController : MonoBehaviour
         _playerRB = GetComponent<Rigidbody2D>();
         MoveSpeed = 5f;
         _healthPoints = 100;
+        _canWalk = true;
     }
     private void Update()
     {
-        InputMovement();
+        if(_canWalk)
+            InputMovement();
         if (_healthPoints == 0)
             Die();
     }

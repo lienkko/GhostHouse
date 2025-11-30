@@ -36,8 +36,20 @@ public class DoorController : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        if (_leadsToPreviousRoom)
+            _gm.CurrentPreviousRoomDoor = this;
+        else
+            _gm.CurrentNextRoomDoor = this;
+    }
+
     void Start()
     {
+        if (_leadsToPreviousRoom)
+            _gm.CurrentPreviousRoomDoor = this;
+        else
+            _gm.CurrentNextRoomDoor = this;
         if (IsStartingDoor)
         {
             SetTargetRoomNumber(1);
@@ -69,7 +81,7 @@ public class DoorController : MonoBehaviour
         GetComponent<Interactive>().SetListener(ActivateDoor);
     }
 
-    private void ActivateDoor(GameObject player)
+    public void ActivateDoor(GameObject player)
     {
         Transform parentTransform = gameObject.transform.parent;
         if (parentTransform == null)
