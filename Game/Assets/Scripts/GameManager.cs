@@ -1,8 +1,8 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Ghost _ghost;
     [SerializeField] private AudioClip _blinkLightsSound;
     [SerializeField] private WraithHandler _wraith;
+    [SerializeField] private Slider loadingBar;
 
     [SerializeField] private GameObject _console;
     private bool _isConsoleOpened = false;
@@ -120,5 +121,10 @@ public class GameManager : MonoBehaviour
         var wraithPoints = _currentRoom.transform.Find("WraithPoints");
         var doors = FindObjectsOfType<DoorController>();
         _wraith.StartWraith(wraithPoints.Find("StartPoint").position, wraithPoints.Find("EndPoint").position, doors);
+    }
+
+    public void ReloadGame()
+    {
+        SceneManager.LoadScene("ReloadMainScene");
     }
 }

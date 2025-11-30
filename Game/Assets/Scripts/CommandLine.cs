@@ -1,11 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Windows;
+
 
 public class CommandLine : MonoBehaviour
 {
@@ -26,7 +25,7 @@ public class CommandLine : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputField.ActivateInputField();
+        StartCoroutine(ActivateInputField());
         if (isSlash)
         {
             _inputField.text = "/";
@@ -35,6 +34,11 @@ public class CommandLine : MonoBehaviour
         }
         else
             _inputField.text = "";
+    }
+
+    IEnumerator ActivateInputField(){
+        yield return null;
+        _inputField.ActivateInputField();
     }
 
     private void EnterCommand(string line)
@@ -67,7 +71,8 @@ public class CommandLine : MonoBehaviour
                     "/startgame - начинает игру\n" +
                     "/godmode (1/0) - включает/выключает режим бога\n" +
                     "/summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
-                    "/open_safe - открывает закрытый сейф в комнате");
+                    "/open_safe - открывает закрытый сейф в комнате\n" +
+                    "/restartgame - перезапускает игру");
                 break;
             case "startgame":
                 {
@@ -139,6 +144,14 @@ public class CommandLine : MonoBehaviour
                 }
                 safe.OpenSafe();
                 PrintOnConsole("Сейф открыт");
+                break;
+            case "restartgame":
+                if (commandAndParameters.Length > 1)
+                {
+                    PrintOnConsole("Некорректные параметры для restart_game");
+                    return;
+                }
+                _gm.ReloadGame();
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
