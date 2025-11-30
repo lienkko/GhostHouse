@@ -15,7 +15,7 @@ public class WraithHandler : MonoBehaviour
     private float _remainingDsitance = 0;
     private Vector3 _startPoint = Vector3.zero;
     private Vector3 _endPoint = Vector3.zero;
-    private bool _isMoving = false;
+    public bool isMoving = false;
     private bool _isWhispering;
     private DoorController[] _doors;
 
@@ -27,7 +27,7 @@ public class WraithHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isMoving)
+        if (isMoving)
         {
             _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1-(_remainingDsitance/_distance));
             _remainingDsitance -= 7f * Time.deltaTime;
@@ -43,9 +43,9 @@ public class WraithHandler : MonoBehaviour
             }
         }
         
-        if (_isMoving && _wraithModel.transform.position == _endPoint)
+        if (isMoving && _wraithModel.transform.position == _endPoint)
         {
-            _isMoving = false;
+            isMoving = false;
             _isWhispering = false;
             foreach (var door in _doors)
             {
@@ -72,7 +72,7 @@ public class WraithHandler : MonoBehaviour
     public IEnumerator WraithWaiting()
     {
         yield return new WaitForSeconds(6);
-
+        _wraithModel.transform.position = _startPoint;
         _wraithModel.SetActive(true);
 
         _audioSource.PlayOneShot(_whispers);
@@ -82,6 +82,6 @@ public class WraithHandler : MonoBehaviour
     public void StartMoving()
     {
         _distance = _remainingDsitance = Vector3.Distance(_startPoint, _endPoint);
-        _isMoving = true;
+        isMoving = true;
     }
 }

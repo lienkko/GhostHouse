@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class CommandLine : MonoBehaviour
 {
     private TMP_InputField _inputField;
-    private PlayerController _playerController;
     private GameManager _gm;
     [SerializeField] private TMP_Text _commandsField;
 
@@ -18,7 +17,6 @@ public class CommandLine : MonoBehaviour
     private void Awake()
     {
         _inputField = GetComponent<TMP_InputField>();
-        _playerController = FindAnyObjectByType<PlayerController>();
         _gm = FindAnyObjectByType<GameManager>();
         _inputField.onSubmit.AddListener(EnterCommand);
     }
@@ -56,9 +54,17 @@ public class CommandLine : MonoBehaviour
         Execute(line[1..]);
     }
 
+    private void ReloadPlayer()
+    {
+        _gm.playerController.gameObject.SetActive(false);
+        _gm.playerController.gameObject.SetActive(true);
+    }
+
+
     private void Execute(string line)
     {
         var commandAndParameters = GetCommandAndParameter(line);
+        Safe safe = FindAnyObjectByType<Safe>();
         switch (commandAndParameters[0])
         {
             case "help":
@@ -92,8 +98,9 @@ public class CommandLine : MonoBehaviour
                         PrintOnConsole("Игра уже началась");
                         return;
                     }
-                    ghost.StartTheGame(_playerController.gameObject);
+                    ghost.StartTheGame(_gm.playerController.gameObject);
                     PrintOnConsole("Игра началась");
+                    ReloadPlayer();
                     break;
                 }
             case "godmode":
@@ -104,12 +111,12 @@ public class CommandLine : MonoBehaviour
                 }
                 if (commandAndParameters[1] == "1")
                 {
-                    _playerController.IsGodMode = true;
+                    _gm.playerController.IsGodMode = true;
                     PrintOnConsole("Режим бога включен");
                 }
                 else if (commandAndParameters[1] == "0")
                 {
-                    _playerController.IsGodMode = false;
+                    _gm.playerController.IsGodMode = false;
                     PrintOnConsole("Режим бога выключен");
                 }
                 else
@@ -131,27 +138,81 @@ public class CommandLine : MonoBehaviour
                 PrintOnConsole("Призрак вызван");
                 break;
             case "open_safe":
-                if (commandAndParameters.Length > 1)
                 {
-                    PrintOnConsole("Некорректные параметры для open_safe");
-                    return;
+                    if (commandAndParameters.Length > 1)
+                    {
+                        PrintOnConsole("Некорректные параметры для open_safe");
+                        return;
+                    }
+                    if (!safe)
+                    {
+                        PrintOnConsole("В комнате не найден закрытый сейф");
+                        return;
+                    }
+                    safe.OpenSafe();
+                    PrintOnConsole("Сейф открыт");
+                    ReloadPlayer();
+                    break;
                 }
-                Safe safe = FindAnyObjectByType<Safe>();
-                if (!safe)
-                {
-                    PrintOnConsole("В комнате не найден закрытый сейф");
-                    return;
-                }
-                safe.OpenSafe();
-                PrintOnConsole("Сейф открыт");
-                break;
             case "restartgame":
                 if (commandAndParameters.Length > 1)
                 {
-                    PrintOnConsole("Некорректные параметры для restart_game");
+                    PrintOnConsole("Некорректные параметры для restartgame");
                     return;
                 }
                 _gm.ReloadGame();
+                break;
+            case "nextroom":
+                {
+                    if (commandAndParameters.Length > 1)
+                    {
+                        PrintOnConsole("Некорректные параметры для nextroom");
+                        return;
+                    }
+                    if (_gm._wraith.isMoving)
+                    {
+                        PrintOnConsole("Во время полета wraith нельзя использовать nextroom");
+                        return;
+                    }
+                    if (FindAnyObjectByType<RoomData>().name == "StartRoom")
+                    {
+                        PrintOnConsole("nextroom не может вызываться в стартовой комнате");
+                        return;
+                    }
+                    if (!_gm.playerController.gameObject.activeSelf)
+                    {
+                        PrintOnConsole("nextroom не может вызываться когда игрок спрятан");
+                        return;
+                    }
+                    if (safe)
+                        safe.OpenSafe();
+                    _gm.CurrentNextRoomDoor.ActivateDoor(_gm.playerController.gameObject);
+                    break;
+                }
+            case "prevroom":
+                if (commandAndParameters.Length > 1)
+                {
+                    PrintOnConsole("Некорректные параметры для prevroom");
+                    return;
+                }
+                if (_gm._wraith.isMoving)
+                {
+                    PrintOnConsole("Во время полета wraith нельзя использовать prevroom");
+                    return;
+                }
+                if (FindAnyObjectByType<RoomData>().name == "StartRoom")
+                {
+                    PrintOnConsole("prevroom не может вызываться в стартовой комнате");
+                    return;
+                }
+                if (!_gm.playerController.gameObject.activeSelf)
+                {
+                    PrintOnConsole("prevroom не может вызываться когда игрок спрятан");
+                    return;
+                }
+                if (safe && safe.isInPuzzle)
+                    safe.ClosePuzzle();
+                _gm.CurrentPreviousRoomDoor.ActivateDoor(_gm.playerController.gameObject);
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
