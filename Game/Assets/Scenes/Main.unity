@@ -514,6 +514,7 @@ MonoBehaviour:
   _ghost: {fileID: 1756740026}
   _blinkLightsSound: {fileID: 8300000, guid: fce8e515822689343b6f2c19ac94e04d, type: 3}
   _wraith: {fileID: 6020706685123314708}
+  loadingBar: {fileID: 0}
   _console: {fileID: 853258490}
   OpenDoorText: {fileID: 345799272}
   OpenSafeText: {fileID: 1351994144}
