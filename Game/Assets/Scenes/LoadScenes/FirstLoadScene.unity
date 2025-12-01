@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e754630810c8234dbb5edae22a236db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentRoom: {fileID: 0}
+  _pauseMenu: {fileID: 0}
   _blinkLightsSound: {fileID: 8300000, guid: fce8e515822689343b6f2c19ac94e04d, type: 3}
 --- !u!4 &837118933
 Transform:
