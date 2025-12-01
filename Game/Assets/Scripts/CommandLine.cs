@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class CommandLine : MonoBehaviour
 {
     private TMP_InputField _inputField;
     private GameManager _gm;
+
+    private List<string> _lastCommands;
+    private int _choosenLastCommandIndex;
+    private bool _choosingLastCommand = true;
+    private string _currentLine = "";
+
     [SerializeField] private TMP_Text _commandsField;
 
     public bool isSlash = false;
@@ -17,21 +23,63 @@ public class CommandLine : MonoBehaviour
     private void Awake()
     {
         _inputField = GetComponent<TMP_InputField>();
+        _inputField.onValueChanged.AddListener(WorkWithLine);
+        _lastCommands = new List<string>();
         _gm = FindAnyObjectByType<GameManager>();
         _inputField.onSubmit.AddListener(EnterCommand);
     }
 
+    private void WorkWithLine(string line)
+    {
+        StartCoroutine(WorkWithLineCor(line));
+    }
+
+    private IEnumerator WorkWithLineCor(string line)
+    {
+        yield return null;
+        _currentLine = line;
+        if (_lastCommands.Count > 0 && line != "/" + _lastCommands[_choosenLastCommandIndex])
+        {
+            _choosingLastCommand = false;
+            _choosenLastCommandIndex = _lastCommands.Count - 1;
+        }
+        else if (_lastCommands.Count > 0 && line == "/" + _lastCommands[_choosenLastCommandIndex])
+        {
+            _choosenLastCommandIndex -= 1;
+            if (_choosenLastCommandIndex < 0)
+                _choosenLastCommandIndex = _lastCommands.Count - 1;
+        }
+    }
+
+
     private void OnEnable()
     {
+        _choosingLastCommand = true;
+        _choosenLastCommandIndex = _lastCommands.Count - 1;
         StartCoroutine(ActivateInputField());
         if (isSlash)
         {
             _inputField.text = "/";
-            _inputField.caretPosition = _inputField.text.Length;
             isSlash = false;
         }
         else
             _inputField.text = "";
+        _inputField.caretPosition = _inputField.text.Length;
+    }
+
+    private void Update()
+    {
+        if (string.IsNullOrWhiteSpace(_currentLine))
+        {
+            _choosingLastCommand = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab) && _choosingLastCommand && _lastCommands.Count > 0)
+        {
+            
+            _inputField.text = "/" + _lastCommands[_choosenLastCommandIndex];
+            _inputField.caretPosition = _inputField.text.Length;
+        }
     }
 
     IEnumerator ActivateInputField(){
@@ -78,7 +126,10 @@ public class CommandLine : MonoBehaviour
                     "/godmode (1/0) - включает/выключает режим бога\n" +
                     "/summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
                     "/open_safe - открывает закрытый сейф в комнате\n" +
-                    "/restartgame - перезапускает игру");
+                    "/restartgame - перезапускает игру\n" +
+                    "/nextroom - перемещает в следующую комнату\n" +
+                    "/prevroom - перемещает в предыдущую комнату");
+                _lastCommands.Add(commandAndParameters[0]);
                 break;
             case "startgame":
                 {
@@ -101,6 +152,7 @@ public class CommandLine : MonoBehaviour
                     ghost.StartTheGame(_gm.playerController.gameObject);
                     PrintOnConsole("Игра началась");
                     ReloadPlayer();
+                    _lastCommands.Add(commandAndParameters[0]);
                     break;
                 }
             case "godmode":
@@ -121,6 +173,7 @@ public class CommandLine : MonoBehaviour
                 }
                 else
                     PrintOnConsole("Некорректный параметр для godmode");
+                _lastCommands.Add(commandAndParameters[0]);
                 break;
             case "summon_wraith":
                 if (commandAndParameters.Length > 1)
@@ -136,6 +189,7 @@ public class CommandLine : MonoBehaviour
 
                 _gm.SummonWraith(FindAnyObjectByType<RoomData>().gameObject);
                 PrintOnConsole("Призрак вызван");
+                _lastCommands.Add(commandAndParameters[0]);
                 break;
             case "open_safe":
                 {
@@ -152,6 +206,7 @@ public class CommandLine : MonoBehaviour
                     safe.OpenSafe();
                     PrintOnConsole("Сейф открыт");
                     ReloadPlayer();
+                    _lastCommands.Add(commandAndParameters[0]);
                     break;
                 }
             case "restartgame":
@@ -187,6 +242,7 @@ public class CommandLine : MonoBehaviour
                     if (safe)
                         safe.OpenSafe();
                     _gm.CurrentNextRoomDoor.ActivateDoor(_gm.playerController.gameObject);
+                    _lastCommands.Add(commandAndParameters[0]);
                     break;
                 }
             case "prevroom":
@@ -213,12 +269,13 @@ public class CommandLine : MonoBehaviour
                 if (safe && safe.isInPuzzle)
                     safe.ClosePuzzle();
                 _gm.CurrentPreviousRoomDoor.ActivateDoor(_gm.playerController.gameObject);
+                _lastCommands.Add(commandAndParameters[0]);
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
                 break;
         }
-
+        _choosenLastCommandIndex = _lastCommands.Count - 1;
     }
 
     private string[] GetCommandAndParameter(string line)
