@@ -5,10 +5,9 @@ public class InitializeGame : MonoBehaviour
 {
     private void Awake()
     {
-
+        PlayerPrefs.SetInt("DisplayMode", 0);
         if (!PlayerPrefs.HasKey("Launched"))
         {
-            PlayerPrefs.SetInt("DisplayMode", 1);
             PlayerPrefs.SetInt("Resolution", 0);
             PlayerPrefs.SetInt("Hints", 1);
             PlayerPrefs.SetFloat("Volume", 1);
