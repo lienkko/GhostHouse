@@ -1,32 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private bool _isSneaking;
-    private bool _isCrouching;
+    public static PlayerController Instance { get; private set; }
+
+    public float MoveSpeed = 5f;
+    public bool IsGodMode = false;
+    [HideInInspector] public bool CanWalk = true;
+
+
+    public delegate void OnDeathDelegate();
+    public event OnDeathDelegate OnDeath;
+
+    public delegate void DamageDelegate(int damage, int hp);
+    public event DamageDelegate OnDamage;
+
+    public Vector2 MoveDir { get; private set; }
+    public bool IsCrouching { get; private set; }
+    public int HealthPoints { get; private set; } = 100;
+    
+
     private Rigidbody2D _playerRB;
-    private Vector2 _moveDir;
-
-
-    public float MoveSpeed;
-    public Vector2 MoveDir { get => _moveDir; }
-    public bool IsCrouching { get => _isCrouching; }
+    
 
     private void Awake()
     {
+        Instance = this;
+
         _playerRB = GetComponent<Rigidbody2D>();
-        MoveSpeed = 5f;
     }
+
+
+
+
+
+
     private void Update()
     {
-        InputMovement();
+        if(CanWalk)
+            InputMovement();
+        if (HealthPoints == 0)
+            Die();
     }
 
     private void FixedUpdate()
     {
-        Move(); 
+        if (CanWalk)
+            Move(); 
     }
 
     private void InputMovement()
@@ -34,21 +54,40 @@ public class PlayerController : MonoBehaviour
 
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
-        _isCrouching = Input.GetKey(KeyCode.C);
-        _isSneaking = Input.GetKey(KeyCode.LeftShift);
+        IsCrouching = Input.GetKey(KeyCode.LeftShift);
 
-
-        _moveDir = new Vector2(moveH, moveV).normalized;
+        MoveDir = new Vector2(moveH, moveV).normalized;
     }
 
     private void Move()
     {
-        if (_isCrouching)
+        if (IsCrouching)
             MoveSpeed = 1.5f;
-        else if (_isSneaking)
-            MoveSpeed = 2f;
         else
             MoveSpeed = 5f;
-        _playerRB.velocity = _moveDir * MoveSpeed;
+        _playerRB.velocity = MoveDir * MoveSpeed;
+    }
+
+    public void InflictDamage(int dmg)
+    {
+        if (IsGodMode)
+        {
+            return;
+        }
+        if (dmg > 0)
+        {
+            HealthPoints -= dmg;
+        }
+        if (HealthPoints <= 0)
+        {
+            HealthPoints = 0;
+        }
+        OnDamage?.Invoke(dmg, HealthPoints);
+    }
+
+    private void Die()
+    {
+        OnDeath?.Invoke();
+        gameObject.SetActive(false);
     }
 }
