@@ -24,7 +24,7 @@ private IEnumerator LoadScene(string scene)
     {
         float progress = Mathf.Clamp01(operation.progress / 0.9f);
         _loadingBar.value = progress;
-            _loadingText.text = $"{(int) progress}%";
+            _loadingText.text = $"{(int) (progress*100)}%";
         if (operation.progress >= 0.9f)
         {
             operation.allowSceneActivation = true;

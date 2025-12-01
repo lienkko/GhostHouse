@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public delegate void ChangeSettings();
-    public event ChangeSettings OnChangeSettings;
-
     [SerializeField] private TMP_Dropdown _displayMode;
     [SerializeField] private TMP_Dropdown _resolution;
     [SerializeField] private Toggle _hints;
     [SerializeField] private Button _saveButton;
     [SerializeField] private Slider _volume;
+
+    public delegate void SettingsChanges();
+    public static event SettingsChanges OnSettingsChanged;
 
     private void Awake()
     {
@@ -43,6 +43,11 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetInt("Hints", _hints.isOn?1:0);
         PlayerPrefs.SetFloat("Volume", _volume.value);
         PlayerPrefs.Save();
-        OnChangeSettings?.Invoke();
+        OnSettingsChanged?.Invoke();
+    }
+
+    private void UpdateParameters()
+    {
+        AudioListener.volume = _volume.value;
     }
 }

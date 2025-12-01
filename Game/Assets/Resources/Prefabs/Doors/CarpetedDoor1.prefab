@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsStartingDoor: 0
-  SecondDigit: {fileID: 1135631921698585792}
-  FirstDigit: {fileID: 1862497454940506484}
-  NumbersSprites:
+  _secondDigit: {fileID: 1135631921698585792}
+  _firstDigit: {fileID: 1862497454940506484}
+  _numbersSprites:
   - {fileID: -1967243279, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   - {fileID: 194365065, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   - {fileID: -662825660, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
@@ -140,8 +140,9 @@ MonoBehaviour:
   - {fileID: 119041152, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   - {fileID: 1967980039, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
   - {fileID: -532782780, guid: 93d499945dd7f9446bf09a54333fd4a6, type: 3}
-  ReturnTargetPoint: {fileID: 0}
   TargetEntrySpawnPoint: {fileID: 0}
+  ReturnTargetPoint: {fileID: 0}
+  isDoorLocked: 1
 --- !u!114 &-6240703548239069084
 MonoBehaviour:
   m_ObjectHideFlags: 0

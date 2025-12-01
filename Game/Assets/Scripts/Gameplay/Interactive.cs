@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Interactive : MonoBehaviour
 {
-    public delegate void InteractDelegate(GameObject playerObj);
+    public delegate void InteractDelegate();
     private event InteractDelegate OnInteracted;
     [HideInInspector] public bool isInteractive = false;
 
-    public void Interact(GameObject playerObj)
+    public void Interact()
     {
         if (isInteractive)
         {
-            OnInteracted?.Invoke(playerObj);
+            OnInteracted?.Invoke();
             return;
         }
     }

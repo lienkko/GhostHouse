@@ -8,7 +8,7 @@ public class PlayerAnimator : MonoBehaviour
     private Animator _am;
     private BoxCollider2D _bc;
 
-    private void Awake()
+    private void Start()
     {
         _pc = GetComponent<PlayerController>();
         _am = GetComponent<Animator>();
@@ -21,13 +21,13 @@ public class PlayerAnimator : MonoBehaviour
             _am.SetBool("Walk", true);
         else
             _am.SetBool("Walk", false);
-        //if (_pc.IsCrouching)
-        //{
-        //    _am.SetBool("Crouch", true);
-        //    _bc.offset = new Vector2(0, 0.3f);
-        //    _bc.size = new Vector2(0.6f, 0.6f);
+        if (_pc.IsCrouching)
+        {
+            _am.SetBool("Crouch", true);
+            _bc.offset = new Vector2(0, 0.3f);
+            _bc.size = new Vector2(0.6f, 0.6f);
 
-        //}
+        }
         //else
         //{
         //    _am.SetBool("Crouch", false);

@@ -2,46 +2,51 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private bool _isSneaking;
-    private bool _isCrouching;
-    private Rigidbody2D _playerRB;
-    private Vector2 _moveDir;
-    private int _healthPoints;
-    private bool _canWalk;
+    public static PlayerController Instance { get; private set; }
 
+    public float MoveSpeed = 5f;
     public bool IsGodMode = false;
-    public float MoveSpeed;
-    public Vector2 MoveDir { get => _moveDir;}
-    public bool IsCrouching { get => _isCrouching; }
+    [HideInInspector] public bool CanWalk = true;
+
 
     public delegate void OnDeathDelegate();
-    public static event OnDeathDelegate OnDeath;
+    public event OnDeathDelegate OnDeath;
 
-    public delegate void DamageDelegate(int damage,int hp);
-    public static event DamageDelegate OnDamage;
+    public delegate void DamageDelegate(int damage, int hp);
+    public event DamageDelegate OnDamage;
 
-    public bool CanWalk { get => _canWalk; set =>_canWalk = value; }
+    public Vector2 MoveDir { get; private set; }
+    public bool IsCrouching { get; private set; }
+    public int HealthPoints { get; private set; } = 100;
     
+
+    private Rigidbody2D _playerRB;
     
-    
+
     private void Awake()
     {
+        Instance = this;
+
         _playerRB = GetComponent<Rigidbody2D>();
-        MoveSpeed = 5f;
-        _healthPoints = 100;
-        _canWalk = true;
     }
+
+
+
+
+
+
     private void Update()
     {
-        if(_canWalk)
+        if(CanWalk)
             InputMovement();
-        if (_healthPoints == 0)
+        if (HealthPoints == 0)
             Die();
     }
 
     private void FixedUpdate()
     {
-        Move(); 
+        if (CanWalk)
+            Move(); 
     }
 
     private void InputMovement()
@@ -49,22 +54,18 @@ public class PlayerController : MonoBehaviour
 
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
-        _isCrouching = Input.GetKey(KeyCode.C);
-        _isSneaking = Input.GetKey(KeyCode.LeftShift);
+        IsCrouching = Input.GetKey(KeyCode.LeftShift);
 
-
-        _moveDir = new Vector2(moveH, moveV).normalized;
+        MoveDir = new Vector2(moveH, moveV).normalized;
     }
 
     private void Move()
     {
-        if (_isCrouching)
+        if (IsCrouching)
             MoveSpeed = 1.5f;
-        else if (_isSneaking)
-            MoveSpeed = 2f;
         else
             MoveSpeed = 5f;
-        _playerRB.velocity = _moveDir * MoveSpeed;
+        _playerRB.velocity = MoveDir * MoveSpeed;
     }
 
     public void InflictDamage(int dmg)
@@ -75,13 +76,13 @@ public class PlayerController : MonoBehaviour
         }
         if (dmg > 0)
         {
-            _healthPoints -= dmg;
+            HealthPoints -= dmg;
         }
-        if (_healthPoints <= 0)
+        if (HealthPoints <= 0)
         {
-            _healthPoints = 0;
+            HealthPoints = 0;
         }
-        OnDamage?.Invoke(dmg, _healthPoints);
+        OnDamage?.Invoke(dmg, HealthPoints);
     }
 
     private void Die()

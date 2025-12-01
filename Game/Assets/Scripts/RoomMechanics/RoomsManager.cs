@@ -2,40 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class RoomGenerator : MonoBehaviour
+public class RoomsManager : MonoBehaviour
 {
-    public GameObject[] RoomPrefabs;
-    public GameObject EastWestDoorPrefab;
-    public GameObject NorthDoorPrefab;
-    public GameObject SouthDoorPrefab;
+    public static RoomsManager Instance { get; private set; }
 
-    public GameObject SafePrefab;
+    [Header("Префабы комнат")]
+    [SerializeField]private GameObject[] _roomPrefabs;
 
-    public Transform Player;
-    public Transform RoomsParent;
+    [Space(10)]
+    [Header("Префабы дверей")]
+    [SerializeField] private GameObject _eastWestDoorPrefab;
+    [SerializeField] private GameObject _northDoorPrefab;
+    [SerializeField] GameObject _southDoorPrefab;
 
-    public float NorthEntryOffset = -1.0f;
-    public float SouthEntryOffset = 1.0f;
+    [Space(5)]
+    [Header("Префаб сейфа")]
+    [SerializeField] private GameObject _safePrefab;
 
-    private GameObject _currentRoomInstance;
+    [Space(5)]
+    [Header("Пустой объект для комнат")]
+    [SerializeField] private Transform _roomsParentObject;
 
-    private int _roomDepth = 1;
+    private int _roomNumber = 1;
+    private readonly float _northEntryOffset = -1.0f;
+    private readonly float _southEntryOffset = 1.0f;
 
-    private GameManager _gm;
+    public GameObject CurrentRoom { get; private set; }
 
-    void Start()
+    
+
+    private void Awake()
     {
-        _gm = FindAnyObjectByType<GameManager>();
-        if (Player == null)
-        {
-            Debug.LogError("Игрок не назначен в генераторе!");
-        }
+        Instance = this;
+        DoorController.OnRoomChanged += ChangeCurrentRoom;
 
         DoorController startDoor = FindObjectOfType<DoorController>();
         if (startDoor != null && startDoor.IsStartingDoor)
         {
-            _currentRoomInstance = startDoor.transform.parent.gameObject;
+            CurrentRoom = startDoor.transform.parent.gameObject;
+            CurrentRoom.GetComponent<RoomData>().NextRoomDoor = startDoor;
         }
+    }
+
+    private void ChangeCurrentRoom(GameObject room)
+    {
+        CurrentRoom = room;
     }
 
     public GameObject GenerateNextRoom(Vector3 spawnPosition, DoorSide previousDoorSide, GameObject previousRoomRoot, Transform lastDoorTransform = null)
@@ -45,43 +56,26 @@ public class RoomGenerator : MonoBehaviour
             previousRoomRoot.SetActive(false);
         }
 
-        if (RoomPrefabs.Length == 0)
-        {
-            Debug.LogError("Массив RoomPrefabs пуст!");
-            return null;
-        }
+        _roomNumber++;
 
-        _roomDepth++;
-        int newRoomNumber = _roomDepth;
-
-        GameObject selectedRoomPrefab = RoomPrefabs[Random.Range(0, RoomPrefabs.Length)];
-        GameObject newRoomInstance = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, RoomsParent);
-
-        RoomData roomData = newRoomInstance.GetComponent<RoomData>();
-        if (roomData == null)
-        {
-            Debug.LogError("В префабе комнаты отсутствует компонент RoomData!");
-            Destroy(newRoomInstance);
-            return null;
-        }
-
-        _currentRoomInstance = newRoomInstance;
+        GameObject selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
+        CurrentRoom = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, _roomsParentObject);
+        RoomData roomData = CurrentRoom.GetComponent<RoomData>();
 
         DoorSide oppositeSide = GetOppositeSide(previousDoorSide);
-
-        Transform returnSpawnPoint = lastDoorTransform;
 
         List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
             .Where(d => d.Side == oppositeSide)
             .ToList();
-        if (entryCandidates.Count == 0)
-        {
-            Destroy(newRoomInstance);
-            return GenerateNextRoom(spawnPosition,previousDoorSide,previousRoomRoot, lastDoorTransform);
-        }
-        RoomData.DoorSpawnPoint finalEntryPoint = entryCandidates[Random.Range(0, entryCandidates.Count)];
 
-        SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, returnSpawnPoint, newRoomNumber - 1);
+        if (entryCandidates.Count < 1)
+        {
+            Destroy(CurrentRoom);
+            return GenerateNextRoom(spawnPosition, previousDoorSide, previousRoomRoot, lastDoorTransform);
+        }
+
+        RoomData.DoorSpawnPoint finalEntryPoint = entryCandidates[Random.Range(0, entryCandidates.Count)];
+        SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1);
 
         RoomData.DoorSpawnPoint[] availableExits = roomData.AvailableDoorSpawns
             .Where(d => d.Side != oppositeSide)
@@ -94,22 +88,23 @@ public class RoomGenerator : MonoBehaviour
 
             if (newExitSide != oppositeSide)
             {
-                SpawnDoor(roomData, newExitSide, false, newRoomNumber);
+                SpawnDoor(roomData, newExitSide, false, _roomNumber);
             }
         }
 
         Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
 
-        if (Player != null && playerSpawnPoint != null)
+        if (playerSpawnPoint != null)
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
 
         SetHideSpots(roomData);
+
         if (Random.Range(1,21) > 17)
-            _gm.SummonWraith(newRoomInstance);
+            GameManager.Instance.SummonWraith();
         
-        return newRoomInstance;
+        return CurrentRoom;
     }
 
     private void SpawnDoor(RoomData roomData, RoomData.DoorSpawnPoint spawnCandidate, bool isPreviousRoomDoor, GameObject previousRoomRoot = null, Transform returnTargetPoint = null, int doorTargetRoomNumber = 0)
@@ -123,13 +118,13 @@ public class RoomGenerator : MonoBehaviour
         {
             case DoorSide.East:
             case DoorSide.West:
-                doorPrefabToUse = EastWestDoorPrefab;
+                doorPrefabToUse = _eastWestDoorPrefab;
                 break;
             case DoorSide.North:
-                doorPrefabToUse = NorthDoorPrefab;
+                doorPrefabToUse = _northDoorPrefab;
                 break;
             case DoorSide.South:
-                doorPrefabToUse = SouthDoorPrefab;
+                doorPrefabToUse = _southDoorPrefab;
                 break;
         }
 
@@ -142,19 +137,28 @@ public class RoomGenerator : MonoBehaviour
         GameObject doorInstance = Instantiate(doorPrefabToUse, spawnPoint.position, Quaternion.identity, roomData.transform);
 
         DoorController doorController = doorInstance.GetComponent<DoorController>();
-        
+
+        if (isPreviousRoomDoor)
+        {
+            roomData.PreviousRoomDoor = doorController;
+        }
+        else
+        {
+            roomData.NextRoomDoor = doorController;
+        }
+
         if (doorController != null)
         {
             bool isDoorLocked = false;
             if (!isPreviousRoomDoor)
             {
-                isDoorLocked = Random.Range(1, 11) > 8;
-                if (isDoorLocked)
+                if (isDoorLocked = Random.Range(1, 11) > 8)
                 {
                     SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], doorController);
                 }
             }
-            doorController.Initialize(this, targetSide, isPreviousRoomDoor, isDoorLocked, previousRoomRoot);
+
+            doorController.Initialize(targetSide, isPreviousRoomDoor, isDoorLocked, previousRoomRoot);
 
             if (isPreviousRoomDoor)
             {
@@ -162,9 +166,8 @@ public class RoomGenerator : MonoBehaviour
             }
 
             doorController.SetTargetRoomNumber(doorTargetRoomNumber);
-            
+
         }
-        
     }
 
     private void SpawnDoor(RoomData roomData, DoorSide targetSide, bool isPreviousRoomDoor, int doorTargetRoomNumber = 0)
@@ -182,7 +185,7 @@ public class RoomGenerator : MonoBehaviour
 
     private void SpawnSafe(Transform spawnPoint, DoorController door)
     {
-        GameObject safeObject = Instantiate(SafePrefab, spawnPoint.position,Quaternion.identity, _currentRoomInstance.transform);
+        GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position,Quaternion.identity, CurrentRoom.transform);
         
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
     }
@@ -218,22 +221,19 @@ public class RoomGenerator : MonoBehaviour
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
     {
-        if (Player == null) return;
-
         Vector3 finalPosition = doorPosition;
-
         switch (entrySide)
         {
             case DoorSide.North:
-                finalPosition.y += NorthEntryOffset;
+                finalPosition.y += _northEntryOffset;
                 break;
 
             case DoorSide.South:
-                finalPosition.y += SouthEntryOffset;
+                finalPosition.y += _southEntryOffset;
                 break;
         }
 
-        Player.position = finalPosition;
+        PlayerController.Instance.transform.position = finalPosition;
         
     }
 

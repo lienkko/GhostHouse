@@ -3,11 +3,8 @@ using UnityEngine;
 
 public class HideSpot : MonoBehaviour
 {
-    private Transform _hidingPlayer;
     private bool _isHidingSomeone = false;
-    private GameManager _gm;
     private Vector3 _unhidePos;
-
 
     [SerializeField] private Sprite _topSideSprite;
     [SerializeField] private Sprite _botSideSprite;
@@ -18,7 +15,6 @@ public class HideSpot : MonoBehaviour
 
     public void Initialize()
     {
-        _gm = FindAnyObjectByType<GameManager>();
         GetComponent<Interactive>().isInteractive = true;
         GetComponent<Interactive>().SetListener(Hide);
         switch (tag)
@@ -56,23 +52,21 @@ public class HideSpot : MonoBehaviour
             Unhide();
     }
 
-    public void Hide(GameObject player)
+    public void Hide()
     {
-        _hidingPlayer = player.transform;
-        _unhidePos = _hidingPlayer.position;
-        _hidingPlayer.position = transform.position;
-        _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(false);
-        player.gameObject.SetActive(false);
+        _unhidePos = PlayerController.Instance.transform.position;
+        PlayerController.Instance.transform.position = transform.position;
+        RoomsManager.Instance.CurrentRoom.transform.Find("Lights").gameObject.SetActive(false);
+        PlayerController.Instance.gameObject.SetActive(false);
         StartCoroutine(SwitchIsHidingSomeone(true));
     }
 
     private void Unhide()
     {
         StartCoroutine(SwitchIsHidingSomeone(false));
-        _hidingPlayer.position = _unhidePos;
-        _gm.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
-        _hidingPlayer.gameObject.SetActive(true);
-        _hidingPlayer = null;
+        PlayerController.Instance.transform.position = _unhidePos;
+        RoomsManager.Instance.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
+        PlayerController.Instance.transform.gameObject.SetActive(true);
     }
 
     private IEnumerator SwitchIsHidingSomeone(bool state)
