@@ -1691,6 +1691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e19146165fd0e4ebfc01708b69bcaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PreviousRoomDoor: {fileID: 0}
+  NextRoomDoor: {fileID: 0}
   AvailableDoorSpawns:
   - Side: 0
     SpawnPoint: {fileID: 940251200454123402}

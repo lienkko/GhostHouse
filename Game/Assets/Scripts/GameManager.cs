@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using TMPro;
-using Unity.Burst.CompilerServices;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,15 +10,19 @@ public class GameManager : MonoBehaviour
 
     public GameUIFieldsGetter GameUIFields { get; private set; }
 
+    [Header("Окно паузы")]
+    [SerializeField] private GameObject _pauseMenu;
 
     [SerializeField] private AudioClip _blinkLightsSound;
+
+    
     public AudioSource GMAudioSource { get; private set; }
 
     private bool _isConsoleOpened = false;
     private bool _inGame = false;
+    private bool _isPaused;
 
 
-    
 
     private void Awake()
     {
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("main menu");
     }
+
     private void InitializeApp()
     {
         PlayerPrefs.SetInt("DisplayMode", 0);
@@ -48,7 +51,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Launched", 1);
             PlayerPrefs.Save();
         }
-
+        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode") == 0;
+        AudioListener.volume = PlayerPrefs.GetFloat("Volume");
 
     }
 
@@ -67,13 +71,12 @@ public class GameManager : MonoBehaviour
 
     private void UpdateSettings()
     {
-        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode")==1;
+        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode")==0;
         if (_inGame)
             PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
     }
     
-
     private void InitializeGame()
     {
         GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
@@ -82,10 +85,7 @@ public class GameManager : MonoBehaviour
         PlayerController.Instance.OnDamage += ChangeHp;
         Cursor.lockState = CursorLockMode.Locked;
 
-
-        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode") == 1;
         PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
-        AudioListener.volume = PlayerPrefs.GetFloat("Volume");
     }
 
 
@@ -104,10 +104,32 @@ public class GameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 CloseConsole();
             }
+            if (!_isConsoleOpened && Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (_isPaused)
+                {
+                    Resume();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
         }
     }
 
-
+    public void Resume()
+    {
+        _isPaused = false;
+        _pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void PauseGame()
+    {
+        _isPaused = true;
+        _pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
 
     //InGame methods
     private void OpenConsole()
