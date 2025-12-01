@@ -28,7 +28,7 @@ public class Safe : MonoBehaviour
 
     private void Update()
     {
-        if (isInPuzzle && Input.GetKeyDown(KeyCode.Escape))
+        if (isInPuzzle && Input.GetKeyDown(KeyCode.E))
         {
             ClosePuzzle();
             return;

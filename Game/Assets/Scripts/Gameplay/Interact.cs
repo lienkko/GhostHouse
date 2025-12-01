@@ -7,9 +7,11 @@ public class Interact : MonoBehaviour
     private Interactive _doorInteractive;
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
+    private bool _hints;
     private bool _canInteract = true;
 
     public bool CanInteract { get => _canInteract; set => _canInteract = value; }
+    public bool Hints { get => _hints; set => _hints = value; }
 
     private void Awake()
     {
@@ -28,7 +30,7 @@ public class Interact : MonoBehaviour
             _hideSpotInteractive.Interact(gameObject);
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Q) && CanOpenSafe())
+        if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
         {
             _safeInteractive.Interact(gameObject);
             return;
