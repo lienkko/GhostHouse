@@ -4,7 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    public float MoveSpeed = 5f;
+    public float MoveSpeed = 3f;
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
 
@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public int HealthPoints { get; private set; } = 100;
-    
+    public float LastHorizontalVector { get; private set; }
 
     private Rigidbody2D _playerRB;
     
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (CanWalk)
-            Move(); 
+            Move();
     }
 
     private void InputMovement()
@@ -55,7 +55,8 @@ public class PlayerController : MonoBehaviour
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
         IsCrouching = Input.GetKey(KeyCode.LeftShift);
-
+        if (moveH != 0)
+            LastHorizontalVector = moveH;
         MoveDir = new Vector2(moveH, moveV).normalized;
     }
 
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         if (IsCrouching)
             MoveSpeed = 1.5f;
         else
-            MoveSpeed = 5f;
+            MoveSpeed = 2f;
         _playerRB.velocity = MoveDir * MoveSpeed;
     }
 
