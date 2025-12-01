@@ -497,7 +497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _loadingBar: {fileID: 536429297}
   _loadingText: {fileID: 1306919535}
-  _sceneName: Main
+  _sceneName: Game
 --- !u!1 &1227070257
 GameObject:
   m_ObjectHideFlags: 0

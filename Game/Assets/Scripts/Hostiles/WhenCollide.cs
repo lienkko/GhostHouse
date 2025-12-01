@@ -10,7 +10,7 @@ public class WhenCollide : MonoBehaviour
     {
         if (collider.gameObject.GetComponent<PlayerController>())
         {
-            collider.gameObject.GetComponent<PlayerController>().InflictDamage(damage);
+            PlayerController.Instance.InflictDamage(damage);
             OnPlayerCollide?.Invoke(collider);
         }
     }

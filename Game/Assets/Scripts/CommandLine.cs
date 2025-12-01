@@ -8,33 +8,44 @@ using UnityEngine;
 
 public class CommandLine : MonoBehaviour
 {
+    private const string HELP_TEXT = "Доступные команды: \n" +
+                    "/startgame - начинает игру\n" +
+                    "/godmode (1/0) - включает/выключает режим бога\n" +
+                    "/summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
+                    "/open_safe - открывает закрытый сейф в комнате\n" +
+                    "/restartgame - перезапускает игру\n" +
+                    "/nextroom - перемещает в следующую комнату\n" +
+                    "/prevroom - перемещает в предыдущую комнату";
+
+    [SerializeField] private TMP_Text _commandsField;
     private TMP_InputField _inputField;
-    private GameManager _gm;
 
     private List<string> _lastCommands;
     private int _choosenLastCommandIndex;
     private bool _choosingLastCommand = true;
     private string _currentLine = "";
 
-    [SerializeField] private TMP_Text _commandsField;
+    
 
-    public bool isSlash = false;
+    [HideInInspector] public bool isSlash = false;
 
     private void Awake()
     {
         _inputField = GetComponent<TMP_InputField>();
-        _inputField.onValueChanged.AddListener(WorkWithLine);
-        _lastCommands = new List<string>();
-        _gm = FindAnyObjectByType<GameManager>();
+
+        _inputField.onValueChanged.AddListener(OnLineChanged);
         _inputField.onSubmit.AddListener(EnterCommand);
+
+        _lastCommands = new List<string>();
+        
     }
 
-    private void WorkWithLine(string line)
+    private void OnLineChanged(string line)
     {
-        StartCoroutine(WorkWithLineCor(line));
+        StartCoroutine(WorkWithLine(line));
     }
 
-    private IEnumerator WorkWithLineCor(string line)
+    private IEnumerator WorkWithLine(string line)
     {
         yield return null;
         _currentLine = line;
@@ -56,7 +67,9 @@ public class CommandLine : MonoBehaviour
     {
         _choosingLastCommand = true;
         _choosenLastCommandIndex = _lastCommands.Count - 1;
-        StartCoroutine(ActivateInputField());
+        
+        StartCoroutine(ActivateCommandLine());
+
         if (isSlash)
         {
             _inputField.text = "/";
@@ -66,6 +79,13 @@ public class CommandLine : MonoBehaviour
             _inputField.text = "";
         _inputField.caretPosition = _inputField.text.Length;
     }
+
+    IEnumerator ActivateCommandLine()
+    {
+        yield return null;
+        _inputField.ActivateInputField();
+    }
+
 
     private void Update()
     {
@@ -82,15 +102,13 @@ public class CommandLine : MonoBehaviour
         }
     }
 
-    IEnumerator ActivateInputField(){
-        yield return null;
-        _inputField.ActivateInputField();
-    }
+    
 
     private void EnterCommand(string line)
     {
         _inputField.text = "";
         _inputField.ActivateInputField();
+
         line = line.Trim();
         if (string.IsNullOrWhiteSpace(line))
             return;
@@ -99,13 +117,14 @@ public class CommandLine : MonoBehaviour
             PrintOnConsole($"\"{line}\" не является командой");
             return;
         }
+
         Execute(line[1..]);
     }
 
     private void ReloadPlayer()
     {
-        _gm.playerController.gameObject.SetActive(false);
-        _gm.playerController.gameObject.SetActive(true);
+        PlayerController.Instance.gameObject.SetActive(false);
+        PlayerController.Instance.gameObject.SetActive(true);
     }
 
 
@@ -121,155 +140,29 @@ public class CommandLine : MonoBehaviour
                     PrintOnConsole("help пока выводит только доступные команды");
                     return;
                 }
-                PrintOnConsole("Доступные команды: \n" +
-                    "/startgame - начинает игру\n" +
-                    "/godmode (1/0) - включает/выключает режим бога\n" +
-                    "/summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
-                    "/open_safe - открывает закрытый сейф в комнате\n" +
-                    "/restartgame - перезапускает игру\n" +
-                    "/nextroom - перемещает в следующую комнату\n" +
-                    "/prevroom - перемещает в предыдущую комнату");
+                PrintOnConsole(HELP_TEXT);
                 _lastCommands.Add(commandAndParameters[0]);
                 break;
             case "startgame":
-                {
-                    if (commandAndParameters.Length > 1)
-                    {
-                        PrintOnConsole("startgame не требует параметров");
-                        return;
-                    }
-                    if (FindAnyObjectByType<RoomData>().name != "StartRoom")
-                    {
-                        PrintOnConsole("startgame может вызываться только в стартовой комнате");
-                        return;
-                    }
-                    var ghost = FindAnyObjectByType<Ghost>();
-                    if (!ghost.GetComponent<Interactive>().isInteractive)
-                    {
-                        PrintOnConsole("Игра уже началась");
-                        return;
-                    }
-                    ghost.StartTheGame(_gm.playerController.gameObject);
-                    PrintOnConsole("Игра началась");
-                    ReloadPlayer();
-                    _lastCommands.Add(commandAndParameters[0]);
-                    break;
-                }
+                ExecuteStartGame(commandAndParameters);
+                break;
             case "godmode":
-                if (commandAndParameters.Length != 2)
-                {
-                    PrintOnConsole("Некорректные параметры для godmode");
-                    return;
-                }
-                if (commandAndParameters[1] == "1")
-                {
-                    _gm.playerController.IsGodMode = true;
-                    PrintOnConsole("Режим бога включен");
-                }
-                else if (commandAndParameters[1] == "0")
-                {
-                    _gm.playerController.IsGodMode = false;
-                    PrintOnConsole("Режим бога выключен");
-                }
-                else
-                    PrintOnConsole("Некорректный параметр для godmode");
-                _lastCommands.Add(commandAndParameters[0]);
+                ExecuteGodMode(commandAndParameters);
                 break;
             case "summon_wraith":
-                if (commandAndParameters.Length > 1)
-                {
-                    PrintOnConsole("Некорректные параметры для summon_wraith");
-                    return;
-                }
-                if (FindAnyObjectByType<RoomData>().name == "StartRoom")
-                {
-                    PrintOnConsole("В стартовой комнате нельзя вызвать wraith");
-                    return;
-                }
-
-                _gm.SummonWraith(FindAnyObjectByType<RoomData>().gameObject);
-                PrintOnConsole("Призрак вызван");
-                _lastCommands.Add(commandAndParameters[0]);
+                ExecuteSummonWraith(commandAndParameters);
                 break;
             case "open_safe":
-                {
-                    if (commandAndParameters.Length > 1)
-                    {
-                        PrintOnConsole("Некорректные параметры для open_safe");
-                        return;
-                    }
-                    if (!safe)
-                    {
-                        PrintOnConsole("В комнате не найден закрытый сейф");
-                        return;
-                    }
-                    safe.OpenSafe();
-                    PrintOnConsole("Сейф открыт");
-                    ReloadPlayer();
-                    _lastCommands.Add(commandAndParameters[0]);
-                    break;
-                }
+                ExecuteOpenSafe(safe, commandAndParameters);
+                break;
             case "restartgame":
-                if (commandAndParameters.Length > 1)
-                {
-                    PrintOnConsole("Некорректные параметры для restartgame");
-                    return;
-                }
-                _gm.ReloadGame();
+                ExecuteReloadGame(commandAndParameters);
                 break;
             case "nextroom":
-                {
-                    if (commandAndParameters.Length > 1)
-                    {
-                        PrintOnConsole("Некорректные параметры для nextroom");
-                        return;
-                    }
-                    if (_gm._wraith.isMoving)
-                    {
-                        PrintOnConsole("Во время полета wraith нельзя использовать nextroom");
-                        return;
-                    }
-                    if (FindAnyObjectByType<RoomData>().name == "StartRoom")
-                    {
-                        PrintOnConsole("nextroom не может вызываться в стартовой комнате");
-                        return;
-                    }
-                    if (!_gm.playerController.gameObject.activeSelf)
-                    {
-                        PrintOnConsole("nextroom не может вызываться когда игрок спрятан");
-                        return;
-                    }
-                    if (safe)
-                        safe.OpenSafe();
-                    _gm.CurrentNextRoomDoor.ActivateDoor(_gm.playerController.gameObject);
-                    _lastCommands.Add(commandAndParameters[0]);
-                    break;
-                }
+                ExecuteNextRoom(safe, commandAndParameters);
+                break;
             case "prevroom":
-                if (commandAndParameters.Length > 1)
-                {
-                    PrintOnConsole("Некорректные параметры для prevroom");
-                    return;
-                }
-                if (_gm._wraith.isMoving)
-                {
-                    PrintOnConsole("Во время полета wraith нельзя использовать prevroom");
-                    return;
-                }
-                if (FindAnyObjectByType<RoomData>().name == "StartRoom")
-                {
-                    PrintOnConsole("prevroom не может вызываться в стартовой комнате");
-                    return;
-                }
-                if (!_gm.playerController.gameObject.activeSelf)
-                {
-                    PrintOnConsole("prevroom не может вызываться когда игрок спрятан");
-                    return;
-                }
-                if (safe && safe.isInPuzzle)
-                    safe.ClosePuzzle();
-                _gm.CurrentPreviousRoomDoor.ActivateDoor(_gm.playerController.gameObject);
-                _lastCommands.Add(commandAndParameters[0]);
+                ExecutePrevRoom(safe, commandAndParameters);
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
@@ -278,9 +171,11 @@ public class CommandLine : MonoBehaviour
         _choosenLastCommandIndex = _lastCommands.Count - 1;
     }
 
+    
+
     private string[] GetCommandAndParameter(string line)
     {
-        var matches = Regex.Matches(line, @"\S+"); // каждое слово — последовательность непробельных символов
+        var matches = Regex.Matches(line, @"\S+");
         var result = new List<string>(matches.Count);
 
         foreach (Match match in matches)
@@ -292,5 +187,152 @@ public class CommandLine : MonoBehaviour
     private void PrintOnConsole(string line)
     {
         _commandsField.text += line + "\n";
+    }
+
+    private void ExecuteStartGame(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("startgame не требует параметров");
+            return;
+        }
+        if (FindAnyObjectByType<RoomData>().name != "StartRoom")
+        {
+            PrintOnConsole("startgame может вызываться только в стартовой комнате");
+            return;
+        }
+        if (!Ghost.Instance.InteractiveInstance.isInteractive)
+        {
+            PrintOnConsole("Игра уже началась");
+            return;
+        }
+        GameManager.Instance.StartGame();
+        PrintOnConsole("Игра началась");
+        ReloadPlayer();
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecuteGodMode(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length != 2)
+        {
+            PrintOnConsole("Некорректные параметры для godmode");
+            return;
+        }
+        if (commandAndParameters[1] == "1")
+        {
+            PlayerController.Instance.IsGodMode = true;
+            PrintOnConsole("Режим бога включен");
+        }
+        else if (commandAndParameters[1] == "0")
+        {
+            PlayerController.Instance.IsGodMode = false;
+            PrintOnConsole("Режим бога выключен");
+        }
+        else
+            PrintOnConsole("Некорректный параметр для godmode");
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecuteSummonWraith(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для summon_wraith");
+            return;
+        }
+        if (RoomsManager.Instance.CurrentRoom.name == "StartRoom")
+        {
+            PrintOnConsole("В стартовой комнате нельзя вызвать wraith");
+            return;
+        }
+
+        GameManager.Instance.SummonWraith();
+        PrintOnConsole("Призрак вызван");
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecuteOpenSafe(Safe safe, string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для open_safe");
+            return;
+        }
+        if (!safe)
+        {
+            PrintOnConsole("В комнате не найден закрытый сейф");
+            return;
+        }
+        safe.OpenSafe();
+        PrintOnConsole("Сейф открыт");
+        ReloadPlayer();
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecuteReloadGame(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для restartgame");
+            return;
+        }
+        GameManager.Instance.ReloadGame();
+    }
+
+    private void ExecuteNextRoom(Safe safe, string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для nextroom");
+            return;
+        }
+        if (WraithHandler.Instance.IsMoving)
+        {
+            PrintOnConsole("Во время полета wraith нельзя использовать nextroom");
+            return;
+        }
+        if (RoomsManager.Instance.CurrentRoom.name == "StartRoom")
+        {
+            PrintOnConsole("nextroom не может вызываться в стартовой комнате");
+            return;
+        }
+        if (!PlayerController.Instance.gameObject.activeSelf)
+        {
+            PrintOnConsole("nextroom не может вызываться когда игрок спрятан");
+            return;
+        }
+        if (safe)
+            safe.OpenSafe();
+        RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().NextRoomDoor.ActivateDoor();
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecutePrevRoom(Safe safe, string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для prevroom");
+            return;
+        }
+        if (WraithHandler.Instance.IsMoving)
+        {
+            PrintOnConsole("Во время полета wraith нельзя использовать prevroom");
+            return;
+        }
+        if (RoomsManager.Instance.CurrentRoom.name == "StartRoom")
+        {
+            PrintOnConsole("prevroom не может вызываться в стартовой комнате");
+            return;
+        }
+        if (!PlayerController.Instance.gameObject.activeSelf)
+        {
+            PrintOnConsole("prevroom не может вызываться когда игрок спрятан");
+            return;
+        }
+        if (safe && safe.IsInPuzzle)
+            safe.ClosePuzzle();
+        RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().PreviousRoomDoor.ActivateDoor();
+        _lastCommands.Add(commandAndParameters[0]);
     }
 }

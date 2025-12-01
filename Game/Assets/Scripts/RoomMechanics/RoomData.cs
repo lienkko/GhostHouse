@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class RoomData : MonoBehaviour
 {
+    [HideInInspector] public DoorController PreviousRoomDoor;
+    [HideInInspector] public DoorController NextRoomDoor;
+
     [System.Serializable]
     public struct DoorSpawnPoint
     {
@@ -18,4 +21,6 @@ public class RoomData : MonoBehaviour
 
     [Tooltip("Список всех шкафов в этой комнате.")]
     public GameObject[] Closets;
+
+    
 }

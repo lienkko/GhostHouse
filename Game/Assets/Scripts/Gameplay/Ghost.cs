@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
+    public static Ghost Instance { get; private set; }
+
+    public Interactive InteractiveInstance { get; private set; }
+
     enum MD {Up, Down};
-    private MD _moveDirection = MD.Down;
-    private float _time = 0;
-    public delegate void StartGameDelegate();
-    public event StartGameDelegate OnStartGame;
+
 
     [SerializeField] private float _speed = 1;
     [SerializeField] private Transform _point1;
@@ -15,19 +16,23 @@ public class Ghost : MonoBehaviour
     [SerializeField] private Sprite _spriteDown;
     [SerializeField] private Sprite _spriteUp;
 
+    private MD _moveDirection = MD.Down;
+    private float _flightTime = 0;
+
     private void Awake()
     {
-        GetComponent<Interactive>().SetListener(StartTheGame);
-        GetComponent<Interactive>().isInteractive = true;
+        Instance = this;
+        InteractiveInstance = GetComponent<Interactive>();
+        InteractiveInstance.isInteractive = true;
     }
 
     private void FixedUpdate()
     {
         if (_moveDirection == MD.Down)
         {
-            _ghost.position = Vector3.Lerp(_point1.position, _point2.position, _time);
-            _time += Time.deltaTime * _speed;
-            if (_time >= 1)
+            _ghost.position = Vector3.Lerp(_point1.position, _point2.position, _flightTime);
+            _flightTime += Time.deltaTime * _speed;
+            if (_flightTime >= 1)
             {
                 _ghost.GetComponent<SpriteRenderer>().sprite = _spriteUp;
                 _moveDirection = MD.Up;
@@ -35,19 +40,13 @@ public class Ghost : MonoBehaviour
         }
         else
         {
-            _ghost.position = Vector3.Lerp(_point1.position, _point2.position, _time);
-            _time -= Time.deltaTime * _speed;
-            if (_time <= 0)
+            _ghost.position = Vector3.Lerp(_point1.position, _point2.position, _flightTime);
+            _flightTime -= Time.deltaTime * _speed;
+            if (_flightTime <= 0)
             {
                 _ghost.GetComponent<SpriteRenderer>().sprite = _spriteDown;
                 _moveDirection = MD.Down;
             }
         }
-    }
-
-    public void StartTheGame(GameObject obj)
-    {
-        GetComponent<Interactive>().isInteractive = false;
-        OnStartGame?.Invoke();
     }
 }

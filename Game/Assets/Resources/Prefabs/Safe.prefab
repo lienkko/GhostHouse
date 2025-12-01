@@ -153,9 +153,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd38fd066755cfd4ea12127f6c8b5979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RightLeftSafeSprite: {fileID: 985846784, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
-  TopSafeSprite: {fileID: 1484379940, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
-  BotSafeSprite: {fileID: -1592321752, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
+  _rightLeftSafeSprite: {fileID: 985846784, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
+  _topSafeSprite: {fileID: 1484379940, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
+  _botSafeSprite: {fileID: -1592321752, guid: b1974641a64a5cb42bb4832a0c4f6fa8, type: 3}
 --- !u!114 &-6819880405985330731
 MonoBehaviour:
   m_ObjectHideFlags: 0
