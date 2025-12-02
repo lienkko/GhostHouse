@@ -1,31 +1,73 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Pause : MonoBehaviour
 {
-    public bool paused;
-    public GameObject pauseMenu;
+    [SerializeField] private Button _resumeButton;
+    [SerializeField] private Button _settingsButton;
+    [SerializeField] private Button _menuButton;
+    [SerializeField] private GameObject _settingsWindow;
+    [SerializeField] private GameObject _pauseWindow;
+
+    public delegate void GamePause();
+    public static event GamePause OnPause;
+    public static event GamePause OnResume;
+
+    private bool _inSettings = false;
+    private bool _isPaused = false;
+
+    private void Awake()
+    {
+        _resumeButton.onClick.AddListener(ResumeGame);
+        _settingsButton.onClick.AddListener(Settings);
+        _menuButton.onClick.AddListener(ToMenu);
+    }
 
     void Update()
     {
-        
+        if (_inSettings && Input.GetKeyDown(KeyCode.Escape))
+        {
+            Settings();
+            return;
+        }
+        if (!GameManager.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!_isPaused)
+                PauseGame();
+            else
+                ResumeGame();
+        }
     }
 
-    public void Resume()
+    private void PauseGame()
     {
-        paused = false;
-        pauseMenu.SetActive(false);
+        _isPaused = true;
+        _pauseWindow.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        GameManager.Instance.BlockPlayer(true);
+        OnPause?.Invoke();
+        Time.timeScale = 0f;
+    }
+    private void ResumeGame()
+    {
+        
+        _isPaused = false;
+        _pauseWindow.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        GameManager.Instance.BlockPlayer(false);
+        OnResume?.Invoke();
         Time.timeScale = 1f;
     }
 
-    public void PauseGame()
+    private void Settings()
     {
-        paused = true;
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
+        _inSettings = !_inSettings;
+        _settingsWindow.SetActive(_inSettings);
+        _pauseWindow.SetActive(!_inSettings);
     }
 
-    public void toMenu()
+    private void ToMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("main menu");

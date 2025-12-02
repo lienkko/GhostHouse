@@ -4,7 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    public float MoveSpeed = 3f;
+    public float MoveSpeed = 4f;
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
 
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
         if (IsCrouching)
             MoveSpeed = 1.5f;
         else
-            MoveSpeed = 2f;
+            MoveSpeed = 3f;
         _playerRB.velocity = MoveDir * MoveSpeed;
     }
 

@@ -27,21 +27,18 @@ public class PlayerAnimator : MonoBehaviour
         if (_pc.IsCrouching)
         {
             _am.SetBool("Crouch", true);
-            _bc.offset = new Vector2(0, 0.3f);
-            _bc.size = new Vector2(0.6f, 0.6f);
 
+        }
+        else
+        {
+            _am.SetBool("Crouch", false);
         }
 
         if (_pc.LastHorizontalVector > 0)
             _sr.flipX = true;
         else if (_pc.LastHorizontalVector < 0)
             _sr.flipX = false;
-        //else
-        //{
-        //    _am.SetBool("Crouch", false);
-        //    _bc.offset = new Vector2(0, 0.5f);
-        //    _bc.size = new Vector2(0.7f, 1f);
-        //}
+        
     }
 
 }

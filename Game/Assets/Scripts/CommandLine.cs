@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -15,7 +14,8 @@ public class CommandLine : MonoBehaviour
                     "/open_safe - открывает закрытый сейф в комнате\n" +
                     "/restartgame - перезапускает игру\n" +
                     "/nextroom - перемещает в следующую комнату\n" +
-                    "/prevroom - перемещает в предыдущую комнату";
+                    "/prevroom - перемещает в предыдущую комнату\n" +
+                    "/room_lights (1/0) - включает/выключает свет в комнате";
 
     [SerializeField] private TMP_Text _commandsField;
     private TMP_InputField _inputField;
@@ -156,13 +156,16 @@ public class CommandLine : MonoBehaviour
                 ExecuteOpenSafe(safe, commandAndParameters);
                 break;
             case "restartgame":
-                ExecuteReloadGame(commandAndParameters);
+                ExecuteRestartGame(commandAndParameters);
                 break;
             case "nextroom":
                 ExecuteNextRoom(safe, commandAndParameters);
                 break;
             case "prevroom":
                 ExecutePrevRoom(safe, commandAndParameters);
+                break;
+            case "room_lights":
+                ExecuteRoomLights(commandAndParameters);
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
@@ -270,7 +273,7 @@ public class CommandLine : MonoBehaviour
         _lastCommands.Add(commandAndParameters[0]);
     }
 
-    private void ExecuteReloadGame(string[] commandAndParameters)
+    private void ExecuteRestartGame(string[] commandAndParameters)
     {
         if (commandAndParameters.Length > 1)
         {
@@ -333,6 +336,33 @@ public class CommandLine : MonoBehaviour
         if (safe && safe.IsInPuzzle)
             safe.ClosePuzzle();
         RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().PreviousRoomDoor.ActivateDoor();
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+
+    private void ExecuteRoomLights(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length != 2)
+        {
+            PrintOnConsole("Некорректные параметры для room_lights");
+            return;
+        }
+        if (RoomsManager.Instance.CurrentRoom.name == "StartRoom")
+        {
+            PrintOnConsole("В стартовой комнате нельзя переключать свет");
+            return;
+        }
+        if (commandAndParameters[1] == "1")
+        {
+            GameManager.Instance.TurnOffLights(false);
+            PrintOnConsole("Свет в комнате включен");
+        }
+        else if (commandAndParameters[1] == "0")
+        {
+            GameManager.Instance.TurnOffLights(true);
+            PrintOnConsole("Свет в комнате выключен");
+        }
+        else
+            PrintOnConsole("Некорректный параметр для room_lights");
         _lastCommands.Add(commandAndParameters[0]);
     }
 }

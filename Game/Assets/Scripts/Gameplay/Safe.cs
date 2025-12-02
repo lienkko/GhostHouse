@@ -72,9 +72,7 @@ public class Safe : MonoBehaviour
 
         StartCoroutine(SwitchIsInPuzzle(true));
 
-        PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        PlayerController.Instance.CanWalk = false;
-        PlayerInteract.Instance.CanInteract = false;
+        GameManager.Instance.BlockPlayer(true);
 
         if (_puzzle)
         {
@@ -93,8 +91,7 @@ public class Safe : MonoBehaviour
             StartCoroutine(SwitchIsInPuzzle(false));
             _puzzle.SetActive(false);
         }
-        PlayerController.Instance.CanWalk = true;
-        PlayerInteract.Instance.CanInteract = true;
+        GameManager.Instance.BlockPlayer(false);
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
