@@ -1,0 +1,133 @@
+### UNITY ###
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Oo]bj/
+[Mm]emoryCaptures/
+UserSettings/
+ProfileAnalyzer/
+Recordings/
+
+# Unity crash reports
+sysinfo.txt
+crash*.dmp
+*.stacktrace
+
+# Unity cache
+*.pidb
+*.mdb
+*.opendb
+*.VC.db
+*.pdb.meta
+
+# PlasticSCM
+Plastic/
+.plastic/
+*.plastic
+plastic.wktree
+
+# Collaborate
+.collab/
+
+# Unity Plugins / Compiled
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb.meta
+*.booproj
+*.svd
+
+# Auto-generated Android stuff
+.gradle/
+.gradle/*
+
+# Auto-generated iOS/Xcode
+xcuserdata/
+*.xccheckout
+*.xcuserstate
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+*.xcworkspace/
+
+# Addressables
+*/build/**/*
+*/BuildCache/**/*
+*/Bundles/**/*
+*/ServerData/**/*
+
+# Artifacts
+Artifacts/
+*.asmdef.meta
+*.asmref.meta
+
+# Burst
+BurstCache/
+*.burst
+*.blob
+*.blob.meta
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Visual Studio
+*.sln
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.csproj
+*.pidb
+*.svd
+*.pdb
+
+### OS FILES ###
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+*.swp
+*.lock
+
+# Linux
+*~
+.nfs*
+
+### BUILD OUTPUT ###
+# Common binary output
+*.apk
+*.aab
+*.app
+*.exe
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.dmg
+*.iso
+
+# StreamingAssets generated files
+StreamingAssets/aa/
+
+# WebGL cache
+Build*/
+
+### GIT ###
+# Ignore git merge backups
+*.orig

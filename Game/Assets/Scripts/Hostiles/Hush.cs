@@ -52,7 +52,7 @@ public class Hush : MonoBehaviour
     {
         _audioSource.PlayOneShot(_soundClip);
         Debug.Log("Psst");
-        DamageWhenCollide.OnCollide += HidePsst;
+        GetComponent<WhenCollide>().OnPlayerCollide += HidePsst;
         _hushModel.gameObject.SetActive(true);
         _pointNearPlayer = Random.insideUnitCircle.normalized * 3;
         _hushModel.position = _player.transform.position + _pointNearPlayer;
@@ -60,10 +60,10 @@ public class Hush : MonoBehaviour
         _isWaitingForLight = true;
     }
 
-    private void HidePsst()
+    private void HidePsst(Collider2D collider)
     {
         _isWaitingForLight = _isPsst = _isDarkness = false;
-        DamageWhenCollide.OnCollide -= HidePsst;
+        GetComponent<WhenCollide>().OnPlayerCollide -= HidePsst;
         _hushModel.gameObject.SetActive(false);
     }
 }
