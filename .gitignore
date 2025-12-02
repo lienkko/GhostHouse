@@ -81,7 +81,6 @@ BurstCache/
 .vscode/
 
 # Visual Studio
-.vs/
 *.sln
 *.suo
 *.user
@@ -91,7 +90,6 @@ BurstCache/
 *.pidb
 *.svd
 *.pdb
-Packages/com.merry-yellow.code-assist/
 
 ### OS FILES ###
 # Windows
