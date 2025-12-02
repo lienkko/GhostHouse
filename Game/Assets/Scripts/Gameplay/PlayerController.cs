@@ -1,47 +1,52 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private bool _isSneaking;
-    private bool _isCrouching;
+    public static PlayerController Instance { get; private set; }
+
+    public float MoveSpeed = 4f;
+    public bool IsGodMode = false;
+    [HideInInspector] public bool CanWalk = true;
+
+
+    public delegate void OnDeathDelegate();
+    public event OnDeathDelegate OnDeath;
+
+    public delegate void DamageDelegate(int damage, int hp);
+    public event DamageDelegate OnDamage;
+
+    public Vector2 MoveDir { get; private set; }
+    public bool IsCrouching { get; private set; }
+    public int HealthPoints { get; private set; } = 100;
+    public float LastHorizontalVector { get; private set; }
+
     private Rigidbody2D _playerRB;
-    private Vector2 _moveDir;
-    private int _healthPoints;
-
-    public float MoveSpeed;
-    public Vector2 MoveDir { get => _moveDir; }
-    public bool IsCrouching { get => _isCrouching; }
-
-    public delegate void NoArgs();
-    public static event NoArgs OnDeath;
-
-    public delegate void DamageDelegate(int damage,int hp);
-    public static event DamageDelegate OnDamage;
-
-
     
-    
-    
+
     private void Awake()
     {
+        Instance = this;
+
         _playerRB = GetComponent<Rigidbody2D>();
-        MoveSpeed = 5f;
-        _healthPoints = 100;
     }
+
+
+
+
+
+
     private void Update()
     {
-        InputMovement();
-        if (_healthPoints == 0)
+        if(CanWalk)
+            InputMovement();
+        if (HealthPoints == 0)
             Die();
     }
 
     private void FixedUpdate()
     {
-        Move(); 
+        if (CanWalk)
+            Move();
     }
 
     private void InputMovement()
@@ -49,35 +54,36 @@ public class PlayerController : MonoBehaviour
 
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
-        _isCrouching = Input.GetKey(KeyCode.C);
-        _isSneaking = Input.GetKey(KeyCode.LeftShift);
-
-
-        _moveDir = new Vector2(moveH, moveV).normalized;
+        IsCrouching = Input.GetKey(KeyCode.LeftShift);
+        if (moveH != 0)
+            LastHorizontalVector = moveH;
+        MoveDir = new Vector2(moveH, moveV).normalized;
     }
 
     private void Move()
     {
-        if (_isCrouching)
-            MoveSpeed = 1.5f;
-        else if (_isSneaking)
+        if (IsCrouching)
             MoveSpeed = 2f;
         else
-            MoveSpeed = 5f;
-        _playerRB.velocity = _moveDir * MoveSpeed;
+            MoveSpeed = 4f;
+        _playerRB.velocity = MoveDir * MoveSpeed;
     }
 
     public void InflictDamage(int dmg)
     {
+        if (IsGodMode)
+        {
+            return;
+        }
         if (dmg > 0)
         {
-            _healthPoints -= dmg;
+            HealthPoints -= dmg;
         }
-        if (_healthPoints <= 0)
+        if (HealthPoints <= 0)
         {
-            _healthPoints = 0;
+            HealthPoints = 0;
         }
-        OnDamage?.Invoke(dmg, _healthPoints);
+        OnDamage?.Invoke(dmg, HealthPoints);
     }
 
     private void Die()

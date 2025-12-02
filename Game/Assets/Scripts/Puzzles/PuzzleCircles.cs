@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PuzzleCircles : MonoBehaviour
 {
-    private const float _circlesRadius = 167.2f;
+    private const float CIRCLES_RADIUS = 167.2f;
 
     [SerializeField] private RectTransform[] _dotsTransforms = new RectTransform[12];
     [SerializeField] private GameObject _completeButton;
@@ -13,8 +13,8 @@ public class PuzzleCircles : MonoBehaviour
     private Image _buttonImage;
     private Button _buttonB;
 
-    private int[,] _dotsInCircles = new [,] {{5,1,0,3,7,8},{6,2,1,4,8,9},{9,5,4,7,10,11}};
-    private Vector2[] _centersDots = new Vector2[3] {new Vector2(-85,60), new Vector2(85,60), new Vector2(0,-88)};
+    private readonly int[,] _dotsInCircles = new [,] {{5,1,0,3,7,8},{6,2,1,4,8,9},{9,5,4,7,10,11}};
+    private readonly Vector2[] _centersDots = new Vector2[3] {new (-85,60), new (85,60), new (0,-88)};
 
     private bool _isMoving;
     private bool _isMovingLeft;
@@ -22,12 +22,19 @@ public class PuzzleCircles : MonoBehaviour
     private int _movingCircle;
     
     private float _angle = 0f;
-    private float _dotsMoveSpeed = 200f;
+    private readonly float _dotsMoveSpeed = 200f;
 
     private string _rotateDirection;
     
 
     private void Awake()
+    {
+        SetDotsPos();
+        _buttonImage = _completeButton.GetComponent<Image>();
+        _buttonB = _completeButton.GetComponent<Button>();
+    }
+
+    private void SetDotsPos()
     {
         _dotsTransforms[0].anchoredPosition = new Vector3(-170, 204, 0);
         _dotsTransforms[1].anchoredPosition = new Vector3(0, 204, 0);
@@ -41,8 +48,6 @@ public class PuzzleCircles : MonoBehaviour
         _dotsTransforms[9].anchoredPosition = new Vector3(170, -88, 0);
         _dotsTransforms[10].anchoredPosition = new Vector3(-85, -233, 0);
         _dotsTransforms[11].anchoredPosition = new Vector3(85, -233, 0);
-        _buttonImage = _completeButton.GetComponent<Image>();
-        _buttonB = _completeButton.GetComponent<Button>();
     }
 
     private void Update()
@@ -77,8 +82,8 @@ public class PuzzleCircles : MonoBehaviour
         for (int dot = 0; dot < 6; dot++)
         {
             float angleRad = ((_angle * direction + 60 * dot) * (MathF.PI / 180));
-            float x = center.x + Mathf.Cos(angleRad) * _circlesRadius;
-            float y = center.y + Mathf.Sin(angleRad) * _circlesRadius;
+            float x = center.x + Mathf.Cos(angleRad) * CIRCLES_RADIUS;
+            float y = center.y + Mathf.Sin(angleRad) * CIRCLES_RADIUS;
             _dotsTransforms[_dotsInCircles[_movingCircle,dot]].anchoredPosition = new Vector3(x, y,0);
         }
         if (_angle == 60)
@@ -136,7 +141,7 @@ public class PuzzleCircles : MonoBehaviour
         }
     }
 
-    public void MoveDotsInList()
+    private void MoveDotsInList()
     {
         switch (_rotateDirection)
         {
