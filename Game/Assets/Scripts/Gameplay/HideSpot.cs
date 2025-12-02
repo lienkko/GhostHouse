@@ -48,7 +48,7 @@ public class HideSpot : MonoBehaviour
 
     private void Update()
     {
-        if (_isHidingSomeone && Input.GetKeyDown(KeyCode.E) && !FindAnyObjectByType<CommandLine>())
+        if (!Pause.IsPaused && _isHidingSomeone && Input.GetKeyDown(KeyCode.E) && !FindAnyObjectByType<CommandLine>())
             Unhide();
     }
 

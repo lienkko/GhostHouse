@@ -15,7 +15,7 @@ public class Pause : MonoBehaviour
     public static event GamePause OnResume;
 
     private bool _inSettings = false;
-    private bool _isPaused = false;
+    public static bool IsPaused { get; private set; } = false;
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class Pause : MonoBehaviour
         }
         if (!GameManager.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!_isPaused)
+            if (!IsPaused)
                 PauseGame();
             else
                 ResumeGame();
@@ -42,7 +42,7 @@ public class Pause : MonoBehaviour
 
     private void PauseGame()
     {
-        _isPaused = true;
+        IsPaused = true;
         _pauseWindow.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.BlockPlayer(true);
@@ -52,7 +52,7 @@ public class Pause : MonoBehaviour
     private void ResumeGame()
     {
         
-        _isPaused = false;
+        IsPaused = false;
         _pauseWindow.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
