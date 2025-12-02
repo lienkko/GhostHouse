@@ -10,29 +10,37 @@ public class GameManager : MonoBehaviour
 
     public GameUIFieldsGetter GameUIFields { get; private set; }
 
-    [Header("Окно паузы")]
-    [SerializeField] private GameObject _pauseMenu;
+    
 
     [SerializeField] private AudioClip _blinkLightsSound;
-
-    
     public AudioSource GMAudioSource { get; private set; }
 
-    private bool _isConsoleOpened = false;
+    private Pause _pauseMenu;
+
+    public bool IsConsoleOpened { get; private set; } = false;
     private bool _inGame = false;
-    private bool _isPaused;
+    
 
 
 
     private void Awake()
     {
+        if (Instance!= null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         GMAudioSource = GetComponent<AudioSource>();
+
         SceneManager.activeSceneChanged += OnSceneChanged;
-        InitializeApp();
         Settings.OnSettingsChanged += UpdateSettings;
+        Pause.OnPause += PauseGame;
+        Pause.OnResume += ResumeGame;
+
+        InitializeApp();
     }
 
     private void Start()
@@ -56,6 +64,20 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void InitializeGame()
+    {
+        GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
+        _pauseMenu = FindAnyObjectByType<Pause>();
+
+        Ghost.Instance.InteractiveInstance.SetListener(StartGame);
+        PlayerController.Instance.OnDeath += Death;
+        PlayerController.Instance.OnDamage += ChangeHp;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
+    }
+
+
     private void OnSceneChanged(Scene oldScene, Scene newScene)
     {
         if (newScene.name == "Game") 
@@ -77,68 +99,48 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
     }
     
-    private void InitializeGame()
+    
+    private void PauseGame()
     {
-        GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
-        Ghost.Instance.InteractiveInstance.SetListener(StartGame);
-        PlayerController.Instance.OnDeath += Death;
-        PlayerController.Instance.OnDamage += ChangeHp;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
+        GMAudioSource.Pause();
     }
-
+    private void ResumeGame()
+    {
+        GMAudioSource.UnPause();
+    }
 
 
     private void Update()
     {
         if (_inGame)
         {
-            if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !_isConsoleOpened)
+            if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened)
             {
                 Cursor.lockState = CursorLockMode.None;
                 OpenConsole();
             }
-            else if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && _isConsoleOpened)
+            else if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 CloseConsole();
             }
-            if (!_isConsoleOpened && Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (_isPaused)
-                {
-                    Resume();
-                }
-                else
-                {
-                    PauseGame();
-                }
-            }
+            
         }
     }
 
-    public void Resume()
+    //InGame methods
+    public void BlockPlayer(bool state)
     {
-        _isPaused = false;
-        _pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
-    }
-    public void PauseGame()
-    {
-        _isPaused = true;
-        _pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
+        if (state)
+            PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        PlayerController.Instance.CanWalk = !state;
+        PlayerInteract.Instance.CanInteract = !state;
     }
 
-    //InGame methods
     private void OpenConsole()
     {
-        PlayerController.Instance.CanWalk = false;
-        PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        PlayerInteract.Instance.CanInteract = false;
-
-        _isConsoleOpened = true;
+        BlockPlayer(true);
+        StartCoroutine(SwitchIsConsoleOpened(true));
 
         if (Input.GetKeyDown(KeyCode.Slash))
             GameUIFields.ConsoleWindow.transform.GetComponentInChildren<CommandLine>().isSlash = true;
@@ -148,11 +150,17 @@ public class GameManager : MonoBehaviour
 
     private void CloseConsole()
     {
-        PlayerController.Instance.CanWalk = true;
-        _isConsoleOpened = false;
-        PlayerInteract.Instance.CanInteract = true;
+        BlockPlayer(false);
+        StartCoroutine(SwitchIsConsoleOpened(false));
         GameUIFields.ConsoleWindow.SetActive(false);
     }
+    private IEnumerator SwitchIsConsoleOpened(bool state)
+    {
+        yield return null;
+        IsConsoleOpened = state;
+    }
+
+
     public void StartGame()
     {
         if (Ghost.Instance.InteractiveInstance.isInteractive == false)
@@ -162,7 +170,9 @@ public class GameManager : MonoBehaviour
             GetComponent<RoomData>().NextRoomDoor.
             GetComponent<Interactive>().isInteractive = true;
         StartCoroutine(BlinkLights(true));
+        Ghost.Instance.gameObject.SetActive(false);
     }
+
 
     private void Death()
     {
@@ -173,6 +183,7 @@ public class GameManager : MonoBehaviour
     {
         GameUIFields.HpField.text = hp.ToString();
     }
+
 
     private IEnumerator BlinkLights(bool turnOff = false)
     {

@@ -25,6 +25,10 @@ public class WraithHandler : MonoBehaviour
     {
         Instance = this;
 
+        Pause.OnPause += PauseAudio;
+        Pause.OnResume += ResumeAudio;
+
+
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0.3f;
     }
@@ -54,6 +58,17 @@ public class WraithHandler : MonoBehaviour
             _wraithModel.SetActive(false);
         }
     }
+
+    private void PauseAudio()
+    {
+        _audioSource.Pause();
+    }
+    private void ResumeAudio()
+    {
+        _audioSource.UnPause();
+    }
+
+
 
     private void OpenDoors()
     {

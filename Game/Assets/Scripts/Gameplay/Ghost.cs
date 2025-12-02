@@ -6,6 +6,7 @@ public class Ghost : MonoBehaviour
 
     public Interactive InteractiveInstance { get; private set; }
 
+
     enum MD {Up, Down};
 
 
