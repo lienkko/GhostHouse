@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -15,12 +14,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip _blinkLightsSound;
     public AudioSource GMAudioSource { get; private set; }
 
-    private Pause _pauseMenu;
-
-    public bool IsConsoleOpened { get; private set; } = false;
-    private bool _inGame = false;
     
 
+    public bool IsConsoleOpened { get; private set; } = false;
+
+    private Pause _pauseMenu;
+    private bool _inGame = false;
+    private readonly int[,] _resolutions = {{800, 600}, { 1280, 960}};
 
 
     private void Awake()
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
         Pause.OnPause += PauseGame;
         Pause.OnResume += ResumeGame;
 
-        InitializeApp();
+        InitializePrefs();
     }
 
     private void Start()
@@ -48,18 +48,30 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("main menu");
     }
 
-    private void InitializeApp()
+    private void SetWindowSize()
     {
-        PlayerPrefs.SetInt("DisplayMode", 0);
+        if (PlayerPrefs.GetInt("DisplayMode") == 0)
+            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+        else
+        {
+            int width = _resolutions[PlayerPrefs.GetInt("Resolution"), 0];
+            int height = _resolutions[PlayerPrefs.GetInt("Resolution"), 1];
+            Screen.SetResolution(width, height, false);
+        }
+    }
+
+    private void InitializePrefs()
+    {
         if (!PlayerPrefs.HasKey("Launched"))
         {
+            PlayerPrefs.SetInt("DisplayMode", 0);
             PlayerPrefs.SetInt("Resolution", 0);
             PlayerPrefs.SetInt("Hints", 1);
             PlayerPrefs.SetFloat("Volume", 1);
             PlayerPrefs.SetInt("Launched", 1);
             PlayerPrefs.Save();
         }
-        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode") == 0;
+        SetWindowSize();
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
 
     }
@@ -93,10 +105,11 @@ public class GameManager : MonoBehaviour
 
     private void UpdateSettings()
     {
-        Screen.fullScreen = PlayerPrefs.GetInt("DisplayMode")==0;
+        SetWindowSize();
+        AudioListener.volume = PlayerPrefs.GetFloat("Volume");
         if (_inGame)
             PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
-        AudioListener.volume = PlayerPrefs.GetFloat("Volume");
+        
     }
     
     

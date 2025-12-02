@@ -63,9 +63,9 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         if (IsCrouching)
-            MoveSpeed = 1.5f;
+            MoveSpeed = 2f;
         else
-            MoveSpeed = 3f;
+            MoveSpeed = 4f;
         _playerRB.velocity = MoveDir * MoveSpeed;
     }
 
