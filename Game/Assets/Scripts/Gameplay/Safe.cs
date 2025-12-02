@@ -28,7 +28,7 @@ public class Safe : MonoBehaviour
 
     private void Update()
     {
-        if (IsInPuzzle && Input.GetKeyDown(KeyCode.E))
+        if (!Pause.IsPaused && IsInPuzzle && Input.GetKeyDown(KeyCode.E))
         {
             ClosePuzzle();
             return;
