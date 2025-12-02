@@ -23,6 +23,7 @@ public class Safe : MonoBehaviour
         GetComponent<Interactive>().SetListener(OpenPuzzle);
         GetComponent<Interactive>().isInteractive = true;
         PlayerController.Instance.OnDeath += ClosePuzzle;
+        Pause.OnResume += ShowCursorOnResume;
     }
 
     private void Update()
@@ -99,6 +100,8 @@ public class Safe : MonoBehaviour
         yield return null;
         IsInPuzzle = state;
     }
+
+    private void ShowCursorOnResume(){Cursor.lockState = CursorLockMode.None;}
 
     public void OpenSafe()
     {
