@@ -37,7 +37,6 @@ public class CommandLine : MonoBehaviour
         _inputField.onSubmit.AddListener(EnterCommand);
 
         _lastCommands = new List<string>();
-        
     }
 
     private void OnLineChanged(string line)
@@ -166,6 +165,9 @@ public class CommandLine : MonoBehaviour
                 break;
             case "room_lights":
                 ExecuteRoomLights(commandAndParameters);
+                break;
+            case "clear":
+                ExecuteClear(commandAndParameters);
                 break;
             default:
                 PrintOnConsole($"\"/{line}\" не является командой");
@@ -363,6 +365,16 @@ public class CommandLine : MonoBehaviour
         }
         else
             PrintOnConsole("Некорректный параметр для room_lights");
+        _lastCommands.Add(commandAndParameters[0]);
+    }
+    private void ExecuteClear(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length > 1)
+        {
+            PrintOnConsole("Некорректные параметры для clear");
+            return;
+        }
+        _commandsField.text = "";
         _lastCommands.Add(commandAndParameters[0]);
     }
 }

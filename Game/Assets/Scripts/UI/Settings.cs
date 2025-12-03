@@ -22,6 +22,8 @@ public class Settings : MonoBehaviour
         _volume.value = PlayerPrefs.GetFloat("Volume");
     }
 
+    
+
     private void Update()
     {
         if (_displayMode.value == 0)
