@@ -290,7 +290,7 @@ public class CommandLine : MonoBehaviour
             PrintOnConsole("Некорректные параметры для nextroom");
             return;
         }
-        if (WraithHandler.Instance.IsMoving)
+        if (WraithHandler.Instance.IsWraithSummoned)
         {
             PrintOnConsole("Во время полета wraith нельзя использовать nextroom");
             return;
@@ -318,7 +318,7 @@ public class CommandLine : MonoBehaviour
             PrintOnConsole("Некорректные параметры для prevroom");
             return;
         }
-        if (WraithHandler.Instance.IsMoving)
+        if (WraithHandler.Instance.IsWraithSummoned)
         {
             PrintOnConsole("Во время полета wraith нельзя использовать prevroom");
             return;

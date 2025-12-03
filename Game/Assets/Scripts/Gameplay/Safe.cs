@@ -12,18 +12,27 @@ public class Safe : MonoBehaviour
 
     private GameObject _puzzle;
     private DoorController _doorToOpen;
+    private Interactive _interactiveComp;
 
     [SerializeField] private Sprite _rightLeftSafeSprite;
     [SerializeField] private Sprite _topSafeSprite;
     [SerializeField] private Sprite _botSafeSprite;
 
+    [SerializeField] private Collider2D _borderCollider;
+
 
     private void Awake()
     {
-        GetComponent<Interactive>().SetListener(OpenPuzzle);
-        GetComponent<Interactive>().isInteractive = true;
+        _interactiveComp = GetComponent<Interactive>();
+        _interactiveComp.SetListener(OpenPuzzle);
+        _interactiveComp.isInteractive = true;
+        
+        Pause.OnResume += SafeOnResume;
+    }
+
+    private void Start()
+    {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        Pause.OnResume += ShowCursorOnResume;
     }
 
     private void Update()
@@ -38,21 +47,25 @@ public class Safe : MonoBehaviour
     public void Initialize(string pointTag, DoorController door)
     {
         _doorToOpen = door;
-        switch (tag)
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        switch (pointTag)
         {
             case "TopPoint":
-                GetComponent<SpriteRenderer>().sprite = _topSafeSprite;
+                spriteRenderer.sprite = _topSafeSprite;
                 break;
             case "BotPoint":
-                GetComponent<SpriteRenderer>().sprite = _botSafeSprite;
+                _borderCollider.offset = new Vector2(0,-0.12f);
+                spriteRenderer.sortingOrder = 11;
+
+                spriteRenderer.sprite = _botSafeSprite;
                 break;
             case "RightPoint":
-                GetComponent<SpriteRenderer>().sprite = _rightLeftSafeSprite;
+                spriteRenderer.sprite = _rightLeftSafeSprite;
                 break;
             case "LeftPoint":
                 {
-                    GetComponent<SpriteRenderer>().flipX = true;
-                    GetComponent<SpriteRenderer>().sprite = _rightLeftSafeSprite;
+                    spriteRenderer.flipX = true;
+                    spriteRenderer.sprite = _rightLeftSafeSprite;
                     break;
                 }
         }
@@ -69,7 +82,7 @@ public class Safe : MonoBehaviour
     private void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        
 
         StartCoroutine(SwitchIsInPuzzle(true));
 
@@ -98,15 +111,22 @@ public class Safe : MonoBehaviour
     private IEnumerator SwitchIsInPuzzle(bool state)
     {
         yield return null;
+        _interactiveComp.isInteractive = !state;
         IsInPuzzle = state;
+        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
     }
 
-    private void ShowCursorOnResume(){Cursor.lockState = CursorLockMode.None;}
+    private void SafeOnResume()
+    {
+        if (IsInPuzzle)
+        {
+            GameManager.Instance.BlockPlayer(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 
     public void OpenSafe()
     {
-        GetComponent<Interactive>().isInteractive = false;
-        GetComponent<Interactive>().RemoveListener();
         if (_puzzle)
         {
             ClosePuzzle();
@@ -114,6 +134,8 @@ public class Safe : MonoBehaviour
         }
         else
             GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        _interactiveComp.RemoveListener();
+        _interactiveComp.isInteractive = false;
         _doorToOpen.UnlockDoor();
         Destroy(this);
     }

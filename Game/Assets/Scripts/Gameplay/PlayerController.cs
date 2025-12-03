@@ -19,14 +19,16 @@ public class PlayerController : MonoBehaviour
     public bool IsCrouching { get; private set; }
     public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
+    public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 
     private Rigidbody2D _playerRB;
+    private Vector3 _lastPos;
     
 
     private void Awake()
     {
         Instance = this;
-
+        _lastPos = transform.position;
         _playerRB = GetComponent<Rigidbody2D>();
     }
 
@@ -37,7 +39,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(CanWalk)
+        DeltaMove = transform.position - _lastPos;
+        _lastPos = transform.position;
+        if (CanWalk)
             InputMovement();
         if (HealthPoints == 0)
             Die();
@@ -45,6 +49,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if (CanWalk)
             Move();
     }
