@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
     {
         if (_inGame)
         {
-            if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened)
+            if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused)
             {
                 Cursor.lockState = CursorLockMode.None;
                 OpenConsole();
