@@ -10,6 +10,11 @@ public class Settings : MonoBehaviour
     [SerializeField] private Button _saveButton;
     [SerializeField] private Slider _volume;
 
+    [Space(10)]
+    [Header("Поля одинакового размера")]
+    [SerializeField] private TextMeshProUGUI _templateSizeField;
+    [SerializeField] private TextMeshProUGUI[] _textFields;
+
     public delegate void SettingsChanges();
     public static event SettingsChanges OnSettingsChanged;
 
@@ -20,7 +25,14 @@ public class Settings : MonoBehaviour
         _resolution.value = PlayerPrefs.GetInt("Resolution");
         _hints.isOn = PlayerPrefs.GetInt("Hints") == 1;
         _volume.value = PlayerPrefs.GetFloat("Volume");
+
+        foreach (var field in _textFields)
+        {
+            field.fontSize = _templateSizeField.fontSize;
+        }
     }
+
+    
 
     private void Update()
     {
@@ -43,6 +55,10 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetInt("Hints", _hints.isOn?1:0);
         PlayerPrefs.SetFloat("Volume", _volume.value);
         PlayerPrefs.Save();
+        foreach (var field in _textFields)
+        {
+            field.fontSize = _templateSizeField.fontSize;
+        }
         OnSettingsChanged?.Invoke();
     }
 
