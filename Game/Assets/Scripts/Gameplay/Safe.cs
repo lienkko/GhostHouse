@@ -82,7 +82,7 @@ public class Safe : MonoBehaviour
     private void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        
 
         StartCoroutine(SwitchIsInPuzzle(true));
 
@@ -113,12 +113,16 @@ public class Safe : MonoBehaviour
         yield return null;
         _interactiveComp.isInteractive = !state;
         IsInPuzzle = state;
+        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
     }
 
     private void SafeOnResume()
     {
-        GameManager.Instance.BlockPlayer(true);
-        Cursor.lockState = CursorLockMode.None;
+        if (IsInPuzzle)
+        {
+            GameManager.Instance.BlockPlayer(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     public void OpenSafe()

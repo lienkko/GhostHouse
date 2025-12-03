@@ -16,9 +16,9 @@ public class WraithHandler : MonoBehaviour
 
     private Vector3 _startPoint = Vector3.zero;
     private Vector3 _endPoint = Vector3.zero;
-
-    public bool IsMoving { get; private set; } = false;
-
+    
+    public bool IsWraithSummoned { get; private set; } = false;
+    private bool _isMoving;
     private bool _isWhispering = false;
 
     private void Awake()
@@ -35,7 +35,7 @@ public class WraithHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsMoving)
+        if (_isMoving)
         {
             _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1-(_remainingDsitance/_distance));
             _remainingDsitance -= 7f * Time.deltaTime;
@@ -50,12 +50,9 @@ public class WraithHandler : MonoBehaviour
             }
         }
         
-        if (IsMoving && (_wraithModel.transform.position == _endPoint))
+        if (_isMoving && (_wraithModel.transform.position == _endPoint))
         {
-            IsMoving = false;
-            _isWhispering = false;
-            OpenDoors();
-            _wraithModel.SetActive(false);
+            EndOfTheFlight();
         }
     }
 
@@ -95,8 +92,18 @@ public class WraithHandler : MonoBehaviour
         StartCoroutine(WraithWaiting());
     }
 
+    private void EndOfTheFlight()
+    {
+        IsWraithSummoned = true;
+        _isMoving = false;
+        _isWhispering = false;
+        OpenDoors();
+        _wraithModel.SetActive(false);
+    }
+
     public IEnumerator WraithWaiting()
     {
+        IsWraithSummoned = true;
         yield return new WaitForSeconds(6);
 
         _wraithModel.transform.position = _startPoint;
@@ -106,6 +113,6 @@ public class WraithHandler : MonoBehaviour
 
         //Start flight
         _distance = _remainingDsitance = Vector3.Distance(_startPoint, _endPoint);
-        IsMoving = true;
+        _isMoving = true;
     }
 }
