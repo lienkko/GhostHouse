@@ -251,6 +251,9 @@ public class GameManager : MonoBehaviour
 
     public void ReloadGame()
     {
+        PlayerController.Instance.OnDeath -= Death;
+        PlayerController.Instance.OnDamage -= ChangeHp;
+        IsConsoleOpened = false;
         SceneManager.LoadScene("LoadMainScene");
     }
 }
