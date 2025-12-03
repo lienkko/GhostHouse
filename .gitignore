@@ -81,6 +81,8 @@ BurstCache/
 .vscode/
 
 # Visual Studio
+.vs/
+.vsconfig
 *.sln
 *.suo
 *.user
