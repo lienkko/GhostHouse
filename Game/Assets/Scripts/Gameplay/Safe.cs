@@ -8,7 +8,7 @@ public class Safe : MonoBehaviour
     private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
 
 
-    public bool IsInPuzzle { get; private set; } = false;
+    public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;
     private DoorController _doorToOpen;
@@ -35,9 +35,11 @@ public class Safe : MonoBehaviour
         PlayerController.Instance.OnDeath += ClosePuzzle;
     }
 
+    private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.IsConsoleOpened)); }
+
     private void Update()
     {
-        if (!Pause.IsPaused && IsInPuzzle && Input.GetKeyDown(KeyCode.E))
+        if (CanClosePuzzle())
         {
             ClosePuzzle();
             return;
@@ -82,7 +84,6 @@ public class Safe : MonoBehaviour
     private void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-        
 
         StartCoroutine(SwitchIsInPuzzle(true));
 
