@@ -37,7 +37,6 @@ public class CommandLine : MonoBehaviour
         _inputField.onSubmit.AddListener(EnterCommand);
 
         _lastCommands = new List<string>();
-        
     }
 
     private void OnLineChanged(string line)
