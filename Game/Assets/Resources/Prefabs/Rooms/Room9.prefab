@@ -135,7 +135,6 @@ Transform:
   m_Children:
   - {fileID: 5358132826058528707}
   - {fileID: 3329122751923702667}
-  - {fileID: 4308546790218635635}
   - {fileID: 7418804687550485538}
   m_Father: {fileID: 2026293812885963086}
   m_RootOrder: 1
@@ -201,37 +200,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6904806091412861253}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1820466075060148460
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4308546790218635635}
-  m_Layer: 0
-  m_Name: Point5
-  m_TagString: TopPoint
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4308546790218635635
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820466075060148460}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.501, y: 5.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6491227036693953227}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2728653793371190126
 GameObject:
@@ -902,7 +870,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6491227036693953227}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7236348282181598926
 GameObject:
@@ -1044,7 +1012,6 @@ MonoBehaviour:
   - {fileID: 218210559110579910}
   - {fileID: 5358132826058528707}
   - {fileID: 3329122751923702667}
-  - {fileID: 4308546790218635635}
   - {fileID: 7418804687550485538}
   Closets:
   - {fileID: 2357340696270367160}
@@ -6966,7 +6933,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -8
+  m_SortingOrder: 12
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

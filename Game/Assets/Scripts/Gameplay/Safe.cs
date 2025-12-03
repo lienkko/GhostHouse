@@ -18,6 +18,8 @@ public class Safe : MonoBehaviour
     [SerializeField] private Sprite _topSafeSprite;
     [SerializeField] private Sprite _botSafeSprite;
 
+    [SerializeField] private Collider2D _borderCollider;
+
 
     private void Awake()
     {
@@ -45,21 +47,25 @@ public class Safe : MonoBehaviour
     public void Initialize(string pointTag, DoorController door)
     {
         _doorToOpen = door;
-        switch (tag)
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        switch (pointTag)
         {
             case "TopPoint":
-                GetComponent<SpriteRenderer>().sprite = _topSafeSprite;
+                spriteRenderer.sprite = _topSafeSprite;
                 break;
             case "BotPoint":
-                GetComponent<SpriteRenderer>().sprite = _botSafeSprite;
+                _borderCollider.offset = new Vector2(0,-0.12f);
+                spriteRenderer.sortingOrder = 11;
+
+                spriteRenderer.sprite = _botSafeSprite;
                 break;
             case "RightPoint":
-                GetComponent<SpriteRenderer>().sprite = _rightLeftSafeSprite;
+                spriteRenderer.sprite = _rightLeftSafeSprite;
                 break;
             case "LeftPoint":
                 {
-                    GetComponent<SpriteRenderer>().flipX = true;
-                    GetComponent<SpriteRenderer>().sprite = _rightLeftSafeSprite;
+                    spriteRenderer.flipX = true;
+                    spriteRenderer.sprite = _rightLeftSafeSprite;
                     break;
                 }
         }

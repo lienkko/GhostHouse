@@ -9,7 +9,7 @@ public class InitializeTest : MonoBehaviour
     {
         SafeObj = FindAnyObjectByType<Safe>();
         Door = FindAnyObjectByType<DoorController>();
-        SafeObj.Initialize("TopPoint", Door);
+        SafeObj.Initialize("BotPoint", Door);
         Destroy(gameObject);
     }
 }

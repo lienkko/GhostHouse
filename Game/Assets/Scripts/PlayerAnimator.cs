@@ -20,7 +20,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update()
     {
-        if (_pc.MoveDir != Vector2.zero && _pc.CanWalk)
+        if (_pc.DeltaMove != Vector3.zero)
             _am.SetBool("Walk", true);
         else
             _am.SetBool("Walk", false);
