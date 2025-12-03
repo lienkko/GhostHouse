@@ -129,17 +129,19 @@ public class GameManager : MonoBehaviour
         GMAudioSource.UnPause();
     }
 
+    private bool CanOpenConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused; }
+    private bool CanCloseConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened; }
 
     private void Update()
     {
         if (_inGame)
         {
-            if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused)
+            if (CanOpenConsole())
             {
                 Cursor.lockState = CursorLockMode.None;
                 OpenConsole();
             }
-            else if ((Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened)
+            else if (CanCloseConsole())
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 CloseConsole();

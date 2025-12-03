@@ -333,7 +333,7 @@ public class CommandLine : MonoBehaviour
             PrintOnConsole("prevroom не может вызываться когда игрок спрятан");
             return;
         }
-        if (safe && safe.IsInPuzzle)
+        if (safe && Safe.IsInPuzzle)
             safe.ClosePuzzle();
         RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().PreviousRoomDoor.ActivateDoor();
         _lastCommands.Add(commandAndParameters[0]);
