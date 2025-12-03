@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     private bool _inGame = false;
     private readonly int[,] _resolutions = {{800, 600}, { 1280, 960}};
+    private int _currentResolution;
 
 
     private void Awake()
@@ -54,13 +55,15 @@ public class GameManager : MonoBehaviour
 
     private void SetWindowSize()
     {
-        if (PlayerPrefs.GetInt("DisplayMode") == 0)
+        int choosedResolution = PlayerPrefs.GetInt("Resolution");
+        if (PlayerPrefs.GetInt("DisplayMode") == 0 && !Screen.fullScreen)
             Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
-        else
+        else if (PlayerPrefs.GetInt("DisplayMode") == 1 && (Screen.fullScreen || choosedResolution != _currentResolution))
         {
-            int width = _resolutions[PlayerPrefs.GetInt("Resolution"), 0];
-            int height = _resolutions[PlayerPrefs.GetInt("Resolution"), 1];
+            int width = _resolutions[choosedResolution, 0];
+            int height = _resolutions[choosedResolution, 1];
             Screen.SetResolution(width, height, false);
+            _currentResolution = PlayerPrefs.GetInt("Resolution");
         }
     }
 
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Launched", 1);
             PlayerPrefs.Save();
         }
+        _currentResolution = PlayerPrefs.GetInt("Resolution");
         SetWindowSize();
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
 
