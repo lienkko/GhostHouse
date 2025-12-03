@@ -14,11 +14,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip _blinkLightsSound;
     public AudioSource GMAudioSource { get; private set; }
 
-    
 
+    [SerializeField]private bool _testMode;
     public bool IsConsoleOpened { get; private set; } = false;
 
-    private Pause _pauseMenu;
     private bool _inGame = false;
     private readonly int[,] _resolutions = {{800, 600}, { 1280, 960}};
 
@@ -45,6 +44,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (_testMode)
+        {
+            GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
+            return;
+        }
         SceneManager.LoadScene("main menu");
     }
 
@@ -79,7 +83,6 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
-        _pauseMenu = FindAnyObjectByType<Pause>();
 
         Ghost.Instance.InteractiveInstance.SetListener(StartGame);
         PlayerController.Instance.OnDeath += Death;

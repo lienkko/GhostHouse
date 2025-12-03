@@ -81,6 +81,7 @@ BurstCache/
 .vscode/
 
 # Visual Studio
+.vsconfig
 *.sln
 *.suo
 *.user
@@ -90,6 +91,7 @@ BurstCache/
 *.pidb
 *.svd
 *.pdb
+
 
 ### OS FILES ###
 # Windows

@@ -42,22 +42,21 @@ public class Pause : MonoBehaviour
 
     private void PauseGame()
     {
+        Time.timeScale = 0f;
         IsPaused = true;
         _pauseWindow.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.BlockPlayer(true);
         OnPause?.Invoke();
-        Time.timeScale = 0f;
     }
     private void ResumeGame()
     {
-        
+        Time.timeScale = 1f;
         IsPaused = false;
         _pauseWindow.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
         OnResume?.Invoke();
-        Time.timeScale = 1f;
     }
 
     private void Settings()

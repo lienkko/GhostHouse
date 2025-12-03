@@ -12,6 +12,7 @@ public class Safe : MonoBehaviour
 
     private GameObject _puzzle;
     private DoorController _doorToOpen;
+    private Interactive _interactiveComp;
 
     [SerializeField] private Sprite _rightLeftSafeSprite;
     [SerializeField] private Sprite _topSafeSprite;
@@ -20,10 +21,16 @@ public class Safe : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<Interactive>().SetListener(OpenPuzzle);
-        GetComponent<Interactive>().isInteractive = true;
+        _interactiveComp = GetComponent<Interactive>();
+        _interactiveComp.SetListener(OpenPuzzle);
+        _interactiveComp.isInteractive = true;
+        
+        Pause.OnResume += SafeOnResume;
+    }
+
+    private void Start()
+    {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        Pause.OnResume += ShowCursorOnResume;
     }
 
     private void Update()
@@ -98,15 +105,18 @@ public class Safe : MonoBehaviour
     private IEnumerator SwitchIsInPuzzle(bool state)
     {
         yield return null;
+        _interactiveComp.isInteractive = !state;
         IsInPuzzle = state;
     }
 
-    private void ShowCursorOnResume(){Cursor.lockState = CursorLockMode.None;}
+    private void SafeOnResume()
+    {
+        GameManager.Instance.BlockPlayer(true);
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     public void OpenSafe()
     {
-        GetComponent<Interactive>().isInteractive = false;
-        GetComponent<Interactive>().RemoveListener();
         if (_puzzle)
         {
             ClosePuzzle();
@@ -114,6 +124,8 @@ public class Safe : MonoBehaviour
         }
         else
             GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        _interactiveComp.RemoveListener();
+        _interactiveComp.isInteractive = false;
         _doorToOpen.UnlockDoor();
         Destroy(this);
     }
