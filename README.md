@@ -19,7 +19,7 @@
     2D игра в жанре Roguelike с элементами хоррора
     <br />
   </p>
-  <h3><a href="https://github.com/lienkko/GhostHouse/releases/tag/v0.1.0">Скачать последнюю версию игры - v0.1.0</a></h3>
+  <h3><a href="https://github.com/lienkko/GhostHouse/releases/tag/v0.1.1">Скачать последнюю версию игры - v0.1.1</a></h3>
 </div>
 
 
@@ -135,6 +135,10 @@
    ```sh
    /room_lights (1/0)
    ```
+9. Очистить окно чата
+   ```sh
+   /clear
+   ```   
 
 
 <p align="right">(<a href="#readme-top">К началу</a>)</p>
