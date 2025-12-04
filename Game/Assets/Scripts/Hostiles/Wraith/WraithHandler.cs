@@ -58,11 +58,18 @@ public class WraithHandler : MonoBehaviour
 
     private void PauseAudio()
     {
-        _audioSource.Pause();
+        if (_audioSource)
+        {
+            _audioSource.Pause();
+        }
+        
     }
     private void ResumeAudio()
     {
-        _audioSource.UnPause();
+        if (_audioSource)
+        {
+            _audioSource.UnPause();
+        }
     }
 
 

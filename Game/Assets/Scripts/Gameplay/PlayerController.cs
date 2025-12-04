@@ -17,9 +17,11 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
+    public bool IsDead { get; private set; } = false;
     public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
+
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
@@ -99,6 +101,7 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        IsDead = true;
         OnDeath?.Invoke();
         gameObject.SetActive(false);
     }
