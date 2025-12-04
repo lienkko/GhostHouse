@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class GameUIFieldsGetter : MonoBehaviour
 {
-    [Header("Поля подсказки")]
+    [Header("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private GameObject _openSafeText;
     [SerializeField] private GameObject _openDoorText;
     [SerializeField] private GameObject _hideText;
@@ -13,6 +13,7 @@ public class GameUIFieldsGetter : MonoBehaviour
 
     [Space(10)]
     [SerializeField] private GameObject _deathText;
+    [SerializeField] private GameObject _buttonRestartGame;
     [SerializeField] private TextMeshProUGUI _hpField;
 
     [Space(10)]
@@ -26,7 +27,21 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject LockedImage => _lockedImage;
 
     public GameObject DeathText => _deathText;
+
+    public GameObject ButtonRestartGame => _buttonRestartGame;
     public TextMeshProUGUI HpField => _hpField;
 
     public GameObject ConsoleWindow => _consoleWindow;
+
+    private void Awake()
+    {
+        _buttonRestartGame.GetComponent<Button>().onClick.AddListener(ReloadGame);
+    }
+
+    private void ReloadGame()
+    {
+        GameManager.Instance.ReloadGame();
+    }
+
+    
 }

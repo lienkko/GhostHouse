@@ -199,6 +199,8 @@ public class GameManager : MonoBehaviour
     private void Death()
     {
         GameUIFields.DeathText.SetActive(true);
+        GameUIFields.ButtonRestartGame.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void ChangeHp(int dmg, int hp)
