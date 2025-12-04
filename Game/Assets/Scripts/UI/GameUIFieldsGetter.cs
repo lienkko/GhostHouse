@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUIFieldsGetter : MonoBehaviour
@@ -14,6 +15,8 @@ public class GameUIFieldsGetter : MonoBehaviour
     [Space(10)]
     [SerializeField] private GameObject _deathText;
     [SerializeField] private GameObject _buttonRestartGame;
+    [SerializeField] private GameObject _buttonMenu;
+
     [SerializeField] private TextMeshProUGUI _hpField;
 
     [Space(10)]
@@ -29,6 +32,7 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject DeathText => _deathText;
 
     public GameObject ButtonRestartGame => _buttonRestartGame;
+    public GameObject ButtonMenu => _buttonMenu;
     public TextMeshProUGUI HpField => _hpField;
 
     public GameObject ConsoleWindow => _consoleWindow;
@@ -36,6 +40,7 @@ public class GameUIFieldsGetter : MonoBehaviour
     private void Awake()
     {
         _buttonRestartGame.GetComponent<Button>().onClick.AddListener(ReloadGame);
+        _buttonMenu.GetComponent<Button>().onClick.AddListener(ToMenu);
     }
 
     private void ReloadGame()
@@ -43,5 +48,9 @@ public class GameUIFieldsGetter : MonoBehaviour
         GameManager.Instance.ReloadGame();
     }
 
+    private void ToMenu()
+    {
+        SceneManager.LoadScene("main menu");
+    }
     
 }

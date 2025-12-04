@@ -54,7 +54,8 @@ public class Pause : MonoBehaviour
         Time.timeScale = 1f;
         IsPaused = false;
         _pauseWindow.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
+        if (!PlayerController.Instance.IsDead)
+            Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
         OnResume?.Invoke();
     }

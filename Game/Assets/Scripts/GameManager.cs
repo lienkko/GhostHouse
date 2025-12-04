@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneChanged(Scene oldScene, Scene newScene)
     {
+        GMAudioSource.Stop();
         if (newScene.name == "Game") 
         {
             _inGame = true;
@@ -200,6 +201,7 @@ public class GameManager : MonoBehaviour
     {
         GameUIFields.DeathText.SetActive(true);
         GameUIFields.ButtonRestartGame.SetActive(true);
+        GameUIFields.ButtonMenu.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -254,8 +256,6 @@ public class GameManager : MonoBehaviour
 
     public void ReloadGame()
     {
-        PlayerController.Instance.OnDeath -= Death;
-        PlayerController.Instance.OnDamage -= ChangeHp;
         IsConsoleOpened = false;
         SceneManager.LoadScene("LoadMainScene");
     }
