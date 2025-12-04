@@ -15,12 +15,13 @@ public class CommandLine : MonoBehaviour
                     "/restartgame - перезапускает игру\n" +
                     "/nextroom - перемещает в следующую комнату\n" +
                     "/prevroom - перемещает в предыдущую комнату\n" +
-                    "/room_lights (1/0) - включает/выключает свет в комнате";
+                    "/room_lights (1/0) - включает/выключает свет в комнате\n" +
+                    "/clear - очищает окно чата";
 
     [SerializeField] private TMP_Text _commandsField;
     private TMP_InputField _inputField;
 
-    private List<string> _lastCommands;
+    private static List<string> _lastCommands = new List<string>();
     private int _choosenLastCommandIndex;
     private bool _choosingLastCommand = true;
     private string _currentLine = "";
@@ -35,8 +36,6 @@ public class CommandLine : MonoBehaviour
 
         _inputField.onValueChanged.AddListener(OnLineChanged);
         _inputField.onSubmit.AddListener(EnterCommand);
-
-        _lastCommands = new List<string>();
     }
 
     private void OnLineChanged(string line)
@@ -120,11 +119,7 @@ public class CommandLine : MonoBehaviour
         Execute(line[1..]);
     }
 
-    private void ReloadPlayer()
-    {
-        PlayerController.Instance.gameObject.SetActive(false);
-        PlayerController.Instance.gameObject.SetActive(true);
-    }
+    
 
 
     private void Execute(string line)
@@ -213,7 +208,7 @@ public class CommandLine : MonoBehaviour
         }
         GameManager.Instance.StartGame();
         PrintOnConsole("Игра началась");
-        ReloadPlayer();
+        PlayerController.Instance.ReloadPlayer();
         _lastCommands.Add(commandAndParameters[0]);
     }
 
@@ -271,7 +266,7 @@ public class CommandLine : MonoBehaviour
         }
         safe.OpenSafe();
         PrintOnConsole("Сейф открыт");
-        ReloadPlayer();
+        PlayerController.Instance.ReloadPlayer();
         _lastCommands.Add(commandAndParameters[0]);
     }
 

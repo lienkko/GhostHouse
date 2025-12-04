@@ -217,22 +217,23 @@ public class GameManager : MonoBehaviour
 
         GMAudioSource.PlayOneShot(_blinkLightsSound);
 
-        while (countOfBlinks < 18)
+        while (countOfBlinks < 12)
         {
             for(int i = 0; i < numOfLights; i++)
             {
                 lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.3f,1.1f);
             }
             countOfBlinks++;
-            yield return new WaitForSeconds(Time.deltaTime*10);
+            yield return new WaitForSeconds(0.1f);
         }
 
-        TurnOffLights(turnOff);
+        TurnOffLights(turnOff,lightsTransform);
     }
     
-    public void TurnOffLights(bool state)
+    public void TurnOffLights(bool state, Transform lightsTransform=null)
     {
-        Transform lightsTransform = RoomsManager.Instance.CurrentRoom.transform.Find("Lights");
+        if (!lightsTransform)
+            lightsTransform = RoomsManager.Instance.CurrentRoom.transform.Find("Lights");
         int numOfChilds = lightsTransform.childCount;
         for (int i = 0; i < numOfChilds; i++)
         {
