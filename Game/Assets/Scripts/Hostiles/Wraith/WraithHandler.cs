@@ -95,7 +95,7 @@ public class WraithHandler : MonoBehaviour
 
     private void EndOfTheFlight()
     {
-        IsWraithSummoned = true;
+        IsWraithSummoned = false;
         _isMoving = false;
         _isWhispering = false;
         OpenDoors();
