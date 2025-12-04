@@ -91,6 +91,12 @@ public class PlayerController : MonoBehaviour
         OnDamage?.Invoke(dmg, HealthPoints);
     }
 
+    public void ReloadPlayer()
+    {
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+    }
+
     private void Die()
     {
         OnDeath?.Invoke();

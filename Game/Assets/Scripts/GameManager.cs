@@ -215,14 +215,14 @@ public class GameManager : MonoBehaviour
 
         GMAudioSource.PlayOneShot(_blinkLightsSound);
 
-        while (countOfBlinks < 15)
+        while (countOfBlinks < 12)
         {
             for(int i = 0; i < numOfLights; i++)
             {
                 lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.3f,1.1f);
             }
             countOfBlinks++;
-            yield return new WaitForSeconds(Time.deltaTime*10);
+            yield return new WaitForSeconds(0.1f);
         }
 
         TurnOffLights(turnOff,lightsTransform);
