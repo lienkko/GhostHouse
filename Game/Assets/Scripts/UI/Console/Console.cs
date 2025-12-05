@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Console : MonoBehaviour
@@ -8,8 +9,9 @@ public class Console : MonoBehaviour
 
     public bool IsConsoleOpened { get; private set; }
 
-
     [SerializeField] private GameObject _consoleWindow;
+
+    [Space(10)]
     [SerializeField] private Button _closeButton;
 
     private void Awake()
@@ -32,6 +34,8 @@ public class Console : MonoBehaviour
             CloseConsole();
         }
     }
+
+    
 
     private void OpenConsole()
     {
