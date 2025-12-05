@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -9,15 +8,15 @@ using UnityEngine;
 public class CommandLine : MonoBehaviour
 {
     private const string HELP_TEXT = "Доступные команды: \n" +
-                    "/startgame - начинает игру\n" +
-                    "/godmode (1/0) - включает/выключает режим бога\n" +
-                    "/summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
-                    "/open_safe - открывает закрытый сейф в комнате\n" +
-                    "/restartgame - перезапускает игру\n" +
-                    "/nextroom - перемещает в следующую комнату\n" +
-                    "/prevroom - перемещает в предыдущую комнату\n" +
-                    "/room_lights (1/0) - включает/выключает свет в комнате\n" +
-                    "/clear - очищает окно чата";
+                    "startgame - начинает игру\n" +
+                    "godmode (1/0) - включает/выключает режим бога\n" +
+                    "summon_wraith - призывает wraith (недоступна в стартовой комнате)\n" +
+                    "open_safe - открывает закрытый сейф в комнате\n" +
+                    "restartgame - перезапускает игру\n" +
+                    "nextroom - перемещает в следующую комнату\n" +
+                    "prevroom - перемещает в предыдущую комнату\n" +
+                    "room_lights (1/0) - включает/выключает свет в комнате\n" +
+                    "clear - очищает окно чата";
 
     [SerializeField] private TMP_Text _commandsField;
     private TMP_InputField _inputField;
@@ -26,10 +25,6 @@ public class CommandLine : MonoBehaviour
     private int _choosenLastCommandIndex;
     private bool _choosingLastCommand = true;
     private string _currentLine = "";
-
-    
-
-    [HideInInspector] public bool isSlash = false;
 
     private void Awake()
     {
@@ -48,12 +43,12 @@ public class CommandLine : MonoBehaviour
     {
         yield return null;
         _currentLine = line;
-        if (_lastCommands.Count > 0 && line != "/" + _lastCommands[_choosenLastCommandIndex])
+        if (_lastCommands.Count > 0 && line != _lastCommands[_choosenLastCommandIndex])
         {
             _choosingLastCommand = false;
             _choosenLastCommandIndex = _lastCommands.Count - 1;
         }
-        else if (_lastCommands.Count > 0 && line == "/" + _lastCommands[_choosenLastCommandIndex])
+        else if (_lastCommands.Count > 0 && line == _lastCommands[_choosenLastCommandIndex])
         {
             _choosenLastCommandIndex -= 1;
             if (_choosenLastCommandIndex < 0)
@@ -66,28 +61,15 @@ public class CommandLine : MonoBehaviour
     {
         _choosingLastCommand = true;
         _choosenLastCommandIndex = _lastCommands.Count - 1;
-        
-        StartCoroutine(ActivateCommandLine());
-
-        if (isSlash)
-        {
-            _inputField.text = "/";
-            isSlash = false;
-        }
-        else
-            _inputField.text = "";
+        _inputField.text = "";
         _inputField.caretPosition = _inputField.text.Length;
     }
 
-    IEnumerator ActivateCommandLine()
-    {
-        yield return null;
-        _inputField.ActivateInputField();
-    }
 
 
     private void Update()
     {
+        _inputField.ActivateInputField();
         if (string.IsNullOrWhiteSpace(_currentLine))
         {
             _choosingLastCommand = true;
@@ -96,7 +78,7 @@ public class CommandLine : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab) && _choosingLastCommand && _lastCommands.Count > 0)
         {
             
-            _inputField.text = "/" + _lastCommands[_choosenLastCommandIndex];
+            _inputField.text = _lastCommands[_choosenLastCommandIndex];
             _inputField.caretPosition = _inputField.text.Length;
         }
     }
@@ -111,13 +93,8 @@ public class CommandLine : MonoBehaviour
         line = line.Trim();
         if (string.IsNullOrWhiteSpace(line))
             return;
-        if (!line.StartsWith("/"))
-        {
-            Log($"\"{line}\" не является командой");
-            return;
-        }
 
-        Execute(line[1..]);
+        Execute(line);
     }
 
     
@@ -166,7 +143,7 @@ public class CommandLine : MonoBehaviour
                 ExecuteClear(commandAndParameters);
                 break;
             default:
-                Log($"\"/{line}\" не является командой");
+                Log($"\"{line}\" не является командой");
                 break;
         }
         _choosenLastCommandIndex = _lastCommands.Count - 1;

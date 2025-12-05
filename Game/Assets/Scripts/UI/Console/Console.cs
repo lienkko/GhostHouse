@@ -19,7 +19,7 @@ public class Console : MonoBehaviour
         _closeButton.onClick.AddListener(CloseConsole);
     }
 
-    private bool CanOpenConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused; }
+    private bool CanOpenConsole() { return Input.GetKeyDown(KeyCode.BackQuote) && !IsConsoleOpened && !Pause.IsPaused; }
     private bool CanCloseConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened; }
     private void Update()
     {
@@ -38,10 +38,6 @@ public class Console : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.BlockPlayer(true);
         StartCoroutine(SwitchIsConsoleOpened(true));
-
-        if (Input.GetKeyDown(KeyCode.Slash))
-            _consoleWindow.transform.GetComponentInChildren<CommandLine>().isSlash = true;
-
         _consoleWindow.SetActive(true);
     }
 
