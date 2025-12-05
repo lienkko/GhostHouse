@@ -19,9 +19,6 @@ public class GameUIFieldsGetter : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _hpField;
 
-    [Space(10)]
-    [SerializeField] private GameObject _consoleWindow;
-
 
     public GameObject OpenSafeText => _openSafeText;
     public GameObject OpenDoorText => _openDoorText;
@@ -34,8 +31,6 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject ButtonRestartGame => _buttonRestartGame;
     public GameObject ButtonMenu => _buttonMenu;
     public TextMeshProUGUI HpField => _hpField;
-
-    public GameObject ConsoleWindow => _consoleWindow;
 
     private void Awake()
     {

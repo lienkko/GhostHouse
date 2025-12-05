@@ -31,7 +31,7 @@ public class Pause : MonoBehaviour
             Settings();
             return;
         }
-        if (!GameManager.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle)
+        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle)
         {
             if (!IsPaused)
                 PauseGame();

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField]private bool _testMode;
-    public bool IsConsoleOpened { get; private set; } = false;
+    
 
     private bool _inGame = false;
     private readonly int[,] _resolutions = {{800, 600}, { 1280, 960}};
@@ -130,27 +130,6 @@ public class GameManager : MonoBehaviour
         GMAudioSource.UnPause();
     }
 
-    private bool CanOpenConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused; }
-    private bool CanCloseConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened; }
-
-    private void Update()
-    {
-        if (_inGame)
-        {
-            if (CanOpenConsole())
-            {
-                Cursor.lockState = CursorLockMode.None;
-                OpenConsole();
-            }
-            else if (CanCloseConsole())
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                CloseConsole();
-            }
-            
-        }
-    }
-
     //InGame methods
     public void BlockPlayer(bool state)
     {
@@ -160,28 +139,9 @@ public class GameManager : MonoBehaviour
         PlayerInteract.Instance.CanInteract = !state;
     }
 
-    private void OpenConsole()
-    {
-        BlockPlayer(true);
-        StartCoroutine(SwitchIsConsoleOpened(true));
+    
 
-        if (Input.GetKeyDown(KeyCode.Slash))
-            GameUIFields.ConsoleWindow.transform.GetComponentInChildren<CommandLine>().isSlash = true;
-
-        GameUIFields.ConsoleWindow.SetActive(true);
-    }
-
-    private void CloseConsole()
-    {
-        BlockPlayer(false);
-        StartCoroutine(SwitchIsConsoleOpened(false));
-        GameUIFields.ConsoleWindow.SetActive(false);
-    }
-    private IEnumerator SwitchIsConsoleOpened(bool state)
-    {
-        yield return null;
-        IsConsoleOpened = state;
-    }
+    
 
 
     public void StartGame()
@@ -256,7 +216,6 @@ public class GameManager : MonoBehaviour
 
     public void ReloadGame()
     {
-        IsConsoleOpened = false;
         SceneManager.LoadScene("LoadMainScene");
     }
 }
