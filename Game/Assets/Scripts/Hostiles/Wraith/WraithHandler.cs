@@ -92,7 +92,8 @@ public class WraithHandler : MonoBehaviour
     public void StartWraith(Vector3 point1, Vector3 point2)
     {
         CloseDoors();
-        PlayerController.Instance.ReloadPlayer();
+        if (PlayerController.Instance.gameObject.activeSelf)
+            PlayerController.Instance.ReloadPlayer();
 
         _startPoint = point1;
         _endPoint = point2;
@@ -106,7 +107,8 @@ public class WraithHandler : MonoBehaviour
         _isMoving = false;
         _isWhispering = false;
         OpenDoors();
-        PlayerController.Instance.ReloadPlayer();
+        if (PlayerController.Instance.gameObject.activeSelf)
+            PlayerController.Instance.ReloadPlayer();
         _wraithModel.SetActive(false);
     }
 
