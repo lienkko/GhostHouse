@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Console : MonoBehaviour
 {
@@ -11,12 +10,13 @@ public class Console : MonoBehaviour
 
 
     [SerializeField] private GameObject _consoleWindow;
-
+    [SerializeField] private Button _closeButton;
 
     private void Awake()
     {
-        IsConsoleOpened = false;
         Instance = this;
+        IsConsoleOpened = false;
+        _closeButton.onClick.AddListener(CloseConsole);
     }
 
     private bool CanOpenConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Slash)) && !IsConsoleOpened && !Pause.IsPaused; }
@@ -25,18 +25,17 @@ public class Console : MonoBehaviour
     {
         if (CanOpenConsole())
         {
-            Cursor.lockState = CursorLockMode.None;
             OpenConsole();
         }
         else if (CanCloseConsole())
         {
-            Cursor.lockState = CursorLockMode.Locked;
             CloseConsole();
         }
     }
 
     private void OpenConsole()
     {
+        Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.BlockPlayer(true);
         StartCoroutine(SwitchIsConsoleOpened(true));
 
@@ -48,6 +47,7 @@ public class Console : MonoBehaviour
 
     private void CloseConsole()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
         StartCoroutine(SwitchIsConsoleOpened(false));
         _consoleWindow.SetActive(false);
