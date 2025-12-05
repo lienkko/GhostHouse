@@ -253,7 +253,8 @@ public class CommandLine : MonoBehaviour
         }
         safe.OpenSafe();
         Log("Сейф открыт");
-        PlayerController.Instance.ReloadPlayer();
+        if (PlayerController.Instance.gameObject.activeSelf)
+            PlayerController.Instance.ReloadPlayer();
         AddToLastCommands(commandAndParameters[0]);
     }
 

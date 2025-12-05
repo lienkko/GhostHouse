@@ -35,7 +35,7 @@ public class Safe : MonoBehaviour
         PlayerController.Instance.OnDeath += ClosePuzzle;
     }
 
-    private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.Escape) && !Console.Instance.IsConsoleOpened)); }
+    private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
 
     private void Update()
     {
