@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
-    public bool IsDead { get; private set; } = false;
+    public bool IsAlive { get; private set; } = true;
     public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        IsDead = true;
+        IsAlive = false;
         OnDeath?.Invoke();
         gameObject.SetActive(false);
     }

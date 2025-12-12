@@ -44,7 +44,7 @@ public class Console : MonoBehaviour
 
     private void CloseConsole()
     {
-        if (!Safe.IsInPuzzle)
+        if (!Safe.IsInPuzzle && PlayerController.Instance.IsAlive)
         {
             Cursor.lockState = CursorLockMode.Locked;
             GameManager.Instance.BlockPlayer(false);

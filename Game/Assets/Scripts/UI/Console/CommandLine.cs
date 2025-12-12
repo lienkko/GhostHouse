@@ -293,6 +293,7 @@ public class CommandLine : MonoBehaviour
         if (safe)
             safe.OpenSafe();
         RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().NextRoomDoor.ActivateDoor();
+        Log($"Игрок перемещен в следующую комнату");
         AddToLastCommands(commandAndParameters[0]);
     }
 
@@ -321,6 +322,7 @@ public class CommandLine : MonoBehaviour
         if (safe && Safe.IsInPuzzle)
             safe.ClosePuzzle();
         RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>().PreviousRoomDoor.ActivateDoor();
+        Log($"Игрок перемещен в предыдущую комнату");
         AddToLastCommands(commandAndParameters[0]);
     }
 
