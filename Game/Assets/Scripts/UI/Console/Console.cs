@@ -21,7 +21,7 @@ public class Console : MonoBehaviour
         _closeButton.onClick.AddListener(CloseConsole);
     }
 
-    private bool CanOpenConsole() { return Input.GetKeyDown(KeyCode.BackQuote) && !IsConsoleOpened && !Pause.IsPaused; }
+    private bool CanOpenConsole() { return Input.GetKeyDown(KeyCode.BackQuote) && !IsConsoleOpened && !Pause.IsPaused && PlayerController.Instance.IsAlive; }
     private bool CanCloseConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened; }
     private void Update()
     {

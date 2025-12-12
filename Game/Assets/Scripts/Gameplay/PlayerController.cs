@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviour
     {
         IsAlive = false;
         OnDeath?.Invoke();
+
         gameObject.SetActive(false);
     }
 }
