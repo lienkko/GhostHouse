@@ -16,6 +16,7 @@ public class Console : MonoBehaviour
 
     private void Awake()
     {
+        PlayerController.Instance.OnDeath += CloseConsole;
         Instance = this;
         IsConsoleOpened = false;
         _closeButton.onClick.AddListener(CloseConsole);
