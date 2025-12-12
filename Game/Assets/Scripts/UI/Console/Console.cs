@@ -34,9 +34,6 @@ public class Console : MonoBehaviour
             CloseConsole();
         }
     }
-
-    
-
     private void OpenConsole()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -47,8 +44,11 @@ public class Console : MonoBehaviour
 
     private void CloseConsole()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        GameManager.Instance.BlockPlayer(false);
+        if (!Safe.IsInPuzzle)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameManager.Instance.BlockPlayer(false);
+        }
         StartCoroutine(SwitchIsConsoleOpened(false));
         _consoleWindow.SetActive(false);
     }
@@ -57,8 +57,4 @@ public class Console : MonoBehaviour
         yield return null;
         IsConsoleOpened = state;
     }
-
-
-
-
 }
