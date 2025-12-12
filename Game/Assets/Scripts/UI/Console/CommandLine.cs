@@ -16,6 +16,7 @@ public class CommandLine : MonoBehaviour
                     "nextroom - перемещает в следующую комнату\n" +
                     "prevroom - перемещает в предыдущую комнату\n" +
                     "room_lights (1/0) - включает/выключает свет в комнате\n" +
+                    "speed (4 <= value <= 10) - включает/выключает свет в комнате\n" +
                     "clear - очищает окно чата";
 
     [SerializeField] private TMP_Text _commandsField;
@@ -138,6 +139,9 @@ public class CommandLine : MonoBehaviour
                 break;
             case "room_lights":
                 ExecuteRoomLights(commandAndParameters);
+                break;
+            case "speed":
+                ExecuteSpeed(commandAndParameters);
                 break;
             case "clear":
                 ExecuteClear(commandAndParameters);
@@ -352,6 +356,33 @@ public class CommandLine : MonoBehaviour
             Log("Некорректный параметр для room_lights");
         AddToLastCommands(commandAndParameters[0]);
     }
+
+    private void ExecuteSpeed(string[] commandAndParameters)
+    {
+        if (commandAndParameters.Length == 1)
+        {
+            Log($"Скорость: {PlayerController.Instance.CurrentSpeed}");
+            return;
+        }
+        if (commandAndParameters.Length != 2)
+        {
+            Log("Некорректные параметры для speed");
+            return;
+        }
+        if (float.TryParse(commandAndParameters[1],out float speed))
+        {
+            if (PlayerController.Instance.ChangeSpeed(speed) < 0)
+                Log("Значение должно быть между 4 и 8");
+            else
+            {
+                Log($"Скорость изменена на {speed}");
+                AddToLastCommands(commandAndParameters[0]);
+            }
+        }
+        else
+            Log("Неккоректное значение для speed");
+    }
+
     private void ExecuteClear(string[] commandAndParameters)
     {
         if (commandAndParameters.Length > 1)

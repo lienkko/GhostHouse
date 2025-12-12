@@ -4,7 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    public float MoveSpeed = 4f;
+    
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
 
@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public delegate void DamageDelegate(int damage, int hp);
     public event DamageDelegate OnDamage;
 
+    public float CurrentSpeed { get; private set; } = 4f;
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
+    private float _walkSpeedValue = 4;
     
 
     private void Awake()
@@ -56,6 +58,15 @@ public class PlayerController : MonoBehaviour
             Move();
     }
 
+    public float ChangeSpeed(float value)
+    {
+        if (value < 4 || value > 8)
+            return -1;
+        _walkSpeedValue = value;
+        return _walkSpeedValue;
+        
+    }
+
     private void InputMovement()
     {
 
@@ -69,11 +80,8 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if (IsCrouching)
-            MoveSpeed = 2f;
-        else
-            MoveSpeed = 4f;
-        _playerRB.velocity = MoveDir * MoveSpeed;
+        CurrentSpeed = IsCrouching ? _walkSpeedValue*0.5f: _walkSpeedValue;
+        _playerRB.velocity = MoveDir * CurrentSpeed;
     }
 
     public void InflictDamage(int dmg)
