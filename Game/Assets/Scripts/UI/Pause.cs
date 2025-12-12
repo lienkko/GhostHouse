@@ -33,10 +33,10 @@ public class Pause : MonoBehaviour
         }
         if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle)
         {
-            if (!IsPaused)
-                PauseGame();
-            else
+            if (IsPaused)
                 ResumeGame();
+            else if (!IsPaused && PlayerController.Instance.IsAlive)
+                PauseGame();
         }
     }
 
@@ -54,7 +54,7 @@ public class Pause : MonoBehaviour
         Time.timeScale = 1f;
         IsPaused = false;
         _pauseWindow.SetActive(false);
-        if (!PlayerController.Instance.IsDead)
+        if (PlayerController.Instance.IsAlive)
             Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
         OnResume?.Invoke();

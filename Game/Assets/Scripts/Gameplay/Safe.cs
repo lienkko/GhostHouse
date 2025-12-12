@@ -99,7 +99,8 @@ public class Safe : MonoBehaviour
 
     public void ClosePuzzle()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        if (PlayerController.Instance.IsAlive)
+            Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
         if (_puzzle)
         {

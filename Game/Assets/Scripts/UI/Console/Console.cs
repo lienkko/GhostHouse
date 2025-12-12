@@ -16,12 +16,13 @@ public class Console : MonoBehaviour
 
     private void Awake()
     {
+        PlayerController.Instance.OnDeath += CloseConsole;
         Instance = this;
         IsConsoleOpened = false;
         _closeButton.onClick.AddListener(CloseConsole);
     }
 
-    private bool CanOpenConsole() { return Input.GetKeyDown(KeyCode.BackQuote) && !IsConsoleOpened && !Pause.IsPaused; }
+    private bool CanOpenConsole() { return Input.GetKeyDown(KeyCode.BackQuote) && !IsConsoleOpened && !Pause.IsPaused && PlayerController.Instance.IsAlive; }
     private bool CanCloseConsole() { return (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.Escape)) && IsConsoleOpened; }
     private void Update()
     {
@@ -44,7 +45,7 @@ public class Console : MonoBehaviour
 
     private void CloseConsole()
     {
-        if (!Safe.IsInPuzzle)
+        if (!Safe.IsInPuzzle && PlayerController.Instance.IsAlive)
         {
             Cursor.lockState = CursorLockMode.Locked;
             GameManager.Instance.BlockPlayer(false);
