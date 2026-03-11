@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 108063689435130821}
   - component: {fileID: 108063689435130822}
   - component: {fileID: 108063689435130819}
+  - component: {fileID: -2814525906189427299}
   m_Layer: 0
   m_Name: MainHero
   m_TagString: Untagged
@@ -164,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9f256b2cdcfa346998f057b4ae0309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
   IsGodMode: 0
   CanWalk: 1
 --- !u!114 &108063689435130821
@@ -214,3 +214,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-2814525906189427299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108063689435130875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32717084eed9e641aa70bfc5c799a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventoryItems: []
