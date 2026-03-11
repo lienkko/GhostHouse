@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static Interactive;
 
 public class Inventory : MonoBehaviour
 {
     private readonly uint _maxSize;
     private uint _size = 0;
-    [SerializeField] private List<InventoryItem> _inventoryItems;
-    [SerializeField] private List<InventoryItem> _startItems;
+    public delegate void AddItemDelegate();
+    private event AddItemDelegate OnAddition;
+    [SerializeField] private List<Item> _inventoryItems;
+    [SerializeField] private List<Item> _startItems;
 
     private void Awake()
     {
@@ -18,7 +21,13 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void AddItem(InventoryItem item)
+    public void PickUp(Item item)
+    {
+        AddItem(item);
+        OnAddition?.Invoke();
+    }
+
+    private void AddItem(Item item)
     {
         _inventoryItems.Add(item);
         _size++;
@@ -27,9 +36,19 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
-    public InventoryItem GetItem(int index)
+    public Item GetItem(int index)
     {
         return _inventoryItems[index];
+    }
+
+    public void SetListener(AddItemDelegate listener)
+    {
+        OnAddition += listener;
+    }
+
+    public void RemoveListener()
+    {
+        OnAddition = null;
     }
 
 }

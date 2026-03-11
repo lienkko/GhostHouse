@@ -10,6 +10,7 @@ public class InventoryWindow : MonoBehaviour
 
     private void Start()
     {
+        _inventory.SetListener(Redraw);
         Redraw();
     }
 
@@ -19,8 +20,8 @@ public class InventoryWindow : MonoBehaviour
         {
             var item = _inventory.GetItem(i);
 
-            var icon = new GameObject(item.Name);
-            icon.AddComponent<Image>().sprite = item.Icon;
+            var icon = new GameObject(item.GetName());
+            icon.AddComponent<Image>().sprite = item.GetIcon();
             icon.transform.SetParent(_itemsPanel.transform, false);
         }
     }

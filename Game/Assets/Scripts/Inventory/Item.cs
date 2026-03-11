@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Interactive))]
-public class PickUpItem : MonoBehaviour
+public class Item : MonoBehaviour
 {
+    [SerializeField] private string Name;
+    [SerializeField] private Sprite Icon;
     private void Awake()
     {
         GetComponent<Interactive>().isInteractive = true;
@@ -15,4 +17,7 @@ public class PickUpItem : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    public string GetName() { return Name; }
+    public Sprite GetIcon() { return Icon; }
 }

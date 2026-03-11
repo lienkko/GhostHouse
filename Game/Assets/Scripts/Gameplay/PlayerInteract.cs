@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Inventory))]
 public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract Instance {get; private set;}
@@ -31,6 +32,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
         {
+            GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>());
             _itemInteractive.Interact();
             return;
         }
@@ -64,7 +66,7 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
-            if (collision.GetComponent<PickUpItem>() && interactive.isInteractive)
+            if (collision.GetComponent<Item>() && interactive.isInteractive)
             {
                 _itemInteractive = interactive;
                 if (Hints)
@@ -111,7 +113,7 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
-            if (collision.GetComponent<PickUpItem>())
+            if (collision.GetComponent<Item>())
             {
                 GameManager.Instance.GameUIFields.HideText.SetActive(false);
                 _itemInteractive = null;
