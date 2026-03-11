@@ -8,6 +8,7 @@ public class PlayerInteract : MonoBehaviour
     private Interactive _doorInteractive;
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
+    private Interactive _itemInteractive;
 
     [HideInInspector] public bool CanInteract;
 
@@ -24,9 +25,15 @@ public class PlayerInteract : MonoBehaviour
     private bool CanOpenSafe() { return CanInteract && _safeInteractive && _safeInteractive.isInteractive; }
     private bool CanOpedDoor() { return CanInteract && _doorInteractive &&  _doorInteractive.isInteractive; }
     private bool CanStartGame() { return CanInteract && _ghostInteractive && _ghostInteractive.isInteractive;  }
+    private bool CanPickUp() { return CanInteract && _itemInteractive; }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
+        {
+            _itemInteractive.Interact();
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.E) && CanHide())
         {
             _hideSpotInteractive.Interact();
@@ -48,6 +55,7 @@ public class PlayerInteract : MonoBehaviour
             GameManager.Instance.GameUIFields.StartGameText.SetActive(false);
             return;
         }
+        
     }
 
 
@@ -56,6 +64,13 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
+            if (collision.GetComponent<PickUpItem>() && interactive.isInteractive)
+            {
+                _itemInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                return;
+            }
             if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
             {
                 _hideSpotInteractive = interactive;
@@ -96,6 +111,11 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
+            if (collision.GetComponent<PickUpItem>())
+            {
+                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                _itemInteractive = null;
+            }
             if (collision.GetComponent<HideSpot>())
             {
                 GameManager.Instance.GameUIFields.HideText.SetActive(false);

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : ScriptableObject
+public class InventoryItem : ScriptableObject
 {
     public string Name = "HealItem";
     public Sprite Icon;

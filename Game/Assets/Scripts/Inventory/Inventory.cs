@@ -7,8 +7,8 @@ public class Inventory : MonoBehaviour
 {
     private readonly uint _maxSize;
     private uint _size = 0;
-    [SerializeField] private List<Item> _inventoryItems;
-    [SerializeField] private List<Item> _startItems;
+    [SerializeField] private List<InventoryItem> _inventoryItems;
+    [SerializeField] private List<InventoryItem> _startItems;
 
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void AddItem(Item item)
+    private void AddItem(InventoryItem item)
     {
         _inventoryItems.Add(item);
         _size++;
@@ -27,7 +27,7 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
-    public Item GetItem(int index)
+    public InventoryItem GetItem(int index)
     {
         return _inventoryItems[index];
     }
