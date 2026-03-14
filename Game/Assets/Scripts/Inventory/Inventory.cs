@@ -1,12 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static Interactive;
 
 public class Inventory : MonoBehaviour
 {
-    private readonly uint _maxSize;
+    public readonly uint MaxSize = 4;
     private uint _size = 0;
     public delegate void AddItemDelegate();
     private event AddItemDelegate OnAddition;
@@ -38,7 +35,7 @@ public class Inventory : MonoBehaviour
     }
     public Item GetItem(int index)
     {
-        return _inventoryItems[index];
+        return index < _size ? _inventoryItems[index] : null;
     }
 
     public void SetListener(AddItemDelegate listener)
