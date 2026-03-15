@@ -40,11 +40,13 @@ public class Inventory : MonoBehaviour
         if (_activeSlot == index)
         {
             _activeSlot = 0;
+            GetComponent<PlayerHand>().HideItem();
             return;
         }
         if (_inventoryItems[index - 1] == _emptyItem)
             return;
         _activeSlot = index;
+        GetComponent<PlayerHand>().TakeItem(_inventoryItems[index - 1]);
     }
 
     private void AddItem(Item item)
@@ -71,7 +73,7 @@ public class Inventory : MonoBehaviour
         _inventoryItems[index] = _emptyItem;
         _size--;
     }
-    private void DropActiveItem()
+    public void DropActiveItem()
     {
         if (_activeSlot == 0)
             return;
@@ -79,8 +81,6 @@ public class Inventory : MonoBehaviour
         _inventoryItems[_activeSlot - 1].gameObject.SetActive(true);
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
-        foreach (var it in _inventoryItems)
-            print($"{it.name}");
 
     }
     public Item GetEmptyItem()

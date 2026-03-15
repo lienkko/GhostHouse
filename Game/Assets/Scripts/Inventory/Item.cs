@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Interactive))]
@@ -18,6 +16,11 @@ public class Item : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public virtual bool UseAndDestroy()
+    {
+        print("Item's base Use method");
+        return false;
+    }
     public string GetName() { return Name; }
     public Sprite GetIcon() { return Icon; }
 }
