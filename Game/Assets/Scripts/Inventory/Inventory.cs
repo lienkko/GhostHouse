@@ -3,23 +3,26 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] private List<Item> _inventoryItems;
-    [SerializeField] private List<Item> _startItems;
+    private Item _emptyItem;
+    private List<Item> _inventoryItems;
     private uint _size = 0;
     private int _activeSlot = 0;
     public readonly uint MaxSize = 4;
     public delegate void AddItemDelegate();
     private event AddItemDelegate OnAddition;
+
     private void Awake()
     {
-        foreach (var item in _startItems)
-        {
-            AddItem(item);
-        }
+        _emptyItem = new GameObject("emptyItem").AddComponent<Item>();
+        _emptyItem.gameObject.SetActive(false);
+        _inventoryItems = new List<Item>();
+        for (int i = 0; i < MaxSize; i++)
+            _inventoryItems.Add(_emptyItem);
     }
-
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+            DropActiveItem();
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -39,13 +42,50 @@ public class Inventory : MonoBehaviour
             _activeSlot = 0;
             return;
         }
+        if (_inventoryItems[index - 1] == _emptyItem)
+            return;
         _activeSlot = index;
     }
 
     private void AddItem(Item item)
     {
-        _inventoryItems.Add(item);
+        if (_activeSlot != 0)
+        {
+            _inventoryItems[_activeSlot - 1] = item;
+            _size++;
+        }
+        for (int it = 0; it < MaxSize - 1; it++)
+        {
+            if (_inventoryItems[it] == _emptyItem)
+            {
+                _inventoryItems[it] = item;
+                _size++;
+                return;
+            }
+        }
+        _inventoryItems[3] = item;
         _size++;
+    }
+    private void DeleteItem(int index)
+    {
+        _inventoryItems[index] = _emptyItem;
+        _size--;
+    }
+    private void DropActiveItem()
+    {
+        if (_activeSlot == 0)
+            return;
+        _inventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
+        _inventoryItems[_activeSlot - 1].gameObject.SetActive(true);
+        DeleteItem(_activeSlot - 1);
+        _activeSlot = 0;
+        foreach (var it in _inventoryItems)
+            print($"{it.name}");
+
+    }
+    public Item GetEmptyItem()
+    {
+        return _emptyItem;
     }
 
     public int GetActiveSlot()
@@ -64,7 +104,7 @@ public class Inventory : MonoBehaviour
 
     public Item GetItem(int index)
     {
-        return index < _size ? _inventoryItems[index] : null;
+        return _inventoryItems[index];
     }
 
     public void SetListener(AddItemDelegate listener)

@@ -19,7 +19,7 @@ public class InventoryWindow : MonoBehaviour
         for (var i = 0; i < _inventory.MaxSize; i++)
         {
             var item = _inventory.GetItem(i);
-            if (item == null)
+            if (item == _inventory.GetEmptyItem())
                 _inventoryIcons[i].gameObject.SetActive(false);
             else
             {
