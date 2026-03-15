@@ -5,6 +5,7 @@ public class InventoryWindow : MonoBehaviour
 {
     [SerializeField] private Inventory _inventory;
     [SerializeField] private Image[] _inventoryIcons;
+    [SerializeField] private Sprite[] _inventoryBG;
 
     private void Start()
     {
@@ -14,6 +15,7 @@ public class InventoryWindow : MonoBehaviour
 
     private void Redraw()
     {
+        GetComponent<Image>().sprite = _inventoryBG[_inventory.GetActiveSlot()];
         for (var i = 0; i < _inventory.MaxSize; i++)
         {
             var item = _inventory.GetItem(i);

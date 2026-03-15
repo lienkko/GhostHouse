@@ -3774,7 +3774,7 @@ RectTransform:
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.4, y: 0}
-  m_AnchorMax: {x: 0.59875, y: 0.09}
+  m_AnchorMax: {x: 0.59, y: 0.1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
@@ -3798,7 +3798,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 390229924, guid: d14a1dea14dd1be4a884e6b50b8efeb6, type: 3}
+  m_Sprite: {fileID: -349999413, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3834,6 +3834,12 @@ MonoBehaviour:
   - {fileID: 1956157420}
   - {fileID: 631159096}
   - {fileID: 1046704657}
+  _inventoryBG:
+  - {fileID: -349999413, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
+  - {fileID: -355545108, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
+  - {fileID: -405524559, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
+  - {fileID: 1838754515, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
+  - {fileID: -950101426, guid: 4e460ad44cd179e909b23b7fd18315bf, type: 3}
 --- !u!1 &1258811544
 GameObject:
   m_ObjectHideFlags: 0
@@ -4190,7 +4196,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 130.3
+  m_fontSize: 130.5
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
