@@ -21,8 +21,6 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-            DropActiveItem();
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -49,24 +47,31 @@ public class Inventory : MonoBehaviour
         GetComponent<PlayerHand>().TakeItem(_inventoryItems[index - 1]);
     }
 
-    private void AddItem(Item item)
+    private bool AddItem(Item item)
     {
-        if (_activeSlot != 0)
+        if ((_size == MaxSize) && (_activeSlot == 0))
+            return false;
+        else if (_activeSlot != 0)
         {
-            _inventoryItems[_activeSlot - 1] = item;
-            _size++;
+            int curSlot = _activeSlot;
+            if (_inventoryItems[_activeSlot - 1] != _emptyItem)
+                DropActiveItem();
+            _inventoryItems[curSlot - 1] = item;
+            ChangeActiveSlot(curSlot);
         }
-        for (int it = 0; it < MaxSize - 1; it++)
+        else
         {
-            if (_inventoryItems[it] == _emptyItem)
+            for (int it = 0; it < MaxSize; it++)
             {
-                _inventoryItems[it] = item;
-                _size++;
-                return;
+                if (_inventoryItems[it] == _emptyItem)
+                {
+                    _inventoryItems[it] = item;
+                    break;
+                }
             }
         }
-        _inventoryItems[3] = item;
         _size++;
+        return true;
     }
     private void DeleteItem(int index)
     {
@@ -96,10 +101,11 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
-    public void PickUp(Item item)
+    public bool PickUp(Item item)
     {
-        AddItem(item);
+        bool wasAdded = AddItem(item);
         OnAddition?.Invoke();
+        return wasAdded;
     }
 
     public Item GetItem(int index)

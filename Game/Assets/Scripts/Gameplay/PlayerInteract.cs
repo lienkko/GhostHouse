@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Inventory))]
 public class PlayerInteract : MonoBehaviour
 {
-    public static PlayerInteract Instance {get; private set;}
+    public static PlayerInteract Instance { get; private set; }
 
     private Interactive _hideSpotInteractive;
     private Interactive _doorInteractive;
@@ -22,18 +22,18 @@ public class PlayerInteract : MonoBehaviour
     }
 
 
-    private bool CanHide() { return CanInteract && _hideSpotInteractive && _hideSpotInteractive.isInteractive;}
+    private bool CanHide() { return CanInteract && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
     private bool CanOpenSafe() { return CanInteract && _safeInteractive && _safeInteractive.isInteractive; }
-    private bool CanOpedDoor() { return CanInteract && _doorInteractive &&  _doorInteractive.isInteractive; }
-    private bool CanStartGame() { return CanInteract && _ghostInteractive && _ghostInteractive.isInteractive;  }
+    private bool CanOpedDoor() { return CanInteract && _doorInteractive && _doorInteractive.isInteractive; }
+    private bool CanStartGame() { return CanInteract && _ghostInteractive && _ghostInteractive.isInteractive; }
     private bool CanPickUp() { return CanInteract && _itemInteractive; }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
         {
-            GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>());
-            _itemInteractive.Interact();
+            if (GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>()))
+                _itemInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanHide())
@@ -57,7 +57,7 @@ public class PlayerInteract : MonoBehaviour
             GameManager.Instance.GameUIFields.StartGameText.SetActive(false);
             return;
         }
-        
+
     }
 
 
@@ -88,7 +88,7 @@ public class PlayerInteract : MonoBehaviour
                 return;
             }
             if (collision.GetComponent<DoorController>() && interactive.isInteractive)
-            {                
+            {
                 _doorInteractive = interactive;
                 if (Hints)
                     GameManager.Instance.GameUIFields.OpenDoorText.SetActive(true);
