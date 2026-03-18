@@ -99,7 +99,7 @@ public class RoomsManager : MonoBehaviour
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
 
-        SetHideSpots(roomData);
+        SetClosetHides(roomData);
 
         if (Random.Range(1,21) > 17)
             GameManager.Instance.SummonWraith();
@@ -190,31 +190,31 @@ public class RoomsManager : MonoBehaviour
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
     }
 
-    private void SetHideSpots(RoomData roomData)
+    private void SetClosetHides(RoomData roomData)
     {
         int numOfSafeSpots = 0;
-        bool[] boxOfClosetsIsHideSpot = new bool[roomData.Closets.Length];
+        bool[] boxOfClosetsIsClosetHide = new bool[roomData.Closets.Length];
 
         for (int i = 0; i < roomData.Closets.Length;i++)
         {
             if (Random.Range(1, 11) > 7)
             {
-                boxOfClosetsIsHideSpot[i] = true;
+                boxOfClosetsIsClosetHide[i] = true;
                 numOfSafeSpots++;
             }
         }
         if (numOfSafeSpots < 1)
         {
-            SetHideSpots(roomData);
+            SetClosetHides(roomData);
             return;
         }
         for (int i = 0; i < roomData.Closets.Length; i++)
         {
-            if (boxOfClosetsIsHideSpot[i])
+            if (boxOfClosetsIsClosetHide[i])
             {
-                GameObject hideSpotCloset = roomData.Closets[i];
-                hideSpotCloset.GetComponent<HideSpot>().enabled = true;
-                hideSpotCloset.GetComponent <HideSpot>().Initialize();
+                GameObject ClosetHideCloset = roomData.Closets[i];
+                ClosetHideCloset.GetComponent<ClosetHide>().enabled = true;
+                ClosetHideCloset.GetComponent <ClosetHide>().Initialize();
             }
         }
     }
