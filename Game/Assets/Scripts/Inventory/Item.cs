@@ -5,7 +5,7 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private string Name;
     [SerializeField] private Sprite Icon;
-    private void Awake()
+    protected virtual void Awake()
     {
         GetComponent<Interactive>().isInteractive = true;
         GetComponent<Interactive>().SetListener(HideItem);

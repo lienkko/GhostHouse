@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6047510260336526987}
   - component: {fileID: 6047510260336526991}
   - component: {fileID: 6047510260336526989}
-  - component: {fileID: 894873392572286019}
+  - component: {fileID: -5448830827413855042}
   m_Layer: 0
   m_Name: MedKit
   m_TagString: Untagged
@@ -126,7 +126,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &894873392572286019
+--- !u!114 &-5448830827413855042
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
