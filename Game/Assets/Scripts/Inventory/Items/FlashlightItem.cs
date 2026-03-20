@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -13,7 +14,16 @@ public class FlashlightItem : Item
     }
     private void Update()
     {
+        if (_isactive)
+        {
+            Vector2 dir = PlayerController.Instance.MoveDir;
 
+            if (dir != Vector2.zero)
+            {
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, angle - 90);
+            }
+        }
     }
     public override bool UseAndDestroy()
     {
