@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public static Inventory Instance { get; private set; }
+    [SerializeField] private InventoryWindow _inventoryWin;
+    public InventoryWindow InventoryWin { get { return _inventoryWin; } }
     private Item _emptyItem;
-    private List<Item> _inventoryItems;
+    public List<Item> InventoryItems { get; private set; }
     private uint _size = 0;
     private int _activeSlot = 0;
     public readonly uint MaxSize = 4;
@@ -13,11 +16,12 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         _emptyItem = new GameObject("emptyItem").AddComponent<Item>();
         _emptyItem.gameObject.SetActive(false);
-        _inventoryItems = new List<Item>();
+        InventoryItems = new List<Item>();
         for (int i = 0; i < MaxSize; i++)
-            _inventoryItems.Add(_emptyItem);
+            InventoryItems.Add(_emptyItem);
     }
     private void Update()
     {
@@ -41,10 +45,10 @@ public class Inventory : MonoBehaviour
             GetComponent<PlayerHand>().HideItem();
             return;
         }
-        if (_inventoryItems[index - 1] == _emptyItem)
+        if (InventoryItems[index - 1] == _emptyItem)
             return;
         _activeSlot = index;
-        GetComponent<PlayerHand>().TakeItem(_inventoryItems[index - 1]);
+        GetComponent<PlayerHand>().TakeItem(InventoryItems[index - 1]);
     }
 
     private bool AddItem(Item item)
@@ -54,18 +58,18 @@ public class Inventory : MonoBehaviour
         else if (_activeSlot != 0)
         {
             int curSlot = _activeSlot;
-            if (_inventoryItems[_activeSlot - 1] != _emptyItem)
+            if (InventoryItems[_activeSlot - 1] != _emptyItem)
                 DropActiveItem();
-            _inventoryItems[curSlot - 1] = item;
+            InventoryItems[curSlot - 1] = item;
             ChangeActiveSlot(curSlot);
         }
         else
         {
             for (int it = 0; it < MaxSize; it++)
             {
-                if (_inventoryItems[it] == _emptyItem)
+                if (InventoryItems[it] == _emptyItem)
                 {
-                    _inventoryItems[it] = item;
+                    InventoryItems[it] = item;
                     break;
                 }
             }
@@ -75,15 +79,15 @@ public class Inventory : MonoBehaviour
     }
     private void DeleteItem(int index)
     {
-        _inventoryItems[index] = _emptyItem;
+        InventoryItems[index] = _emptyItem;
         _size--;
     }
     public void DropActiveItem()
     {
         if (_activeSlot == 0)
             return;
-        _inventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
-        _inventoryItems[_activeSlot - 1].gameObject.SetActive(true);
+        InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
+        InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
 
@@ -103,14 +107,23 @@ public class Inventory : MonoBehaviour
     }
     public bool PickUp(Item item)
     {
+        if (!item.IsCollectable)
+        {
+            if (item.UseAndDestroy())
+            {
+                Destroy(item.gameObject);
+            }
+            return false;
+        }
         bool wasAdded = AddItem(item);
+
         OnAddition?.Invoke();
         return wasAdded;
     }
 
     public Item GetItem(int index)
     {
-        return _inventoryItems[index];
+        return InventoryItems[index];
     }
 
     public void SetListener(AddItemDelegate listener)

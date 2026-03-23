@@ -5,6 +5,7 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private string Name;
     [SerializeField] private Sprite Icon;
+    public bool IsCollectable { get; protected set; } = true;
     protected virtual void Awake()
     {
         GetComponent<Interactive>().isInteractive = true;

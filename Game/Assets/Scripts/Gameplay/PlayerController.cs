@@ -36,11 +36,6 @@ public class PlayerController : MonoBehaviour
         _playerRB = GetComponent<Rigidbody2D>();
     }
 
-
-
-
-
-
     private void Update()
     {
         DeltaMove = transform.position - _lastPos;

@@ -6,6 +6,26 @@ using UnityEngine.Rendering.Universal;
 public class FlashlightItem : Item
 {
     private bool _isactive = false;
+    private float _flashLightCharge = 0.5f;
+    public float FlaslightCharge
+    {
+        get
+        {
+            return _flashLightCharge;
+        }
+        set
+        {
+            _flashLightCharge = value;
+            if (_flashLightCharge > 1)
+            {
+                _flashLightCharge = 1;
+            }
+            if (_flashLightCharge < 0)
+            {
+                _flashLightCharge = 0;
+            }
+        }
+    }
     private Light2D _light2D;
     protected override void Awake()
     {

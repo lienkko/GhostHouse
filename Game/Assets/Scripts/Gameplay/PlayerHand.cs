@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Inventory))]
 public class PlayerHand : MonoBehaviour
 {
     private Item _activeItem;
@@ -9,6 +10,7 @@ public class PlayerHand : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             GetComponent<Inventory>().DropActiveItem();
+            _activeItem.GetComponent<Interactive>().isInteractive = true;
             HideItem();
         }
         if (Input.GetKeyDown(KeyCode.Space) && _activeItem != null)
@@ -31,12 +33,18 @@ public class PlayerHand : MonoBehaviour
         _activeItem = item;
         _activeItem.GetComponent<Interactive>().isInteractive = false;
         _activeItem.gameObject.SetActive(true);
+        if (item is FlashlightItem flashlight)
+        {
+            Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
+        }
     }
     public void HideItem()
     {
         _activeItem.gameObject.SetActive(false);
-        _activeItem.GetComponent<Interactive>().isInteractive = true;
-
+        if (_activeItem is FlashlightItem flashlight)
+        {
+            Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
+        }
         _activeItem = null;
     }
 
