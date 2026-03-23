@@ -11,22 +11,19 @@ public class PlayerInteract : MonoBehaviour
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
 
-    [HideInInspector] public bool CanInteract;
-
     [HideInInspector] public bool Hints;
 
     private void Awake()
     {
         Instance = this;
-        CanInteract = true;
     }
 
 
-    private bool CanHide() { return CanInteract && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
-    private bool CanOpenSafe() { return CanInteract && _safeInteractive && _safeInteractive.isInteractive; }
-    private bool CanOpedDoor() { return CanInteract && _doorInteractive && _doorInteractive.isInteractive; }
-    private bool CanStartGame() { return CanInteract && _ghostInteractive && _ghostInteractive.isInteractive; }
-    private bool CanPickUp() { return CanInteract && _itemInteractive; }
+    private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
+    private bool CanOpenSafe() { return GameManager.Instance.CanUseKeyboard && _safeInteractive && _safeInteractive.isInteractive; }
+    private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
+    private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
+    private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
 
     private void Update()
     {

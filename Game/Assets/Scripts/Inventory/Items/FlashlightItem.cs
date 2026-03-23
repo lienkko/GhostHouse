@@ -6,8 +6,8 @@ using UnityEngine.Rendering.Universal;
 public class FlashlightItem : Item
 {
     private bool _isactive = false;
-    private float _flashLightCharge = 0.1f;
-    private float _dischargeSpeed = 0.02f;
+    private float _flashLightCharge = 0.5f;
+    private readonly float _dischargeSpeed = 0.02f;
     public float FlaslightCharge
     {
         get
@@ -60,6 +60,12 @@ public class FlashlightItem : Item
     {
         ChangeMode();
         return false;
+    }
+    public override void HideItem()
+    {
+        base.HideItem();
+        _isactive = false;
+        _light2D.enabled = false;
     }
     private void ChangeMode()
     {

@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
 
+    public bool CanUseKeyboard {get; private set;}
+
 
     private void Awake()
     {
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour
         PlayerController.Instance.OnChangeHp += ChangeHp;
         ChangeHp(0, PlayerController.Instance.HealthPoints);
         Cursor.lockState = CursorLockMode.Locked;
+        CanUseKeyboard = true;
 
         PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
     }
@@ -137,7 +140,7 @@ public class GameManager : MonoBehaviour
         if (state)
             PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         PlayerController.Instance.CanWalk = !state;
-        PlayerInteract.Instance.CanInteract = !state;
+        CanUseKeyboard = !state;
     }
 
 

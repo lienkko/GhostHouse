@@ -3,15 +3,20 @@ using UnityEngine;
 [RequireComponent(typeof(Inventory))]
 public class PlayerHand : MonoBehaviour
 {
+
     private Item _activeItem;
 
     private void Update()
     {
+        if (_activeItem)
+        {
+            _activeItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
+        }
+        if (!GameManager.Instance.CanUseKeyboard)
+            return;
         if (Input.GetKeyDown(KeyCode.G))
         {
-            GetComponent<Inventory>().DropActiveItem();
-            _activeItem.GetComponent<Interactive>().isInteractive = true;
-            HideItem();
+            DropItem();
         }
         if (Input.GetKeyDown(KeyCode.Space) && _activeItem != null)
         {
@@ -23,10 +28,7 @@ public class PlayerHand : MonoBehaviour
                 Destroy(_activeItem.gameObject);
             }
         }
-        if (_activeItem)
-        {
-            _activeItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
-        }
+        
     }
     public void TakeItem(Item item)
     {
@@ -37,6 +39,11 @@ public class PlayerHand : MonoBehaviour
         {
             Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
         }
+    }
+    private void DropItem()
+    {
+        HideItem();
+        GetComponent<Inventory>().DropActiveItem();
     }
     public void HideItem()
     {
