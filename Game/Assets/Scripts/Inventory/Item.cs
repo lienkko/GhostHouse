@@ -12,7 +12,7 @@ public class Item : MonoBehaviour
         GetComponent<Interactive>().SetListener(HideItem);
     }
 
-    private void HideItem()
+    public virtual void HideItem()
     {
         gameObject.SetActive(false);
     }

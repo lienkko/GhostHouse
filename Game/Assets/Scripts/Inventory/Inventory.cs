@@ -88,6 +88,8 @@ public class Inventory : MonoBehaviour
         if (_activeSlot == 0)
             return;
         InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
+        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
+        InventoryItems[_activeSlot - 1].HideItem();
         InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
@@ -117,7 +119,6 @@ public class Inventory : MonoBehaviour
             return false;
         }
         bool wasAdded = AddItem(item);
-
         OnAddition?.Invoke();
         return wasAdded;
     }

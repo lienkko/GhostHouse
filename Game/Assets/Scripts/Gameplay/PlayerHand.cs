@@ -9,9 +9,7 @@ public class PlayerHand : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            GetComponent<Inventory>().DropActiveItem();
-            _activeItem.GetComponent<Interactive>().isInteractive = true;
-            HideItem();
+            DropItem();
         }
         if (Input.GetKeyDown(KeyCode.Space) && _activeItem != null)
         {
@@ -37,6 +35,11 @@ public class PlayerHand : MonoBehaviour
         {
             Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
         }
+    }
+    private void DropItem()
+    {
+        HideItem();
+        GetComponent<Inventory>().DropActiveItem();
     }
     public void HideItem()
     {
