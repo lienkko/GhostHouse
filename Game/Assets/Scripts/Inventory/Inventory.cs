@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerHand))]
 public class Inventory : MonoBehaviour
 {
     public static Inventory Instance { get; private set; }
@@ -44,17 +45,22 @@ public class Inventory : MonoBehaviour
     {
         if (_activeSlot == index)
         {
-            InventoryItems[index - 1].gameObject.SetActive(false);
-            _activeSlot = 0;
-            GetComponent<PlayerHand>().HideItem();
+            ShutDownSlot(index);
             return;
         }
         if (InventoryItems[index - 1] == _emptyItem)
             return;
+        if (_activeSlot != 0)
+            ShutDownSlot(_activeSlot);
         _activeSlot = index;
         GetComponent<PlayerHand>().TakeItem(InventoryItems[index - 1]);
     }
-
+    private void ShutDownSlot(int index)
+    {
+        InventoryItems[index - 1].HideItem();
+        _activeSlot = 0;
+        GetComponent<PlayerHand>().HideItem();
+    }
     private bool AddItem(Item item)
     {
         if ((_size == MaxSize) && (_activeSlot == 0))

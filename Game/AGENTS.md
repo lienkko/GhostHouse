@@ -8,7 +8,11 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
+<<<<<<< HEAD
   - Name: Flashlight
+=======
+  - Name: MedKit
+>>>>>>> inventory
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
