@@ -3,10 +3,17 @@ using UnityEngine;
 [RequireComponent(typeof(Inventory))]
 public class PlayerHand : MonoBehaviour
 {
+
     private Item _activeItem;
 
     private void Update()
     {
+        if (_activeItem)
+        {
+            _activeItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
+        }
+        if (!GameManager.Instance.CanUseKeyboard)
+            return;
         if (Input.GetKeyDown(KeyCode.G))
         {
             DropItem();
@@ -21,10 +28,7 @@ public class PlayerHand : MonoBehaviour
                 Destroy(_activeItem.gameObject);
             }
         }
-        if (_activeItem)
-        {
-            _activeItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
-        }
+        
     }
     public void TakeItem(Item item)
     {

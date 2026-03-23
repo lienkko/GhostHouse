@@ -14,6 +14,7 @@ public class Inventory : MonoBehaviour
     public delegate void AddItemDelegate();
     private event AddItemDelegate OnAddition;
 
+
     private void Awake()
     {
         Instance = this;
@@ -25,6 +26,8 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
+        if (!GameManager.Instance.CanUseKeyboard)
+            return;
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
