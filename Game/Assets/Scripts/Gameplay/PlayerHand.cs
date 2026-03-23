@@ -40,7 +40,7 @@ public class PlayerHand : MonoBehaviour
     }
     public void HideItem()
     {
-        _activeItem.gameObject.SetActive(false);
+
         if (_activeItem is FlashlightItem flashlight)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();

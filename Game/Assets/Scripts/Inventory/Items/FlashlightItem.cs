@@ -6,7 +6,8 @@ using UnityEngine.Rendering.Universal;
 public class FlashlightItem : Item
 {
     private bool _isactive = false;
-    private float _flashLightCharge = 0.5f;
+    private float _flashLightCharge = 0.1f;
+    private float _dischargeSpeed = 0.02f;
     public float FlaslightCharge
     {
         get
@@ -36,6 +37,16 @@ public class FlashlightItem : Item
     {
         if (_isactive)
         {
+            FlaslightCharge -= _dischargeSpeed * Time.deltaTime;
+
+            if (FlaslightCharge <= 0)
+            {
+                FlaslightCharge = 0;
+                _isactive = false;
+                _light2D.enabled = false;
+                return;
+            }
+
             Vector2 dir = PlayerController.Instance.MoveDir;
 
             if (dir != Vector2.zero)
@@ -59,6 +70,8 @@ public class FlashlightItem : Item
         }
         else
         {
+            if (FlaslightCharge <= 0)
+                return;
             _isactive = true;
             _light2D.enabled = true;
         }

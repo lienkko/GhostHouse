@@ -41,6 +41,7 @@ public class Inventory : MonoBehaviour
     {
         if (_activeSlot == index)
         {
+            InventoryItems[index - 1].gameObject.SetActive(false);
             _activeSlot = 0;
             GetComponent<PlayerHand>().HideItem();
             return;
