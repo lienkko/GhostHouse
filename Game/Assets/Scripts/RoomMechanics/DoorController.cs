@@ -36,7 +36,7 @@ public class DoorController : MonoBehaviour
         if (IsStartingDoor)
         {
             GetComponent<Interactive>().SetListener(ActivateDoor);
-            GetComponent<Interactive>().isInteractive = true;
+            GetComponent<Interactive>().isInteractive = false;
             SetTargetRoomNumber(1);
         }
     }

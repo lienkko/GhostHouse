@@ -90,7 +90,7 @@ public class RoomsManager : MonoBehaviour
         }
 
         // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
-        if (Random.Range(1, 101) <= 10)
+        if (Random.Range(1, 101) <= 20)
         {
             var remainingPoints = roomData.AvailableDoorSpawns
                 .Where(p => p.SpawnPoint != finalEntryPoint.SpawnPoint &&

@@ -5,7 +5,6 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    public Slider healthSlider;
 
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
@@ -33,15 +32,6 @@ public class PlayerController : MonoBehaviour
         Instance = this;
         _lastPos = transform.position;
         _playerRB = GetComponent<Rigidbody2D>();
-    }
-
-    private void Start()
-    {
-        if (healthSlider != null)
-        {
-            healthSlider.maxValue = 100;
-            healthSlider.value = HealthPoints;
-        }
     }
 
     private void Update()
@@ -91,10 +81,6 @@ public class PlayerController : MonoBehaviour
         if (dmg > 0)
         {
             HealthPoints -= dmg;
-            if (healthSlider != null)
-            {
-                healthSlider.value = HealthPoints;
-            }
         }
         
         if (HealthPoints <= 0)
