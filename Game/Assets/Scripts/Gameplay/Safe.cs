@@ -1,13 +1,10 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Safe : MonoBehaviour
 {
     private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
-
-
     public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;

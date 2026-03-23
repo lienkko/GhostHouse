@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class PuzzleNumber : MonoBehaviour
+public class NumberPuzzle : MonoBehaviour
 {
     [Header("Настройки")]
     [SerializeField] private Button[] _numberButtons;
@@ -10,7 +10,7 @@ public class PuzzleNumber : MonoBehaviour
     [SerializeField] private Text _statusText;
 
     private int _currentNumber = 1;
-    private int _targetCount = 10; // Всего 10 цифр
+    private readonly int _targetCount = 10;
 
     private void Start()
     {
@@ -21,27 +21,23 @@ public class PuzzleNumber : MonoBehaviour
     {
         _currentNumber = 1;
         _completeButton.SetActive(false);
-        if (_statusText != null) _statusText.text = "Нажми: 1";
+        _statusText.text = "Нажми: 1";
 
-        // Создаем список цифр от 1 до 10 и перемешиваем
-        List<int> numbers = new List<int>();
+        List<int> numbers = new();
         for (int i = 1; i <= _targetCount; i++) numbers.Add(i);
 
-        for (int i = 0; i < _numberButtons.Length; i++)
+        for (int i = 0; i < _targetCount; i++)
         {
             int index = i;
             int numberValue = numbers[Random.Range(0, numbers.Count)];
             numbers.Remove(numberValue);
 
-            // Настраиваем текст на кнопке
             _numberButtons[i].GetComponentInChildren<Text>().text = numberValue.ToString();
 
-            // Сбрасываем цвета и события
             _numberButtons[i].interactable = true;
             _numberButtons[i].GetComponent<Image>().color = Color.white;
             _numberButtons[i].onClick.RemoveAllListeners();
 
-            // Добавляем логику нажатия
             _numberButtons[i].onClick.AddListener(() => OnClick(numberValue, _numberButtons[index]));
         }
     }
@@ -51,7 +47,7 @@ public class PuzzleNumber : MonoBehaviour
         if (val == _currentNumber)
         {
             btn.interactable = false;
-            btn.GetComponent<Image>().color = Color.green; // Подсветим верную
+            btn.GetComponent<Image>().color = Color.green;
             _currentNumber++;
 
             if (_currentNumber > _targetCount)
@@ -66,7 +62,6 @@ public class PuzzleNumber : MonoBehaviour
         }
         else
         {
-            // Ошибка: можно добавить тряску или звук, но пока просто ничего не происходит
             Debug.Log("Не та цифра!");
         }
     }
