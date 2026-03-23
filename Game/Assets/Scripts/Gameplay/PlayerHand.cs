@@ -25,7 +25,7 @@ public class PlayerHand : MonoBehaviour
             {
                 Item itemToDestroy = _activeItem;
                 GetComponent<Inventory>().DropActiveItem();
-                Destroy(_activeItem.gameObject);
+                Destroy(itemToDestroy.gameObject);
             }
         }
         
@@ -48,7 +48,7 @@ public class PlayerHand : MonoBehaviour
     public void HideItem()
     {
 
-        if (_activeItem is FlashlightItem flashlight)
+        if (_activeItem is FlashlightItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
