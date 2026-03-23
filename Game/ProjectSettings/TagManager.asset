@@ -49,3 +49,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Layer For Candle
+    uniqueID: 1732548613
+    locked: 0
+  - name: Layer For Player
+    uniqueID: 3215395235
+    locked: 0
