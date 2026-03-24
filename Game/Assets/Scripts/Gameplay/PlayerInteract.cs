@@ -1,32 +1,38 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Inventory))]
 public class PlayerInteract : MonoBehaviour
 {
-    public static PlayerInteract Instance {get; private set;}
+    public static PlayerInteract Instance { get; private set; }
 
     private Interactive _hideSpotInteractive;
     private Interactive _doorInteractive;
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
-
-    [HideInInspector] public bool CanInteract;
+    private Interactive _itemInteractive;
 
     [HideInInspector] public bool Hints;
 
     private void Awake()
     {
         Instance = this;
-        CanInteract = true;
     }
 
 
-    private bool CanHide() { return CanInteract && _hideSpotInteractive && _hideSpotInteractive.isInteractive;}
-    private bool CanOpenSafe() { return CanInteract && _safeInteractive && _safeInteractive.isInteractive; }
-    private bool CanOpedDoor() { return CanInteract && _doorInteractive &&  _doorInteractive.isInteractive; }
-    private bool CanStartGame() { return CanInteract && _ghostInteractive && _ghostInteractive.isInteractive;  }
+    private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
+    private bool CanOpenSafe() { return GameManager.Instance.CanUseKeyboard && _safeInteractive && _safeInteractive.isInteractive; }
+    private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
+    private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
+    private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
+        {
+            if (GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>()))
+                _itemInteractive.Interact();
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.E) && CanHide())
         {
             _hideSpotInteractive.Interact();
@@ -48,6 +54,7 @@ public class PlayerInteract : MonoBehaviour
             GameManager.Instance.GameUIFields.StartGameText.SetActive(false);
             return;
         }
+
     }
 
 
@@ -56,6 +63,13 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
+            if (collision.GetComponent<Item>() && interactive.isInteractive)
+            {
+                _itemInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                return;
+            }
             if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
             {
                 _hideSpotInteractive = interactive;
@@ -71,7 +85,7 @@ public class PlayerInteract : MonoBehaviour
                 return;
             }
             if (collision.GetComponent<DoorController>() && interactive.isInteractive)
-            {                
+            {
                 _doorInteractive = interactive;
                 if (Hints)
                     GameManager.Instance.GameUIFields.OpenDoorText.SetActive(true);
@@ -96,6 +110,11 @@ public class PlayerInteract : MonoBehaviour
         var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
+            if (collision.GetComponent<Item>())
+            {
+                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                _itemInteractive = null;
+            }
             if (collision.GetComponent<HideSpot>())
             {
                 GameManager.Instance.GameUIFields.HideText.SetActive(false);

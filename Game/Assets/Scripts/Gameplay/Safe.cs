@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +25,7 @@ public class Safe : MonoBehaviour
         _interactiveComp = GetComponent<Interactive>();
         _interactiveComp.SetListener(OpenPuzzle);
         _interactiveComp.isInteractive = true;
-        
+
         Pause.OnResume += SafeOnResume;
     }
 
@@ -56,7 +55,7 @@ public class Safe : MonoBehaviour
                 spriteRenderer.sprite = _topSafeSprite;
                 break;
             case "BotPoint":
-                _borderCollider.offset = new Vector2(0,-0.12f);
+                _borderCollider.offset = new Vector2(0, -0.12f);
                 spriteRenderer.sortingOrder = 11;
 
                 spriteRenderer.sprite = _botSafeSprite;
@@ -88,6 +87,10 @@ public class Safe : MonoBehaviour
         StartCoroutine(SwitchIsInPuzzle(true));
 
         GameManager.Instance.BlockPlayer(true);
+        if (PlayerHand.Instance.ActivveItem)
+        {
+            PlayerHand.Instance.ActivveItem.Hide();
+        }
 
         if (_puzzle)
         {
@@ -108,6 +111,10 @@ public class Safe : MonoBehaviour
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
+        if (PlayerHand.Instance.ActivveItem)
+        {
+            PlayerHand.Instance.ActivveItem.Unhide();
+        }
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)

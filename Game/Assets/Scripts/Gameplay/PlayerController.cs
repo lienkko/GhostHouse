@@ -12,20 +12,21 @@ public class PlayerController : MonoBehaviour
     public delegate void OnDeathDelegate();
     public event OnDeathDelegate OnDeath;
 
-    public delegate void DamageDelegate(int damage, int hp);
-    public event DamageDelegate OnDamage;
+    public delegate void ChangeHpDelegate(int damage, int hp);
+    public event ChangeHpDelegate OnChangeHp;
 
     public float CurrentSpeed { get; private set; } = 4f;
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
-    public int HealthPoints { get; private set; } = 100;
+    public int HealthPoints { get; private set; } = 40;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
     private float _walkSpeedValue = 4;
+
 
     private void Awake()
     {
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         if (CanWalk)
             Move();
     }
@@ -56,6 +58,7 @@ public class PlayerController : MonoBehaviour
             return -1;
         _walkSpeedValue = value;
         return _walkSpeedValue;
+
     }
 
     private void InputMovement()
@@ -82,12 +85,30 @@ public class PlayerController : MonoBehaviour
         {
             HealthPoints -= dmg;
         }
-        
+
         if (HealthPoints <= 0)
         {
             HealthPoints = 0;
         }
-        OnDamage?.Invoke(dmg, HealthPoints);
+        OnChangeHp?.Invoke(-dmg, HealthPoints);
+    }
+
+    public void Heal(int hp)
+    {
+        if (IsGodMode)
+        {
+            return;
+        }
+        if (hp > 0)
+        {
+            HealthPoints += hp;
+        }
+        if (HealthPoints >= 100)
+        {
+            HealthPoints = 100;
+        }
+        OnChangeHp?.Invoke(hp, HealthPoints);
+
     }
 
     public void ReloadPlayer()
