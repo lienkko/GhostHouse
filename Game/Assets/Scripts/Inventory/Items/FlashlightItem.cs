@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Light2D))]
-public class FlashlightItem : Item
+public class FlashlightItem : Item, IChargeableItem
 {
     private bool _isactive = false;
     private float _flashLightCharge = 0.5f;
@@ -27,6 +27,7 @@ public class FlashlightItem : Item
             }
         }
     }
+    public float CurrentChargeNormalized => FlaslightCharge;
     private Light2D _light2D;
     protected override void Awake()
     {

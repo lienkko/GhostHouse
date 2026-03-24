@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHand : MonoBehaviour
 {
     public static PlayerHand Instance { get; private set; }
-    public Item ActiveItem{get; private set;}
+    public Item ActiveItem { get; private set; }
 
     private void Awake()
     {
@@ -33,16 +33,16 @@ public class PlayerHand : MonoBehaviour
                 Destroy(itemToDestroy.gameObject);
             }
         }
-        
+
     }
     public void TakeItem(Item item)
     {
         ActiveItem = item;
         ActiveItem.GetComponent<Interactive>().isInteractive = false;
         ActiveItem.gameObject.SetActive(true);
-        if (item is FlashlightItem flashlight)
+        if (item is IChargeableItem chargeableItem)
         {
-            Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
+            Inventory.Instance.InventoryWin.FlashLightSliderAppear(chargeableItem);
         }
         ActiveItem.GetComponent<Interactive>().isInteractive = false;
     }
@@ -54,7 +54,7 @@ public class PlayerHand : MonoBehaviour
     public void HideItem()
     {
 
-        if (ActiveItem is FlashlightItem)
+        if (ActiveItem is IChargeableItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
