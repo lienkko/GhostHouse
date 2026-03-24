@@ -1,4 +1,5 @@
 public interface IChargeableItem
 {
-    float CurrentChargeNormalized { get; }
+    public Item ItemObj { get; }
+    public float CurrentChargeNormalized { get; }
 }
