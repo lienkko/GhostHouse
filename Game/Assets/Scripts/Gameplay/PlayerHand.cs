@@ -39,9 +39,9 @@ public class PlayerHand : MonoBehaviour
         ActivveItem = item;
         ActivveItem.GetComponent<Interactive>().isInteractive = false;
         ActivveItem.gameObject.SetActive(true);
-        if (item is FlashlightItem flashlight)
+        if (item is IChargeableItem chargeableItem)
         {
-            Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
+            Inventory.Instance.InventoryWin.FlashLightSliderAppear(chargeableItem);
         }
     }
     private void DropItem()
@@ -52,7 +52,7 @@ public class PlayerHand : MonoBehaviour
     public void HideItem()
     {
 
-        if (ActivveItem is FlashlightItem)
+        if (ActivveItem is IChargeableItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
