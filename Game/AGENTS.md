@@ -1,4 +1,5 @@
 <!-- UNITY CODE ASSIST INSTRUCTIONS START -->
+
 - Project name: Game
 - Unity version: Unity 2021.3.45f2
 - Active scene:
@@ -8,7 +9,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-  - Name: Lights
+  - Name: MedKit
   - Tag: Untagged
   - Layer: Default
-<!-- UNITY CODE ASSIST INSTRUCTIONS END -->
+  <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
