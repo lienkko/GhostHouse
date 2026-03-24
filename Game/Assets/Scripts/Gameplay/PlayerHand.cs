@@ -3,14 +3,18 @@ using UnityEngine;
 [RequireComponent(typeof(Inventory))]
 public class PlayerHand : MonoBehaviour
 {
+    public static PlayerHand Instance { get; private set; }
+    public Item ActivveItem{get; private set;}
 
-    private Item _activeItem;
-
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Update()
     {
-        if (_activeItem)
+        if (ActivveItem)
         {
-            _activeItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
+            ActivveItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
         }
         if (!GameManager.Instance.CanUseKeyboard)
             return;
@@ -18,12 +22,12 @@ public class PlayerHand : MonoBehaviour
         {
             DropItem();
         }
-        if (Input.GetKeyDown(KeyCode.Space) && _activeItem != null)
+        if (Input.GetKeyDown(KeyCode.Space) && ActivveItem != null)
         {
-            bool needToDestroy = _activeItem.UseAndDestroy();
+            bool needToDestroy = ActivveItem.UseAndDestroy();
             if (needToDestroy)
             {
-                Item itemToDestroy = _activeItem;
+                Item itemToDestroy = ActivveItem;
                 GetComponent<Inventory>().DropActiveItem();
                 Destroy(itemToDestroy.gameObject);
             }
@@ -32,9 +36,9 @@ public class PlayerHand : MonoBehaviour
     }
     public void TakeItem(Item item)
     {
-        _activeItem = item;
-        _activeItem.GetComponent<Interactive>().isInteractive = false;
-        _activeItem.gameObject.SetActive(true);
+        ActivveItem = item;
+        ActivveItem.GetComponent<Interactive>().isInteractive = false;
+        ActivveItem.gameObject.SetActive(true);
         if (item is FlashlightItem flashlight)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
@@ -48,11 +52,11 @@ public class PlayerHand : MonoBehaviour
     public void HideItem()
     {
 
-        if (_activeItem is FlashlightItem)
+        if (ActivveItem is FlashlightItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
-        _activeItem = null;
+        ActivveItem = null;
     }
 
 }

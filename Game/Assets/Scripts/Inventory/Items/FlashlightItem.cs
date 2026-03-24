@@ -61,11 +61,17 @@ public class FlashlightItem : Item
         ChangeMode();
         return false;
     }
-    public override void HideItem()
+    public override void Hide()
     {
-        base.HideItem();
+        base.Hide();
         _isactive = false;
         _light2D.enabled = false;
+    }
+    public override void Unhide()
+    {
+        base.Unhide();
+        _isactive = true;
+        _light2D.enabled = true;
     }
     private void ChangeMode()
     {

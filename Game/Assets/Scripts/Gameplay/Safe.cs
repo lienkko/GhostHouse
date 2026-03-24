@@ -87,6 +87,10 @@ public class Safe : MonoBehaviour
         StartCoroutine(SwitchIsInPuzzle(true));
 
         GameManager.Instance.BlockPlayer(true);
+        if (PlayerHand.Instance.ActivveItem)
+        {
+            PlayerHand.Instance.ActivveItem.Hide();
+        }
 
         if (_puzzle)
         {
@@ -107,6 +111,10 @@ public class Safe : MonoBehaviour
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
+        if (PlayerHand.Instance.ActivveItem)
+        {
+            PlayerHand.Instance.ActivveItem.Unhide();
+        }
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)

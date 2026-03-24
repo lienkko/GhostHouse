@@ -2698,6 +2698,9 @@ MonoBehaviour:
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
   _southDoorPrefab: {fileID: 3876304005829112623, guid: 84161e873fc9895448be8ddbdbd780ea, type: 3}
+  _fakeEastWestPrefab: {fileID: 3876304005829112623, guid: a98c72e4ba74e0441950fd616f6a7e70, type: 3}
+  _fakeNorthPrefab: {fileID: 3876304005829112623, guid: 0a39815a9712e384ca53494499c1441f, type: 3}
+  _fakeSouthPrefab: {fileID: 3876304005829112623, guid: 35ed887dab415b7479c145956942245b, type: 3}
   _safePrefab: {fileID: 7884531472750873166, guid: 61f9fe25b38c9ef47895a7e16323f937, type: 3}
   _roomsParentObject: {fileID: 1987403195}
 --- !u!1 &790199994

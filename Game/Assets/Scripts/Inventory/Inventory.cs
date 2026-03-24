@@ -57,7 +57,7 @@ public class Inventory : MonoBehaviour
     }
     private void ShutDownSlot(int index)
     {
-        InventoryItems[index - 1].HideItem();
+        InventoryItems[index - 1].Hide();
         _activeSlot = 0;
         GetComponent<PlayerHand>().HideItem();
     }
@@ -98,7 +98,7 @@ public class Inventory : MonoBehaviour
             return;
         InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
         InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
-        InventoryItems[_activeSlot - 1].HideItem();
+        InventoryItems[_activeSlot - 1].Hide();
         InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
