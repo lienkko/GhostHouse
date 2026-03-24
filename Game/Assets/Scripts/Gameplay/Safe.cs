@@ -87,9 +87,9 @@ public class Safe : MonoBehaviour
         StartCoroutine(SwitchIsInPuzzle(true));
 
         GameManager.Instance.BlockPlayer(true);
-        if (PlayerHand.Instance.ActivveItem)
+        if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActivveItem.Hide();
+            PlayerHand.Instance.ActiveItem.Hide();
         }
 
         if (_puzzle)
@@ -111,9 +111,9 @@ public class Safe : MonoBehaviour
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
-        if (PlayerHand.Instance.ActivveItem)
+        if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActivveItem.Unhide();
+            PlayerHand.Instance.ActiveItem.Unhide();
         }
     }
 

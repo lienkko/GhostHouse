@@ -1,10 +1,11 @@
+using System.ComponentModel.Design;
 using UnityEngine;
 
 [RequireComponent(typeof(Inventory))]
 public class PlayerHand : MonoBehaviour
 {
     public static PlayerHand Instance { get; private set; }
-    public Item ActivveItem{get; private set;}
+    public Item ActiveItem{get; private set;}
 
     private void Awake()
     {
@@ -12,9 +13,9 @@ public class PlayerHand : MonoBehaviour
     }
     private void Update()
     {
-        if (ActivveItem)
+        if (ActiveItem)
         {
-            ActivveItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
+            ActiveItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
         }
         if (!GameManager.Instance.CanUseKeyboard)
             return;
@@ -22,12 +23,12 @@ public class PlayerHand : MonoBehaviour
         {
             DropItem();
         }
-        if (Input.GetKeyDown(KeyCode.Space) && ActivveItem != null)
+        if (Input.GetKeyDown(KeyCode.Space) && ActiveItem != null)
         {
-            bool needToDestroy = ActivveItem.UseAndDestroy();
+            bool needToDestroy = ActiveItem.UseAndDestroy();
             if (needToDestroy)
             {
-                Item itemToDestroy = ActivveItem;
+                Item itemToDestroy = ActiveItem;
                 GetComponent<Inventory>().DropActiveItem();
                 Destroy(itemToDestroy.gameObject);
             }
@@ -36,13 +37,14 @@ public class PlayerHand : MonoBehaviour
     }
     public void TakeItem(Item item)
     {
-        ActivveItem = item;
-        ActivveItem.GetComponent<Interactive>().isInteractive = false;
-        ActivveItem.gameObject.SetActive(true);
+        ActiveItem = item;
+        ActiveItem.GetComponent<Interactive>().isInteractive = false;
+        ActiveItem.gameObject.SetActive(true);
         if (item is FlashlightItem flashlight)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderAppear(flashlight);
         }
+        ActiveItem.GetComponent<Interactive>().isInteractive = false;
     }
     private void DropItem()
     {
@@ -52,11 +54,12 @@ public class PlayerHand : MonoBehaviour
     public void HideItem()
     {
 
-        if (ActivveItem is FlashlightItem)
+        if (ActiveItem is FlashlightItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
-        ActivveItem = null;
+        ActiveItem.GetComponent<Interactive>().isInteractive = true;
+        ActiveItem = null;
     }
 
 }

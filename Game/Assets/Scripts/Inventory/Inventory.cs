@@ -100,6 +100,7 @@ public class Inventory : MonoBehaviour
         InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
         InventoryItems[_activeSlot - 1].Hide();
         InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
+        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
 
@@ -128,6 +129,7 @@ public class Inventory : MonoBehaviour
             return false;
         }
         bool wasAdded = AddItem(item);
+        
         OnAddition?.Invoke();
         return wasAdded;
     }

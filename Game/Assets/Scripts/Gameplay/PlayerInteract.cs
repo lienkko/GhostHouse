@@ -11,6 +11,8 @@ public class PlayerInteract : MonoBehaviour
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
 
+    private Interactive _swappingInteractive; 
+
     [HideInInspector] public bool Hints;
 
     private void Awake()
@@ -29,8 +31,9 @@ public class PlayerInteract : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
         {
+            _swappingInteractive = _itemInteractive;
             if (GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>()))
-                _itemInteractive.Interact();
+                _swappingInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanHide())
