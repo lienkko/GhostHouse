@@ -7,7 +7,7 @@ public class InventoryWindow : MonoBehaviour
     [SerializeField] private Image[] _inventoryIcons;
     [SerializeField] private Sprite[] _inventoryBG;
     [SerializeField] private Slider _flashLightSlider;
-    private FlashlightItem _flashlightItem;
+    private IChargeableItem _chargeableItem;
     private void Start()
     {
         _inventory.SetListener(Redraw);
@@ -31,18 +31,18 @@ public class InventoryWindow : MonoBehaviour
     }
     private void Update()
     {
-        if (_flashLightSlider.IsActive())
-            _flashLightSlider.value = _flashlightItem.FlaslightCharge;
+        if (_flashLightSlider.IsActive() && _chargeableItem != null)
+            _flashLightSlider.value = _chargeableItem.CurrentChargeNormalized;
     }
-    public void FlashLightSliderAppear(FlashlightItem flashlight)
+    public void FlashLightSliderAppear(IChargeableItem chargeableItem)
     {
-        _flashlightItem = flashlight;
+        _chargeableItem = chargeableItem;
         _flashLightSlider.gameObject.SetActive(true);
-        _flashLightSlider.value = _flashlightItem.FlaslightCharge;
+        _flashLightSlider.value = _chargeableItem.CurrentChargeNormalized;
     }
     public void FlashLightSliderDisappear()
     {
-        _flashlightItem = null;
+        _chargeableItem = null;
         _flashLightSlider.gameObject.SetActive(false);
         _flashLightSlider.value = 0;
     }

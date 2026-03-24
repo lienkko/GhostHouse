@@ -19,9 +19,9 @@ public class HideSpot : MonoBehaviour
         PlayerController.Instance.gameObject.SetActive(false);
         StartCoroutine(SwitchIsHidingSomeone(true));
         GameManager.Instance.BlockPlayer(true);
-        if (PlayerHand.Instance.ActivveItem)
+        if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActivveItem.Hide();
+            PlayerHand.Instance.ActiveItem.Hide();
         }
     }
 
@@ -32,9 +32,9 @@ public class HideSpot : MonoBehaviour
         RoomsManager.Instance.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
         PlayerController.Instance.transform.gameObject.SetActive(true);
         GameManager.Instance.BlockPlayer(false);
-        if (PlayerHand.Instance.ActivveItem)
+        if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActivveItem.Unhide();
+            PlayerHand.Instance.ActiveItem.Unhide();
         }
     }
     public virtual void Initialize() { }

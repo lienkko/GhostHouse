@@ -3,57 +3,49 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Light2D))]
-public class FlashlightItem : Item, IChargeableItem
+public class CandleItem : Item, IChargeableItem
 {
     private bool _isactive = false;
-    private float _flashLightCharge = 0.5f;
-    private readonly float _dischargeSpeed = 0.02f;
-    public float FlaslightCharge
+    private const float MaxCharge = 100f;
+    private float _candleCharge = 100f;
+    [SerializeField] private float _dischargeSpeed = 5f;
+    public float CandleCharge
     {
         get
         {
-            return _flashLightCharge;
+            return _candleCharge;
         }
         set
         {
-            _flashLightCharge = value;
-            if (_flashLightCharge > 1)
-            {
-                _flashLightCharge = 1;
-            }
-            if (_flashLightCharge < 0)
-            {
-                _flashLightCharge = 0;
-            }
+            _candleCharge = value;
+
+            if (_candleCharge > MaxCharge)
+                _candleCharge = MaxCharge;
+
+            if (_candleCharge < 0f)
+                _candleCharge = 0f;
         }
     }
-    public float CurrentChargeNormalized => FlaslightCharge;
+    public float CurrentChargeNormalized => CandleCharge / MaxCharge;
     private Light2D _light2D;
     protected override void Awake()
     {
         base.Awake();
         _light2D = GetComponent<Light2D>();
+        _light2D.enabled = false;
     }
     private void Update()
     {
         if (_isactive)
         {
-            FlaslightCharge -= _dischargeSpeed * Time.deltaTime;
+            CandleCharge -= _dischargeSpeed * Time.deltaTime;
 
-            if (FlaslightCharge <= 0)
+            if (CandleCharge <= 0)
             {
-                FlaslightCharge = 0;
+                CandleCharge = 0;
                 _isactive = false;
                 _light2D.enabled = false;
                 return;
-            }
-
-            Vector2 dir = PlayerController.Instance.MoveDir;
-
-            if (dir != Vector2.zero)
-            {
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, angle - 90);
             }
         }
     }
@@ -71,9 +63,13 @@ public class FlashlightItem : Item, IChargeableItem
     public override void Unhide()
     {
         base.Unhide();
+        if (CandleCharge <= 0f)
+            return;
+
         _isactive = true;
         _light2D.enabled = true;
     }
+
     private void ChangeMode()
     {
         if (_isactive)
@@ -83,8 +79,9 @@ public class FlashlightItem : Item, IChargeableItem
         }
         else
         {
-            if (FlaslightCharge <= 0)
+            if (CandleCharge <= 0)
                 return;
+
             _isactive = true;
             _light2D.enabled = true;
         }
