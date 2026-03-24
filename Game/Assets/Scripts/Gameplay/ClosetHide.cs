@@ -8,7 +8,7 @@ public class ClosetHide : HideSpot
     [SerializeField] private Sprite _botSideSprite;
     [SerializeField] private Sprite _faceSprite;
     [SerializeField] private Sprite _backSprite;
-    public void Initialize()
+    public override void Initialize()
     {
         GetComponent<Interactive>().isInteractive = true;
         GetComponent<Interactive>().SetListener(Hide);
@@ -25,7 +25,7 @@ public class ClosetHide : HideSpot
                 break;
             case "BotLeftPoint":
                 GetComponent<SpriteRenderer>().sprite = _botSideSprite;
-                transform.position += new Vector3(0.05f,0,0);
+                transform.position += new Vector3(0.05f, 0, 0);
                 break;
             case "BotRightPoint":
                 GetComponent<SpriteRenderer>().sprite = _botSideSprite;

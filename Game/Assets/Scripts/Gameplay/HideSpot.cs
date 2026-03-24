@@ -37,7 +37,7 @@ public class HideSpot : MonoBehaviour
             PlayerHand.Instance.ActivveItem.Unhide();
         }
     }
-
+    public virtual void Initialize() { }
     private IEnumerator SwitchIsHidingSomeone(bool state)
     {
         yield return null;
