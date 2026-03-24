@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     {
         if (_testMode)
         {
-            GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
+            InitializeGame();
             return;
         }
         SceneManager.LoadScene("main menu");
