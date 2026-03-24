@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,7 +8,6 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
-
 
     public delegate void OnDeathDelegate();
     public event OnDeathDelegate OnDeath;
@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     public int HealthPoints { get; private set; } = 40;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
-
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
@@ -64,7 +63,6 @@ public class PlayerController : MonoBehaviour
 
     private void InputMovement()
     {
-
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
         IsCrouching = Input.GetKey(KeyCode.LeftShift);
@@ -81,14 +79,13 @@ public class PlayerController : MonoBehaviour
 
     public void InflictDamage(int dmg)
     {
-        if (IsGodMode)
-        {
-            return;
-        }
+        if (IsGodMode) return;
+
         if (dmg > 0)
         {
             HealthPoints -= dmg;
         }
+
         if (HealthPoints <= 0)
         {
             HealthPoints = 0;
@@ -124,7 +121,6 @@ public class PlayerController : MonoBehaviour
     {
         IsAlive = false;
         OnDeath?.Invoke();
-
         gameObject.SetActive(false);
     }
 }

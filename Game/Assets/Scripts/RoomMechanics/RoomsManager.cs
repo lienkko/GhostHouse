@@ -7,13 +7,21 @@ public class RoomsManager : MonoBehaviour
     public static RoomsManager Instance { get; private set; }
 
     [Header("Префабы комнат")]
-    [SerializeField]private GameObject[] _roomPrefabs;
+    [SerializeField] private GameObject[] _roomPrefabs;
 
     [Space(10)]
     [Header("Префабы дверей")]
     [SerializeField] private GameObject _eastWestDoorPrefab;
     [SerializeField] private GameObject _northDoorPrefab;
     [SerializeField] GameObject _southDoorPrefab;
+
+    // -------------- fake doors 23.03.2026 ------------ //
+    [Space(5)]
+    [Header("Префабы фейковых дверей")]
+    [SerializeField] private GameObject _fakeEastWestPrefab;
+    [SerializeField] private GameObject _fakeNorthPrefab;
+    [SerializeField] private GameObject _fakeSouthPrefab;
+    // ------------------------------------------------- //
 
     [Space(5)]
     [Header("Префаб сейфа")]
@@ -28,8 +36,6 @@ public class RoomsManager : MonoBehaviour
     private readonly float _southEntryOffset = 1.0f;
 
     public GameObject CurrentRoom { get; private set; }
-
-    
 
     private void Awake()
     {
@@ -51,10 +57,7 @@ public class RoomsManager : MonoBehaviour
 
     public GameObject GenerateNextRoom(Vector3 spawnPosition, DoorSide previousDoorSide, GameObject previousRoomRoot, Transform lastDoorTransform = null)
     {
-        if (previousRoomRoot != null)
-        {
-            previousRoomRoot.SetActive(false);
-        }
+        if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
 
         _roomNumber++;
 
@@ -65,8 +68,7 @@ public class RoomsManager : MonoBehaviour
         DoorSide oppositeSide = GetOppositeSide(previousDoorSide);
 
         List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
-            .Where(d => d.Side == oppositeSide)
-            .ToList();
+            .Where(d => d.Side == oppositeSide).ToList();
 
         if (entryCandidates.Count < 1)
         {
@@ -78,163 +80,106 @@ public class RoomsManager : MonoBehaviour
         SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1);
 
         RoomData.DoorSpawnPoint[] availableExits = roomData.AvailableDoorSpawns
-            .Where(d => d.Side != oppositeSide)
-            .ToArray();
+            .Where(d => d.Side != oppositeSide).ToArray();
 
+        RoomData.DoorSpawnPoint? actualExitPoint = null;
         if (availableExits.Length > 0)
         {
-            int randomIndex = Random.Range(0, availableExits.Length);
-            DoorSide newExitSide = availableExits[randomIndex].Side;
-
-            if (newExitSide != oppositeSide)
-            {
-                SpawnDoor(roomData, newExitSide, false, _roomNumber);
-            }
+            actualExitPoint = availableExits[Random.Range(0, availableExits.Length)];
+            SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
         }
 
-        Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
+        // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
+        if (Random.Range(1, 101) <= 20)
+        {
+            var remainingPoints = roomData.AvailableDoorSpawns
+                .Where(p => p.SpawnPoint != finalEntryPoint.SpawnPoint &&
+                           (actualExitPoint == null || p.SpawnPoint != actualExitPoint.Value.SpawnPoint))
+                .ToList();
 
+            if (remainingPoints.Count > 0)
+            {
+                SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
+            }
+        }
+        // ------------------------------------------------------------------------------------------------ //
+
+        Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
         if (playerSpawnPoint != null)
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
 
-        SetClosetHides(roomData);
+        SetHideSpots(roomData);
+        if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
 
-        if (Random.Range(1,21) > 17)
-            GameManager.Instance.SummonWraith();
-        
         return CurrentRoom;
     }
+
+    // --------------------------------------- fake doors 23.03.2026 --------------------------------------- //
+    private void SpawnFakeDoor(RoomData roomData, RoomData.DoorSpawnPoint point)
+    {
+        GameObject prefab = _fakeNorthPrefab;
+        if (point.Side == DoorSide.South) prefab = _fakeSouthPrefab;
+        else if (point.Side == DoorSide.East || point.Side == DoorSide.West) prefab = _fakeEastWestPrefab;
+
+        GameObject fakeObj = Instantiate(prefab, point.SpawnPoint.position, Quaternion.identity, roomData.transform);
+        DoorController fakeDc = fakeObj.GetComponent<DoorController>();
+
+        int offset = Random.value > 0.5f ? 1 : -1;
+        int fakeNum = _roomNumber + offset;
+        if (fakeNum < 1) fakeNum = _roomNumber + 1;
+
+        fakeDc.InitializeFake(point.Side, fakeNum, roomData.PreviousRoomDoor);
+
+        if (roomData.PreviousRoomDoor != null)
+        {
+            roomData.PreviousRoomDoor.SetDoorVisualAndInteract(false);
+        }
+    }
+    // ---------------------------------------------------------------------------------------------------- //
 
     private void SpawnDoor(RoomData roomData, RoomData.DoorSpawnPoint spawnCandidate, bool isPreviousRoomDoor, GameObject previousRoomRoot = null, Transform returnTargetPoint = null, int doorTargetRoomNumber = 0)
     {
         Transform spawnPoint = spawnCandidate.SpawnPoint;
         DoorSide targetSide = spawnCandidate.Side;
+        GameObject prefab = _northDoorPrefab;
 
-        GameObject doorPrefabToUse = null;
+        if (targetSide == DoorSide.South) prefab = _southDoorPrefab;
+        else if (targetSide == DoorSide.East || targetSide == DoorSide.West) prefab = _eastWestDoorPrefab;
 
-        switch (targetSide)
+        GameObject doorInstance = Instantiate(prefab, spawnPoint.position, Quaternion.identity, roomData.transform);
+        DoorController dc = doorInstance.GetComponent<DoorController>();
+
+        bool willSpawnSafe = !isPreviousRoomDoor && Random.Range(1, 11) > 8;
+
+        dc.Initialize(targetSide, isPreviousRoomDoor, willSpawnSafe, previousRoomRoot);
+        if (isPreviousRoomDoor) dc.ReturnTargetPoint = returnTargetPoint;
+        dc.SetTargetRoomNumber(doorTargetRoomNumber);
+
+        if (isPreviousRoomDoor) roomData.PreviousRoomDoor = dc;
+        else roomData.NextRoomDoor = dc;
+
+        if (willSpawnSafe)
         {
-            case DoorSide.East:
-            case DoorSide.West:
-                doorPrefabToUse = _eastWestDoorPrefab;
-                break;
-            case DoorSide.North:
-                doorPrefabToUse = _northDoorPrefab;
-                break;
-            case DoorSide.South:
-                doorPrefabToUse = _southDoorPrefab;
-                break;
+            SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], dc);
         }
-
-        if (doorPrefabToUse == null)
-        {
-            Debug.LogError($"Не назначен префаб для стороны {targetSide}. Проверьте RoomGenerator!");
-            return;
-        }
-
-        GameObject doorInstance = Instantiate(doorPrefabToUse, spawnPoint.position, Quaternion.identity, roomData.transform);
-
-        DoorController doorController = doorInstance.GetComponent<DoorController>();
-
-        if (isPreviousRoomDoor)
-        {
-            roomData.PreviousRoomDoor = doorController;
-        }
-        else
-        {
-            roomData.NextRoomDoor = doorController;
-        }
-
-        if (doorController != null)
-        {
-            bool isDoorLocked = false;
-            if (!isPreviousRoomDoor)
-            {
-                if (isDoorLocked = Random.Range(1, 11) > 8)
-                {
-                    SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], doorController);
-                }
-            }
-
-            doorController.Initialize(targetSide, isPreviousRoomDoor, isDoorLocked, previousRoomRoot);
-
-            if (isPreviousRoomDoor)
-            {
-                doorController.ReturnTargetPoint = returnTargetPoint;
-            }
-
-            doorController.SetTargetRoomNumber(doorTargetRoomNumber);
-
-        }
-    }
-
-    private void SpawnDoor(RoomData roomData, DoorSide targetSide, bool isPreviousRoomDoor, int doorTargetRoomNumber = 0)
-    {
-        List<RoomData.DoorSpawnPoint> candidates = roomData.AvailableDoorSpawns
-            .Where(d => d.Side == targetSide)
-            .ToList();
-
-        if (candidates.Count == 0) return;
-
-        RoomData.DoorSpawnPoint finalCandidate = candidates[Random.Range(0, candidates.Count)];
-
-        SpawnDoor(roomData, finalCandidate, isPreviousRoomDoor, null, null, doorTargetRoomNumber);
     }
 
     private void SpawnSafe(Transform spawnPoint, DoorController door)
     {
-        GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position,Quaternion.identity, CurrentRoom.transform);
-        
+        if (_safePrefab == null) return;
+        GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
-    }
-
-    private void SetClosetHides(RoomData roomData)
-    {
-        int numOfSafeSpots = 0;
-        bool[] boxOfClosetsIsClosetHide = new bool[roomData.Closets.Length];
-
-        for (int i = 0; i < roomData.Closets.Length;i++)
-        {
-            if (Random.Range(1, 11) > 7)
-            {
-                boxOfClosetsIsClosetHide[i] = true;
-                numOfSafeSpots++;
-            }
-        }
-        if (numOfSafeSpots < 1)
-        {
-            SetClosetHides(roomData);
-            return;
-        }
-        for (int i = 0; i < roomData.Closets.Length; i++)
-        {
-            if (boxOfClosetsIsClosetHide[i])
-            {
-                GameObject ClosetHideCloset = roomData.Closets[i];
-                ClosetHideCloset.GetComponent<ClosetHide>().enabled = true;
-                ClosetHideCloset.GetComponent <ClosetHide>().Initialize();
-            }
-        }
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
     {
         Vector3 finalPosition = doorPosition;
-        switch (entrySide)
-        {
-            case DoorSide.North:
-                finalPosition.y += _northEntryOffset;
-                break;
-
-            case DoorSide.South:
-                finalPosition.y += _southEntryOffset;
-                break;
-        }
+        if (entrySide == DoorSide.North) finalPosition.y += _northEntryOffset;
+        else if (entrySide == DoorSide.South) finalPosition.y += _southEntryOffset;
 
         PlayerController.Instance.transform.position = finalPosition;
-        
     }
 
     public DoorSide GetOppositeSide(DoorSide side)
@@ -246,6 +191,39 @@ public class RoomsManager : MonoBehaviour
             case DoorSide.East: return DoorSide.West;
             case DoorSide.West: return DoorSide.East;
             default: return DoorSide.North;
+        }
+    }
+
+    private void SetHideSpots(RoomData roomData)
+    {
+        if (roomData.Closets == null || roomData.Closets.Length == 0) return;
+
+        int numOfSafeSpots = 0;
+        bool[] boxOfClosetsIsHideSpot = new bool[roomData.Closets.Length];
+
+        for (int i = 0; i < roomData.Closets.Length; i++)
+        {
+            if (Random.Range(1, 11) > 7)
+            {
+                boxOfClosetsIsHideSpot[i] = true;
+                numOfSafeSpots++;
+            }
+        }
+
+        if (numOfSafeSpots < 1 && roomData.Closets.Length > 0)
+        {
+            SetHideSpots(roomData);
+            return;
+        }
+
+        for (int i = 0; i < roomData.Closets.Length; i++)
+        {
+            if (boxOfClosetsIsHideSpot[i])
+            {
+                GameObject hideSpotCloset = roomData.Closets[i];
+                hideSpotCloset.GetComponent<HideSpot>().enabled = true;
+                hideSpotCloset.GetComponent<HideSpot>().Initialize();
+            }
         }
     }
 }
