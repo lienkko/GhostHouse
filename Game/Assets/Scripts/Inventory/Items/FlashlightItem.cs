@@ -28,6 +28,7 @@ public class FlashlightItem : Item, IChargeableItem
         }
     }
     public float CurrentChargeNormalized => FlaslightCharge;
+    public Item ItemObj => this;
     private Light2D _light2D;
     protected override void Awake()
     {

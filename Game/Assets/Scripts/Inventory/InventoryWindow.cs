@@ -7,6 +7,8 @@ public class InventoryWindow : MonoBehaviour
     [SerializeField] private Image[] _inventoryIcons;
     [SerializeField] private Sprite[] _inventoryBG;
     [SerializeField] private Slider _flashLightSlider;
+    [SerializeField] private Sprite _flashlightSliderBG;
+    [SerializeField] private Sprite _candleSliderBG;
     private IChargeableItem _chargeableItem;
     private void Start()
     {
@@ -36,6 +38,16 @@ public class InventoryWindow : MonoBehaviour
     }
     public void FlashLightSliderAppear(IChargeableItem chargeableItem)
     {
+        if (chargeableItem.ItemObj is FlashlightItem)
+        {
+            _flashLightSlider.transform.Find("Background").GetComponent<Image>().sprite = _flashlightSliderBG;
+            _flashLightSlider.transform.Find("Fill Area/Fill").GetComponent<Image>().color = new Color32(17, 170, 0, 255);
+        }
+        else
+        {
+            _flashLightSlider.transform.Find("Background").GetComponent<Image>().sprite = _candleSliderBG;
+            _flashLightSlider.transform.Find("Fill Area/Fill").GetComponent<Image>().color = new Color32(250, 250, 0, 255);
+        }
         _chargeableItem = chargeableItem;
         _flashLightSlider.gameObject.SetActive(true);
         _flashLightSlider.value = _chargeableItem.CurrentChargeNormalized;

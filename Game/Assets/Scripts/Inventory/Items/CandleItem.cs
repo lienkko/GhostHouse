@@ -27,6 +27,7 @@ public class CandleItem : Item, IChargeableItem
         }
     }
     public float CurrentChargeNormalized => CandleCharge / MaxCharge;
+    public Item ItemObj => this;
     private Light2D _light2D;
     protected override void Awake()
     {

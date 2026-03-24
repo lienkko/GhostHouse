@@ -98,8 +98,8 @@ TextureImporter:
         serializedVersion: 2
         x: 268
         y: 657
-        width: 1034
-        height: 190
+        width: 1033
+        height: 188
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,20 +107,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 790a12d25886ae94bad85e1487df874d
-      internalID: -1830928735
+      spriteID: 6519dc32b9a7fdb4b8530f82bafb1b8a
+      internalID: -1139276759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Empty scale for flashlight
+      name: empty scale for falshlight
       rect:
         serializedVersion: 2
-        x: 263
-        y: 266
-        width: 1055
-        height: 148
+        x: 274
+        y: 338
+        width: 1023
+        height: 188
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6459c579a90442a4cba12cadb8c34f40
-      internalID: 262106067
+      spriteID: b4a7a1c8d7b9d584fad33bbb78ed32a0
+      internalID: -638515482
       vertices: []
       indices: 
       edges: []
@@ -137,7 +137,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 49827b2e516bddf449d26da943a24ae2
+    spriteID: c98ccd2ba060b0546ba4d3b4e25e21b1
     internalID: 0
     vertices: []
     indices: 
@@ -145,8 +145,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Empty scale for candle: -1830928735
-      Empty scale for flashlight: 262106067
+      Empty scale for candle: -1139276759
+      EmptyScales_0: 1395268698
+      empty scale for falshlight: -638515482
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
