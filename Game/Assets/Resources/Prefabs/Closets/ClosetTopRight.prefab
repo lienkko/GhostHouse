@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 583069119188711422}
   - component: {fileID: 6734100488830735182}
   - component: {fileID: 3929621307345017463}
-  - component: {fileID: -8670987931943450724}
   - component: {fileID: -4290310857027504688}
+  - component: {fileID: -2294116265356024620}
   m_Layer: 0
   m_Name: ClosetTopRight
   m_TagString: TopRightPoint
@@ -140,22 +140,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.7272313, y: 3.1518176}
   m_EdgeRadius: 0
---- !u!114 &-8670987931943450724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 583069119188711421}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d71d50e82a8772444a7543df403d1445, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _topSideSprite: {fileID: 1538731608, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
-  _botSideSprite: {fileID: -1254326979, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
-  _faceSprite: {fileID: -1462162248, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
-  _backSprite: {fileID: 887499136, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
 --- !u!114 &-4290310857027504688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,3 +153,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractive: 0
+--- !u!114 &-2294116265356024620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583069119188711421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686e33f574c04284ea7b293a1718cfb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _topSideSprite: {fileID: 1538731608, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
+  _botSideSprite: {fileID: -1254326979, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
+  _faceSprite: {fileID: -1462162248, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}
+  _backSprite: {fileID: 887499136, guid: 4e9721e5ecdb53244a9a358c3bb5aed4, type: 3}

@@ -1,33 +1,32 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
-    
+
     public bool IsGodMode = false;
     [HideInInspector] public bool CanWalk = true;
-
 
     public delegate void OnDeathDelegate();
     public event OnDeathDelegate OnDeath;
 
-    public delegate void DamageDelegate(int damage, int hp);
-    public event DamageDelegate OnDamage;
+    public delegate void ChangeHpDelegate(int damage, int hp);
+    public event ChangeHpDelegate OnChangeHp;
 
     public float CurrentSpeed { get; private set; } = 4f;
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
-    public int HealthPoints { get; private set; } = 100;
+    public int HealthPoints { get; private set; } = 40;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
-
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
     private float _walkSpeedValue = 4;
-    
+
 
     private void Awake()
     {
@@ -35,11 +34,6 @@ public class PlayerController : MonoBehaviour
         _lastPos = transform.position;
         _playerRB = GetComponent<Rigidbody2D>();
     }
-
-
-
-
-
 
     private void Update()
     {
@@ -53,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+
         if (CanWalk)
             Move();
     }
@@ -64,12 +58,11 @@ public class PlayerController : MonoBehaviour
             return -1;
         _walkSpeedValue = value;
         return _walkSpeedValue;
-        
+
     }
 
     private void InputMovement()
     {
-
         float moveH = Input.GetAxisRaw("Horizontal");
         float moveV = Input.GetAxisRaw("Vertical");
         IsCrouching = Input.GetKey(KeyCode.LeftShift);
@@ -80,25 +73,42 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        CurrentSpeed = IsCrouching ? _walkSpeedValue*0.5f: _walkSpeedValue;
+        CurrentSpeed = IsCrouching ? _walkSpeedValue * 0.5f : _walkSpeedValue;
         _playerRB.velocity = MoveDir * CurrentSpeed;
     }
 
     public void InflictDamage(int dmg)
     {
-        if (IsGodMode)
-        {
-            return;
-        }
+        if (IsGodMode) return;
+
         if (dmg > 0)
         {
             HealthPoints -= dmg;
         }
+
         if (HealthPoints <= 0)
         {
             HealthPoints = 0;
         }
-        OnDamage?.Invoke(dmg, HealthPoints);
+        OnChangeHp?.Invoke(-dmg, HealthPoints);
+    }
+
+    public void Heal(int hp)
+    {
+        if (IsGodMode)
+        {
+            return;
+        }
+        if (hp > 0)
+        {
+            HealthPoints += hp;
+        }
+        if (HealthPoints >= 100)
+        {
+            HealthPoints = 100;
+        }
+        OnChangeHp?.Invoke(hp, HealthPoints);
+
     }
 
     public void ReloadPlayer()
@@ -111,7 +121,6 @@ public class PlayerController : MonoBehaviour
     {
         IsAlive = false;
         OnDeath?.Invoke();
-
         gameObject.SetActive(false);
     }
 }

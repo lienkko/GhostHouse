@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Hush : MonoBehaviour
@@ -11,19 +9,19 @@ public class Hush : MonoBehaviour
     private AudioSource _audioSource;
     private Vector3 _pointNearPlayer;
 
-    private bool _isWaitingForLight = false;    
+    private bool _isWaitingForLight = false;
     private bool _isPsst = false;
     [SerializeField] private bool _isDarkness = false;
 
     private float _distance;
     private float _remainingDistance;
 
-    
+
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        
+
     }
 
     private void Update()

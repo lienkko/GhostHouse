@@ -9,23 +9,25 @@ public class GameManager : MonoBehaviour
 
     public GameUIFieldsGetter GameUIFields { get; private set; }
 
-    
+
 
     [SerializeField] private AudioClip _blinkLightsSound;
     public AudioSource GMAudioSource { get; private set; }
 
 
-    [SerializeField]private bool _testMode;
-    
+    [SerializeField] private bool _testMode;
+
 
     private bool _inGame = false;
-    private readonly int[,] _resolutions = {{800, 600}, { 1280, 960}};
+    private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
+
+    public bool CanUseKeyboard {get; private set;}
 
 
     private void Awake()
     {
-        if (Instance!= null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
             return;
@@ -90,8 +92,10 @@ public class GameManager : MonoBehaviour
 
         Ghost.Instance.InteractiveInstance.SetListener(StartGame);
         PlayerController.Instance.OnDeath += Death;
-        PlayerController.Instance.OnDamage += ChangeHp;
+        PlayerController.Instance.OnChangeHp += ChangeHp;
+        ChangeHp(0, PlayerController.Instance.HealthPoints);
         Cursor.lockState = CursorLockMode.Locked;
+        CanUseKeyboard = true;
 
         PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
     }
@@ -100,12 +104,12 @@ public class GameManager : MonoBehaviour
     private void OnSceneChanged(Scene oldScene, Scene newScene)
     {
         GMAudioSource.Stop();
-        if (newScene.name == "Game") 
+        if (newScene.name == "Game")
         {
             _inGame = true;
             InitializeGame();
         }
-        else 
+        else
         {
             _inGame = false;
         }
@@ -117,10 +121,10 @@ public class GameManager : MonoBehaviour
         AudioListener.volume = PlayerPrefs.GetFloat("Volume");
         if (_inGame)
             PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
-        
+
     }
-    
-    
+
+
     private void PauseGame()
     {
         GMAudioSource.Pause();
@@ -136,12 +140,12 @@ public class GameManager : MonoBehaviour
         if (state)
             PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         PlayerController.Instance.CanWalk = !state;
-        PlayerInteract.Instance.CanInteract = !state;
+        CanUseKeyboard = !state;
     }
 
-    
 
-    
+
+
 
 
     public void StartGame()
@@ -181,18 +185,18 @@ public class GameManager : MonoBehaviour
 
         while (countOfBlinks < 12)
         {
-            for(int i = 0; i < numOfLights; i++)
+            for (int i = 0; i < numOfLights; i++)
             {
-                lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.3f,1.1f);
+                lightsTransform.GetChild(i).GetComponent<Light2D>().intensity = Random.Range(0.3f, 1.1f);
             }
             countOfBlinks++;
             yield return new WaitForSeconds(0.1f);
         }
 
-        TurnOffLights(turnOff,lightsTransform);
+        TurnOffLights(turnOff, lightsTransform);
     }
-    
-    public void TurnOffLights(bool state, Transform lightsTransform=null)
+
+    public void TurnOffLights(bool state, Transform lightsTransform = null)
     {
         if (!lightsTransform)
             lightsTransform = RoomsManager.Instance.CurrentRoom.transform.Find("Lights");

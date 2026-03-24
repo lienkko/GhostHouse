@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ExpandConsole : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class ExpandConsole : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private RectTransform _consoleWindow;
     [SerializeField] private Texture2D _nwseCursor;
@@ -38,7 +34,7 @@ public class ExpandConsole : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndD
 
     public void OnDrag(PointerEventData eventData)
     {
-        Cursor.SetCursor(_nwseCursor, new Vector2(11,11), CursorMode.Auto);
+        Cursor.SetCursor(_nwseCursor, new Vector2(11, 11), CursorMode.Auto);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _consoleWindow.parent as RectTransform,
             eventData.position,
@@ -47,14 +43,14 @@ public class ExpandConsole : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndD
         Rect canvasRect = _consoleWindow.parent.GetComponent<RectTransform>().rect;
         RectTransform _canvasRectT = _consoleWindow.parent as RectTransform;
 
-        float width = Mathf.Clamp(mouse.x - _consoleWindow.anchoredPosition.x, 400, 
+        float width = Mathf.Clamp(mouse.x - _consoleWindow.anchoredPosition.x, 400,
             canvasRect.width);
-        float height = Mathf.Clamp(_consoleWindow.anchoredPosition.y - mouse.y,300,
+        float height = Mathf.Clamp(_consoleWindow.anchoredPosition.y - mouse.y, 300,
             canvasRect.height);
 
         _consoleWindow.sizeDelta = new Vector2(width,
             height) - _offset;
-        
+
     }
 
     public void OnEndDrag(PointerEventData eventData)

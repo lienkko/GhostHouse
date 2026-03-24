@@ -6,7 +6,6 @@ public class DoorController : MonoBehaviour
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
 
-
     [SerializeField] private SpriteRenderer _secondDigit;
     [SerializeField] private SpriteRenderer _firstDigit;
     [SerializeField] private Sprite[] _numbersSprites;
@@ -17,10 +16,15 @@ public class DoorController : MonoBehaviour
     private GameObject _previousRoomRoot;
     private GameObject _nextRoomRoot;
 
-
     [HideInInspector] public Transform TargetEntrySpawnPoint;
     [HideInInspector] public Transform ReturnTargetPoint;
-    [HideInInspector] public bool isDoorLocked = true; 
+    [HideInInspector] public bool isDoorLocked = true;
+
+    // ---- fake doors 23.03.2026 --- //
+    private bool _isFakeDoor = false;
+    private bool _isBlockedByFake = false;
+    private DoorController _linkedBackDoor;
+    // ------------------------------ //
 
     public DoorSide GetSide() { return _doorSide; }
 
@@ -32,6 +36,7 @@ public class DoorController : MonoBehaviour
         if (IsStartingDoor)
         {
             GetComponent<Interactive>().SetListener(ActivateDoor);
+            GetComponent<Interactive>().isInteractive = false;
             SetTargetRoomNumber(1);
         }
     }
@@ -42,28 +47,63 @@ public class DoorController : MonoBehaviour
 
         if ((_secondDigit != null) && (_firstDigit != null) && (_numbersSprites != null))
         {
-            _secondDigit.sprite = _numbersSprites[_targetRoomNumber/10];
-            _firstDigit.sprite = _numbersSprites[_targetRoomNumber%10];
+            int tens = Mathf.Clamp(_targetRoomNumber / 10, 0, _numbersSprites.Length - 1);
+            int units = Mathf.Clamp(_targetRoomNumber % 10, 0, _numbersSprites.Length - 1);
+            _secondDigit.sprite = _numbersSprites[tens];
+            _firstDigit.sprite = _numbersSprites[units];
         }
     }
 
-    public void Initialize(DoorSide side, bool leadsBack,bool isLocked, GameObject previousRoomRoot = null)
+    // -------------------------- fake doors 23.03.2026 -------------------------- //
+    public void InitializeFake(DoorSide side, int fakeNumber, DoorController backDoor)
     {
-        if (!isLocked)
-        {
-            GetComponent<Interactive>().isInteractive = true;
-            isDoorLocked = false;
-        }
+        _doorSide = side;
+        _targetRoomNumber = fakeNumber;
+        _isFakeDoor = true;
+        _linkedBackDoor = backDoor;
+
+        SetTargetRoomNumber(fakeNumber);
+        GetComponent<Interactive>().SetListener(ActivateDoor);
+        GetComponent<Interactive>().isInteractive = true;
+    }
+
+    public void SetDoorVisualAndInteract(bool state)
+    {
+        _isBlockedByFake = !state;
+        if (_firstDigit != null) _firstDigit.enabled = state;
+        if (_secondDigit != null) _secondDigit.enabled = state;
+        GetComponent<Interactive>().isInteractive = state;
+    }
+    // --------------------------------------------------------------------------- //
+
+    public void Initialize(DoorSide side, bool leadsBack, bool isLocked, GameObject previousRoomRoot = null)
+    {
         _doorSide = side;
         _leadsToPreviousRoom = leadsBack;
         _previousRoomRoot = previousRoomRoot;
+        isDoorLocked = isLocked;
+
         GetComponent<Interactive>().SetListener(ActivateDoor);
+        GetComponent<Interactive>().isInteractive = !isLocked;
     }
 
     public void ActivateDoor()
     {
-        
-            GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
+        if (_isBlockedByFake) return;
+
+        // ------------------------ fake doors 23.03.2026 ------------------------ //
+        if (_isFakeDoor)
+        {
+            PlayerController.Instance.InflictDamage(20);
+            if (_linkedBackDoor != null) _linkedBackDoor.SetDoorVisualAndInteract(true);
+            GetComponent<Interactive>().isInteractive = false;
+            return;
+        }
+        // ---------------------------------------------------------------------- //
+
+        if (isDoorLocked && !IsStartingDoor && !_leadsToPreviousRoom) return;
+
+        GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
 
         if (IsStartingDoor)
         {
@@ -72,22 +112,14 @@ public class DoorController : MonoBehaviour
 
             if (_nextRoomRoot == null)
             {
-                _nextRoomRoot = RoomsManager.Instance.GenerateNextRoom(
-                    Vector3.zero, exitSide, currentRoomRoot, gameObject.transform
-                );
+                _nextRoomRoot = RoomsManager.Instance.GenerateNextRoom(Vector3.zero, exitSide, currentRoomRoot, transform);
 
+                // Находим точку входа в первой созданной комнате для будущих возвратов
                 if (_nextRoomRoot != null)
                 {
-                    DoorSide oppositeSide = RoomsManager.Instance.GetOppositeSide(exitSide);
-
                     DoorController backDoorInstance = _nextRoomRoot.GetComponentsInChildren<DoorController>()
-                         .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == oppositeSide);
-
-                    if (backDoorInstance != null)
-                    {
-                        this.TargetEntrySpawnPoint = backDoorInstance.transform;
-                        this.enabled = false;
-                    }
+                         .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == entrySideForNextRoom);
+                    if (backDoorInstance != null) this.TargetEntrySpawnPoint = backDoorInstance.transform;
                 }
             }
             else
@@ -96,14 +128,9 @@ public class DoorController : MonoBehaviour
                 {
                     currentRoomRoot.SetActive(false);
                     _nextRoomRoot.SetActive(true);
-
-                    RoomsManager.Instance.SetPlayerPositionWithOffset(
-                        TargetEntrySpawnPoint.position,
-                        entrySideForNextRoom
-                    );
-                    this.enabled = false;
+                    RoomsManager.Instance.SetPlayerPositionWithOffset(TargetEntrySpawnPoint.position, entrySideForNextRoom);
+                    OnRoomChanged?.Invoke(_nextRoomRoot);
                 }
-                OnRoomChanged?.Invoke(_nextRoomRoot);
             }
             return;
         }
@@ -114,41 +141,23 @@ public class DoorController : MonoBehaviour
             {
                 currentRoomRoot.SetActive(false);
                 _previousRoomRoot.SetActive(true);
-
-                DoorSide entrySideForPreviousRoom = RoomsManager.Instance.GetOppositeSide(_doorSide);
-
-                DoorController targetDoorController = ReturnTargetPoint.GetComponent<DoorController>();
-                if (targetDoorController != null)
-                {
-                    targetDoorController.enabled = true;
-                }
-
-                RoomsManager.Instance.SetPlayerPositionWithOffset(
-                    ReturnTargetPoint.position,
-                    entrySideForPreviousRoom
-                );
+                RoomsManager.Instance.SetPlayerPositionWithOffset(ReturnTargetPoint.position, RoomsManager.Instance.GetOppositeSide(_doorSide));
                 OnRoomChanged?.Invoke(_previousRoomRoot);
             }
         }
-
         else
         {
             DoorSide entrySideForNextRoom = RoomsManager.Instance.GetOppositeSide(_doorSide);
 
             if (_nextRoomRoot == null)
             {
-                _nextRoomRoot = RoomsManager.Instance.GenerateNextRoom(
-                    currentRoomRoot.transform.position, _doorSide, currentRoomRoot, gameObject.transform
-                );
+                _nextRoomRoot = RoomsManager.Instance.GenerateNextRoom(currentRoomRoot.transform.position, _doorSide, currentRoomRoot, transform);
 
                 if (_nextRoomRoot != null)
                 {
                     DoorController backDoorInstance = _nextRoomRoot.GetComponentsInChildren<DoorController>()
                          .FirstOrDefault(d => d._leadsToPreviousRoom && d.GetSide() == entrySideForNextRoom);
-                    if (backDoorInstance != null)
-                    {
-                        this.TargetEntrySpawnPoint = backDoorInstance.transform;
-                    }
+                    if (backDoorInstance != null) this.TargetEntrySpawnPoint = backDoorInstance.transform;
                 }
             }
             else
@@ -157,18 +166,12 @@ public class DoorController : MonoBehaviour
                 {
                     currentRoomRoot.SetActive(false);
                     _nextRoomRoot.SetActive(true);
-
-                    RoomsManager.Instance.SetPlayerPositionWithOffset(
-                        TargetEntrySpawnPoint.position,
-                        entrySideForNextRoom
-                    );
+                    RoomsManager.Instance.SetPlayerPositionWithOffset(TargetEntrySpawnPoint.position, entrySideForNextRoom);
                 }
                 OnRoomChanged?.Invoke(_nextRoomRoot);
             }
         }
-        
     }
-
 
     public void UnlockDoor()
     {
