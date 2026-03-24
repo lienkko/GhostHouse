@@ -2,34 +2,35 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Safe : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Interactive))]
+public class TreasureChest : MonoBehaviour
 {
-    private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
+    private readonly string _puzzleName = "Prefabs/Puzzles/PuzzleNumbers";
     public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;
-    private DoorController _doorToOpen;
     private Interactive _interactiveComp;
+    private SpriteRenderer _spriteRenderer;
 
-    [SerializeField] private Sprite _rightLeftSafeSprite;
-    [SerializeField] private Sprite _topSafeSprite;
-    [SerializeField] private Sprite _botSafeSprite;
-
-    [SerializeField] private Collider2D _borderCollider;
-
+    [Header("Chest Settings")]
+    [SerializeField] private Sprite _openedChestSprite;
+    private int _rewardValue;
 
     private void Awake()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _interactiveComp = GetComponent<Interactive>();
         _interactiveComp.SetListener(OpenPuzzle);
         _interactiveComp.isInteractive = true;
 
-        Pause.OnResume += SafeOnResume;
+        Pause.OnResume += ChestOnResume;
     }
 
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
+        _rewardValue = Random.Range(20,41);
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -43,56 +44,26 @@ public class Safe : MonoBehaviour
         }
     }
 
-    public void Initialize(string pointTag, DoorController door)
-    {
-        _doorToOpen = door;
-        var spriteRenderer = GetComponent<SpriteRenderer>();
-        switch (pointTag)
-        {
-            case "TopPoint":
-                spriteRenderer.sprite = _topSafeSprite;
-                break;
-            case "BotPoint":
-                _borderCollider.offset = new Vector2(0, -0.12f);
-                spriteRenderer.sortingOrder = 11;
-
-                spriteRenderer.sprite = _botSafeSprite;
-                break;
-            case "RightPoint":
-                spriteRenderer.sprite = _rightLeftSafeSprite;
-                break;
-            case "LeftPoint":
-                {
-                    spriteRenderer.flipX = true;
-                    spriteRenderer.sprite = _rightLeftSafeSprite;
-                    break;
-                }
-        }
-    }
-
     private void CreatePuzzle()
     {
-        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
-        _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
+        GameObject prefab = Resources.Load<GameObject>(_puzzleName);
+        _puzzle = Instantiate(prefab, transform);
         _puzzle.transform.SetParent(gameObject.transform);
-        _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenSafe);
+        _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenChest);
     }
 
-    private void OpenPuzzle()
+    public void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-
+        
         StartCoroutine(SwitchIsInPuzzle(true));
-
+        
         GameManager.Instance.BlockPlayer(true);
-        if (PlayerHand.Instance.ActivveItem)
-        {
-            PlayerHand.Instance.ActivveItem.Hide();
-        }
 
         if (_puzzle)
         {
             _puzzle.SetActive(true);
+            _puzzle.GetComponent<NumberPuzzle>().SetupPuzzle();
             return;
         }
         CreatePuzzle();
@@ -109,10 +80,6 @@ public class Safe : MonoBehaviour
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
-        if (PlayerHand.Instance.ActivveItem)
-        {
-            PlayerHand.Instance.ActivveItem.Unhide();
-        }
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
@@ -123,7 +90,7 @@ public class Safe : MonoBehaviour
         GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
     }
 
-    private void SafeOnResume()
+    private void ChestOnResume()
     {
         if (IsInPuzzle)
         {
@@ -132,7 +99,7 @@ public class Safe : MonoBehaviour
         }
     }
 
-    public void OpenSafe()
+    public void OpenChest()
     {
         if (_puzzle)
         {
@@ -141,10 +108,15 @@ public class Safe : MonoBehaviour
         }
         else
             GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        _spriteRenderer.sprite = _openedChestSprite;
         _interactiveComp.RemoveListener();
         _interactiveComp.isInteractive = false;
-        _doorToOpen.UnlockDoor();
+        GiveReward();
         Destroy(this);
     }
 
+    private void GiveReward()
+    {
+        return;
+    }
 }
