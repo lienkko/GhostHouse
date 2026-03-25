@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     public float ChangeSpeed(float value)
     {
-        if (value < 4 || value > 8)
+        if (value < 1 || value > 8)
             return -1;
         _walkSpeedValue = value;
         return _walkSpeedValue;
