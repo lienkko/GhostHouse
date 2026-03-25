@@ -8,6 +8,7 @@ public class RoomsManager : MonoBehaviour
 
     [Header("Префабы комнат")]
     [SerializeField] private GameObject[] _roomPrefabs;
+    [SerializeField] private GameObject _bossSpiderRoomPrefab;
 
     [Space(10)]
     [Header("Префабы дверей")]
@@ -54,14 +55,23 @@ public class RoomsManager : MonoBehaviour
     {
         CurrentRoom = room;
     }
-
+    
     public GameObject GenerateNextRoom(Vector3 spawnPosition, DoorSide previousDoorSide, GameObject previousRoomRoot, Transform lastDoorTransform = null)
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
-
         _roomNumber++;
-
-        GameObject selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
+        // ------ Boss Spider ------
+        bool isBossSpiderRoom = false;
+        if (_roomNumber == 25)
+        {
+            isBossSpiderRoom = true;
+        }
+        // -------------------------
+        GameObject selectedRoomPrefab;
+        if (isBossSpiderRoom)
+            selectedRoomPrefab = _bossSpiderRoomPrefab;
+        else
+            selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
         CurrentRoom = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, _roomsParentObject);
         RoomData roomData = CurrentRoom.GetComponent<RoomData>();
 
@@ -90,7 +100,7 @@ public class RoomsManager : MonoBehaviour
         }
 
         // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
-        if (Random.Range(1, 101) <= 20)
+        if (Random.Range(1, 101) <= 20 && !isBossSpiderRoom)
         {
             var remainingPoints = roomData.AvailableDoorSpawns
                 .Where(p => p.SpawnPoint != finalEntryPoint.SpawnPoint &&
@@ -109,9 +119,9 @@ public class RoomsManager : MonoBehaviour
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
-
-        SetHideSpots(roomData);
-        if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
+        if (!isBossSpiderRoom)
+            SetHideSpots(roomData);
+        if (Random.Range(1, 21) > 17 && !isBossSpiderRoom) GameManager.Instance.SummonWraith();
 
         return CurrentRoom;
     }

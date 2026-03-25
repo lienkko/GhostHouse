@@ -89,8 +89,8 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
-
-        Ghost.Instance.InteractiveInstance.SetListener(StartGame);
+        if (Ghost.Instance)
+            Ghost.Instance.InteractiveInstance.SetListener(StartGame);
         PlayerController.Instance.OnDeath += Death;
         PlayerController.Instance.OnChangeHp += ChangeHp;
         ChangeHp(0, PlayerController.Instance.HealthPoints);

@@ -76,6 +76,8 @@ public class DoorController : MonoBehaviour
     }
     // --------------------------------------------------------------------------- //
 
+    // ------ Boss Spider ------
+
     public void Initialize(DoorSide side, bool leadsBack, bool isLocked, GameObject previousRoomRoot = null)
     {
         _doorSide = side;
