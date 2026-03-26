@@ -27,15 +27,13 @@ public class SpiderBossManager : MonoBehaviour
         _keyCount++;
         if (_keyCount == MaxKeyCount)
         {
-            OpenDoors();
+            OpenDoor();
         }
         _spider.Trigger(PlayerController.Instance.transform.position);
     }
-    private void OpenDoors()
+    private void OpenDoor()
     {
-        _enterDoor.isDoorLocked = false;
         _exitDoor.isDoorLocked = false;
-        _enterDoor.GetComponent<Interactive>().isInteractive = true;
         _exitDoor.GetComponent<Interactive>().isInteractive = true;
     }
     private bool IsPlayerRunning()

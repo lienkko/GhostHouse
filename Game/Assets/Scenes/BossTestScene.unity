@@ -5360,6 +5360,8 @@ MonoBehaviour:
   _hideText: {fileID: 988237509}
   _startGameText: {fileID: 1258811544}
   _lockedImage: {fileID: 1453539038}
+  _takeItemText: {fileID: 0}
+  _takeKeyText: {fileID: 0}
   _deathText: {fileID: 1432997924}
   _buttonRestartGame: {fileID: 790199994}
   _buttonMenu: {fileID: 1400677968}
@@ -6996,6 +6998,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6906871512595190479, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573772664414043653, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 7980e89c6466ed1d687c19bcf8be4a1b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
