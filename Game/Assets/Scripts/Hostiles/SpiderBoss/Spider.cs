@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Spider : MonoBehaviour
 {
     NavMeshAgent agent;
@@ -12,7 +13,7 @@ public class Spider : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
         agent.updateRotation = false;
-        agent.updateUpAxis = false;   // если есть в версии
+        agent.updateUpAxis = false;
     }
 
     void Update()

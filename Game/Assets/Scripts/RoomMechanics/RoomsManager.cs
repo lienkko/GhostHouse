@@ -60,6 +60,7 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
+        Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
         if (_roomNumber == 25)
