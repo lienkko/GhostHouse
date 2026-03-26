@@ -371,7 +371,7 @@ public class CommandLine : MonoBehaviour
         }
         if (float.TryParse(commandAndParameters[1], out float speed))
         {
-            if (PlayerController.Instance.ChangeSpeed(speed) < 0)
+            if (PlayerController.Instance.ChangeNormalSpeed(speed) < 0)
                 Log("�������� ������ ���� ����� 4 � 8");
             else
             {

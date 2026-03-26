@@ -11,6 +11,7 @@ public class Spider : MonoBehaviour
     private NavMeshAgent _agent;
     private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
+    [SerializeField] private GameObject _webPrefab;
     private bool _isOnPoint = true;
     void Start()
     {
@@ -27,6 +28,10 @@ public class Spider : MonoBehaviour
             PlayerController.Instance.InflictDamage(100);
         }
         Vector3 direction = _agent.velocity;
+        if (Random.Range(0, 10000) < 5)
+        {
+            SpawnWeb();
+        }
         if (direction.sqrMagnitude > 0.01f)
         {
             RotateSpider(direction);
@@ -61,6 +66,10 @@ public class Spider : MonoBehaviour
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
 
 
+    }
+    private void SpawnWeb()
+    {
+        Instantiate(_webPrefab, transform.position, Quaternion.identity);
     }
     public void Trigger(Vector3 target)
     {
