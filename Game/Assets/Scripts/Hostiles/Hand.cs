@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +16,7 @@ public class Hand : MonoBehaviour
             _trapLeftTime -= _trapSpeed * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space) && !Pause.IsPaused)
             {
-                _trapLeftTime +=_trapSpeed/2;
+                _trapLeftTime += _trapSpeed / 2;
             }
             if (_trapLeftTime >= 1)
             {
@@ -31,7 +29,7 @@ public class Hand : MonoBehaviour
             }
             _trapSlider.value = _trapLeftTime;
         }
-        
+
     }
     private void CatchPlayer()
     {

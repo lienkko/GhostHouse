@@ -22,5 +22,8 @@ public class RoomData : MonoBehaviour
     [Tooltip("Список всех шкафов в этой комнате.")]
     public GameObject[] Closets;
 
-    
+    public DoorSpawnPoint EnterBossDoor;
+    public DoorSpawnPoint ExitBossDoor;
+
+
 }

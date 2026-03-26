@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +25,14 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
     private float _walkSpeedValue = 4;
+
+    // ------ Boss Spider prefs ------
+
+
+
+
+
+    // -------------------------------
 
 
     private void Awake()
@@ -74,7 +81,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         CurrentSpeed = IsCrouching ? _walkSpeedValue * 0.5f : _walkSpeedValue;
-        _playerRB.velocity = MoveDir * CurrentSpeed;
+        _playerRB.linearVelocity = MoveDir * CurrentSpeed;
     }
 
     public void InflictDamage(int dmg)

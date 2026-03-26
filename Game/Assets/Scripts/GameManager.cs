@@ -89,8 +89,8 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
-
-        Ghost.Instance.InteractiveInstance.SetListener(StartGame);
+        if (Ghost.Instance)
+            Ghost.Instance.InteractiveInstance.SetListener(StartGame);
         PlayerController.Instance.OnDeath += Death;
         PlayerController.Instance.OnChangeHp += ChangeHp;
         ChangeHp(0, PlayerController.Instance.HealthPoints);
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     public void BlockPlayer(bool state)
     {
         if (state)
-            PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            PlayerController.Instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
         PlayerController.Instance.CanWalk = !state;
         CanUseKeyboard = !state;
     }
