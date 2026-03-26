@@ -43,8 +43,8 @@ public class RoomsManager : MonoBehaviour
         Instance = this;
         DoorController.OnRoomChanged += ChangeCurrentRoom;
 
-        DoorController startDoor = FindObjectOfType<DoorController>();
-        if (startDoor != null && startDoor.IsStartingDoor)
+        DoorController startDoor = FindFirstObjectByType<DoorController>();
+        if (startDoor != null && (startDoor.IsStartingDoor || startDoor.IsTestBossDoor))
         {
             CurrentRoom = startDoor.transform.parent.gameObject;
             CurrentRoom.GetComponent<RoomData>().NextRoomDoor = startDoor;

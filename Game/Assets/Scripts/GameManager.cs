@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     public void BlockPlayer(bool state)
     {
         if (state)
-            PlayerController.Instance.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            PlayerController.Instance.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
         PlayerController.Instance.CanWalk = !state;
         CanUseKeyboard = !state;
     }

@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         CurrentSpeed = IsCrouching ? _walkSpeedValue * 0.5f : _walkSpeedValue;
-        _playerRB.velocity = MoveDir * CurrentSpeed;
+        _playerRB.linearVelocity = MoveDir * CurrentSpeed;
     }
 
     public void InflictDamage(int dmg)
