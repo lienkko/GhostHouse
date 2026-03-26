@@ -77,8 +77,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 _itemInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeItemText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
@@ -92,8 +91,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 _keyClosetInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeKeyText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<Safe>() && interactive.isInteractive)
@@ -131,7 +129,7 @@ public class PlayerInteract : MonoBehaviour
         {
             if (collision.GetComponent<Item>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
                 _itemInteractive = null;
             }
             if (collision.GetComponent<HideSpot>())
@@ -142,7 +140,7 @@ public class PlayerInteract : MonoBehaviour
             }
             if (collision.GetComponent<KeyCloset>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeKeyText.SetActive(false);
                 _keyClosetInteractive = null;
 
             }

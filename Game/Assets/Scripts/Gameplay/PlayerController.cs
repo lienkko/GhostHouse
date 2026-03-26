@@ -67,6 +67,10 @@ public class PlayerController : MonoBehaviour
         return _walkSpeedValue;
 
     }
+    public float GetNormalSpeed()
+    {
+        return _walkSpeedValue;
+    }
 
     private void InputMovement()
     {

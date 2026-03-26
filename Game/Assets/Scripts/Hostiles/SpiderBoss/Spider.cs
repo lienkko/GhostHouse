@@ -6,21 +6,20 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Spider : MonoBehaviour
 {
-    NavMeshAgent agent;
+    private NavMeshAgent _agent;
     private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
     private bool _isOnPoint = true;
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        _agent = GetComponent<NavMeshAgent>();
 
-        agent.updateRotation = false;
-        agent.updateUpAxis = false;
+        _agent.updateRotation = false;
+        _agent.updateUpAxis = false;
     }
-
     void Update()
     {
-        Vector3 direction = agent.velocity;
+        Vector3 direction = _agent.velocity;
 
         if (direction.sqrMagnitude > 0.01f)
         {
@@ -30,11 +29,25 @@ public class Spider : MonoBehaviour
         }
         if (_isOnPoint)
         {
-            agent.SetDestination(_patrolPoints[Random.Range(0, _patrolPoints.Length)].position);
+            _agent.SetDestination(_patrolPoints[Random.Range(0, _patrolPoints.Length)].position);
             _isOnPoint = false;
         }
-        if (agent.remainingDistance <= 0.02f)
+        if (_agent.remainingDistance <= 0.02f)
+        {
+            _agent.speed = 3;
+            StartCoroutine(Rest());
             _isOnPoint = true;
-
+        }
+    }
+    private IEnumerator Rest()
+    {
+        _agent.isStopped = true;
+        yield return new WaitForSeconds(2f);
+        _agent.isStopped = false;
+    }
+    public void Trigger(Vector3 target)
+    {
+        _agent.SetDestination(target);
+        _agent.speed = 5;
     }
 }

@@ -36131,6 +36131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad70850e2666d90d869c6b9b73877d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spider: {fileID: 3672925047150086532}
 --- !u!1 &6515518276054434257
 GameObject:
   m_ObjectHideFlags: 0
@@ -36283,6 +36284,8 @@ GameObject:
   - component: {fileID: 8214571859314860211}
   - component: {fileID: 3881995061424249620}
   - component: {fileID: 2476346669452413100}
+  - component: {fileID: 5483054581733961536}
+  - component: {fileID: 3672925047150086532}
   m_Layer: 0
   m_Name: Spider
   m_TagString: Untagged
@@ -36406,10 +36409,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.4
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 0
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -36418,6 +36421,58 @@ NavMeshAgent:
   m_BaseOffset: 0.36
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!50 &5483054581733961536
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7659323189982236870}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &3672925047150086532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7659323189982236870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fec4e120f171633e9da8977b6623efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _patrolPoints:
+  - {fileID: 2529274504938476955}
+  - {fileID: 4129014728758748471}
+  - {fileID: 2390314539912394973}
+  - {fileID: 4842399411805159167}
+  - {fileID: 9106008844553679268}
+  - {fileID: 7296731065980215833}
+  - {fileID: 89922808208997661}
+  - {fileID: 3785480034789060132}
+  - {fileID: 2039708078284299411}
+  - {fileID: 5557486382504783336}
+  - {fileID: 1861523750431594777}
+  - {fileID: 6076509437844851054}
 --- !u!1 &8171908631248487162
 GameObject:
   m_ObjectHideFlags: 0
