@@ -3474,6 +3474,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1091823189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091823179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fec4e120f171633e9da8977b6623efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1111356187
 GameObject:
   m_ObjectHideFlags: 0
@@ -4362,7 +4374,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 154.45
+  m_fontSize: 154.65
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7031,6 +7043,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7659323189982236870, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1091823184}
+    - targetCorrespondingSourceObject: {fileID: 7659323189982236870, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1091823189}
   m_SourcePrefab: {fileID: 100100000, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
 --- !u!114 &6020706684139193232
 MonoBehaviour:
