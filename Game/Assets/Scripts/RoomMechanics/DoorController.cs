@@ -5,6 +5,7 @@ public class DoorController : MonoBehaviour
 {
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
+    public bool IsTestBossDoor = false;
 
     [SerializeField] private SpriteRenderer _secondDigit;
     [SerializeField] private SpriteRenderer _firstDigit;
@@ -38,6 +39,14 @@ public class DoorController : MonoBehaviour
             GetComponent<Interactive>().SetListener(ActivateDoor);
             GetComponent<Interactive>().isInteractive = false;
             SetTargetRoomNumber(1);
+        }
+        if (IsTestBossDoor)
+        {
+            GetComponent<Interactive>().SetListener(ActivateDoor);
+            GetComponent<Interactive>().isInteractive = true;
+            isDoorLocked = false;
+            SetTargetRoomNumber(24);
+
         }
     }
 

@@ -32,7 +32,7 @@ public class RoomsManager : MonoBehaviour
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
 
-    private int _roomNumber = 1;
+    private int _roomNumber = 24;
     private readonly float _northEntryOffset = -1.0f;
     private readonly float _southEntryOffset = 1.0f;
 
@@ -55,7 +55,7 @@ public class RoomsManager : MonoBehaviour
     {
         CurrentRoom = room;
     }
-    
+
     public GameObject GenerateNextRoom(Vector3 spawnPosition, DoorSide previousDoorSide, GameObject previousRoomRoot, Transform lastDoorTransform = null)
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
@@ -74,54 +74,63 @@ public class RoomsManager : MonoBehaviour
             selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
         CurrentRoom = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, _roomsParentObject);
         RoomData roomData = CurrentRoom.GetComponent<RoomData>();
-
+        RoomData.DoorSpawnPoint finalEntryPoint;
         DoorSide oppositeSide = GetOppositeSide(previousDoorSide);
-
-        List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
-            .Where(d => d.Side == oppositeSide).ToList();
-
-        if (entryCandidates.Count < 1)
-        {
-            Destroy(CurrentRoom);
-            return GenerateNextRoom(spawnPosition, previousDoorSide, previousRoomRoot, lastDoorTransform);
-        }
-
-        RoomData.DoorSpawnPoint finalEntryPoint = entryCandidates[Random.Range(0, entryCandidates.Count)];
-        SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1);
-
-        RoomData.DoorSpawnPoint[] availableExits = roomData.AvailableDoorSpawns
-            .Where(d => d.Side != oppositeSide).ToArray();
-
+        DoorController enterBossDoor;
+        DoorController exitBossDoor;
         RoomData.DoorSpawnPoint? actualExitPoint = null;
-        if (availableExits.Length > 0)
+        if (!isBossSpiderRoom)
         {
-            actualExitPoint = availableExits[Random.Range(0, availableExits.Length)];
-            SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
-        }
+            List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
+                .Where(d => d.Side == oppositeSide).ToList();
 
-        // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
-        if (Random.Range(1, 101) <= 20 && !isBossSpiderRoom)
-        {
-            var remainingPoints = roomData.AvailableDoorSpawns
-                .Where(p => p.SpawnPoint != finalEntryPoint.SpawnPoint &&
-                           (actualExitPoint == null || p.SpawnPoint != actualExitPoint.Value.SpawnPoint))
-                .ToList();
-
-            if (remainingPoints.Count > 0)
+            if (entryCandidates.Count < 1)
             {
-                SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
+                Destroy(CurrentRoom);
+                return GenerateNextRoom(spawnPosition, previousDoorSide, previousRoomRoot, lastDoorTransform);
             }
-        }
-        // ------------------------------------------------------------------------------------------------ //
 
+            finalEntryPoint = entryCandidates[Random.Range(0, entryCandidates.Count)];
+            SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1);
+            RoomData.DoorSpawnPoint[] availableExits = roomData.AvailableDoorSpawns
+                .Where(d => d.Side != oppositeSide).ToArray();
+
+            if (availableExits.Length > 0)
+            {
+                actualExitPoint = availableExits[Random.Range(0, availableExits.Length)];
+                SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
+            }
+            SetHideSpots(roomData);
+            if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
+            // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
+            if (Random.Range(1, 101) <= 20)
+            {
+                var remainingPoints = roomData.AvailableDoorSpawns
+                    .Where(p => p.SpawnPoint != finalEntryPoint.SpawnPoint &&
+                               (actualExitPoint == null || p.SpawnPoint != actualExitPoint.Value.SpawnPoint))
+                    .ToList();
+
+                if (remainingPoints.Count > 0)
+                {
+                    SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
+                }
+            }
+            // ------------------------------------------------------------------------------------------------ //
+        }
+        else
+        {
+            finalEntryPoint = roomData.EnterBossDoor;
+            enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
+            actualExitPoint = roomData.ExitBossDoor;
+            exitBossDoor = SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber, true);
+            SetKeyClosets(roomData);
+            CurrentRoom.GetComponentInChildren<SpiderBossManager>().SetDoors(enterBossDoor, exitBossDoor);
+        }
         Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
         if (playerSpawnPoint != null)
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
         }
-        if (!isBossSpiderRoom)
-            SetHideSpots(roomData);
-        if (Random.Range(1, 21) > 17 && !isBossSpiderRoom) GameManager.Instance.SummonWraith();
 
         return CurrentRoom;
     }
@@ -149,7 +158,7 @@ public class RoomsManager : MonoBehaviour
     }
     // ---------------------------------------------------------------------------------------------------- //
 
-    private void SpawnDoor(RoomData roomData, RoomData.DoorSpawnPoint spawnCandidate, bool isPreviousRoomDoor, GameObject previousRoomRoot = null, Transform returnTargetPoint = null, int doorTargetRoomNumber = 0)
+    private DoorController SpawnDoor(RoomData roomData, RoomData.DoorSpawnPoint spawnCandidate, bool isPreviousRoomDoor, GameObject previousRoomRoot = null, Transform returnTargetPoint = null, int doorTargetRoomNumber = 0, bool isBossDoor = false)
     {
         Transform spawnPoint = spawnCandidate.SpawnPoint;
         DoorSide targetSide = spawnCandidate.Side;
@@ -161,7 +170,7 @@ public class RoomsManager : MonoBehaviour
         GameObject doorInstance = Instantiate(prefab, spawnPoint.position, Quaternion.identity, roomData.transform);
         DoorController dc = doorInstance.GetComponent<DoorController>();
 
-        bool willSpawnSafe = !isPreviousRoomDoor && Random.Range(1, 11) > 8;
+        bool willSpawnSafe = !isBossDoor && !isPreviousRoomDoor && Random.Range(1, 11) > 8;
 
         dc.Initialize(targetSide, isPreviousRoomDoor, willSpawnSafe, previousRoomRoot);
         if (isPreviousRoomDoor) dc.ReturnTargetPoint = returnTargetPoint;
@@ -174,6 +183,7 @@ public class RoomsManager : MonoBehaviour
         {
             SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], dc);
         }
+        return dc;
     }
 
     private void SpawnSafe(Transform spawnPoint, DoorController door)
@@ -234,6 +244,17 @@ public class RoomsManager : MonoBehaviour
                 hideSpotCloset.GetComponent<HideSpot>().enabled = true;
                 hideSpotCloset.GetComponent<HideSpot>().Initialize();
             }
+        }
+    }
+
+    private void SetKeyClosets(RoomData roomData)
+    {
+        List<GameObject> keyClosets = roomData.Closets.ToList();
+        for (int i = 0; i < 6; i++)
+        {
+            int closetIndex = Random.Range(0, keyClosets.Count);
+            keyClosets[closetIndex].GetComponent<KeyCloset>().Initialize();
+            keyClosets.RemoveAt(closetIndex);
         }
     }
 }

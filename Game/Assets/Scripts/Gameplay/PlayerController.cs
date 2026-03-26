@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,8 +27,7 @@ public class PlayerController : MonoBehaviour
     private float _walkSpeedValue = 4;
 
     // ------ Boss Spider prefs ------
-    public int BossSpiderKeyNumber = 0;
-    public readonly int BossSpiderMaxKeyNumber = 6;
+
 
 
 

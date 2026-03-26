@@ -1129,6 +1129,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hand
       objectReference: {fileID: 0}
+    - target: {fileID: 1286644769695463377, guid: e64041a4e3b2fb94e8152bacd7cdcc73, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e64041a4e3b2fb94e8152bacd7cdcc73, type: 3}
 --- !u!1 &314583087
@@ -2772,6 +2776,7 @@ MonoBehaviour:
   - {fileID: 5569701789731649767, guid: d1eef1327f584404faf4c21cf06e524d, type: 3}
   - {fileID: 8103860337959506060, guid: 02c6c521b930ea6438b15bebf6731f52, type: 3}
   - {fileID: 7788039770513656768, guid: e3cc309b1420c7b4d86c74adf55067cc, type: 3}
+  _bossSpiderRoomPrefab: {fileID: 5511730685514120321, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
   _southDoorPrefab: {fileID: 3876304005829112623, guid: 84161e873fc9895448be8ddbdbd780ea, type: 3}
@@ -3213,6 +3218,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 950032051972538312, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
       propertyPath: IsStartingDoor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 950032051972538312, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
+      propertyPath: IsTestBossDoor
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
@@ -4659,7 +4668,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 95.55
+  m_fontSize: 129.05
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6304,7 +6313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1756740025
 Transform:
   m_ObjectHideFlags: 0
@@ -7552,6 +7561,12 @@ MonoBehaviour:
   AvailableDoorSpawns: []
   AvailableSafeSpawns: []
   Closets: []
+  EnterBossDoor:
+    Side: 0
+    SpawnPoint: {fileID: 0}
+  ExitBossDoor:
+    Side: 0
+    SpawnPoint: {fileID: 0}
 --- !u!61 &5422226503888014151
 BoxCollider2D:
   m_ObjectHideFlags: 0
