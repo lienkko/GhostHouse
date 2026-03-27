@@ -6,17 +6,17 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Spider : MonoBehaviour
 {
-    private readonly float DistanceToKill = 2.5f;
+    private readonly float DistanceToKill = 2.2f;
     private readonly int NormalSpeed = 3;
     private readonly int TriggeredSpeed = 5;
-    public NavMeshAgent Agent {get; private set;}
+    public NavMeshAgent Agent { get; private set; }
     private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
     [SerializeField] private GameObject _webPrefab;
     private bool _isOnPoint = true;
     private Vector3 _lastPos;
-    public bool IsWalking {get; private set;}
-    public bool IsRunning {get; private set;}
+    public bool IsWalking { get; private set; }
+    public bool IsRunning { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
     void Start()
     {
@@ -41,7 +41,7 @@ public class Spider : MonoBehaviour
             IsWalking = false;
             IsRunning = true;
         }
-        
+
         float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.Instance.transform.position);
         if (distanceToPlayer < DistanceToKill)
         {
