@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField] private bool _testMode;
-
+    [SerializeField] private GameObject _flashlightPrefab;
 
     private bool _inGame = false;
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
@@ -158,6 +158,9 @@ public class GameManager : MonoBehaviour
             GetComponent<Interactive>().isInteractive = true;
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
+        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        Inventory.Instance.PickUp(flashlight.GetComponent<Item>());
+        flashlight.SetActive(false);
     }
 
 

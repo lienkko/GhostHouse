@@ -171,7 +171,7 @@ TextureImporter:
         width: 18
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -180,6 +180,50 @@ TextureImporter:
       bones: []
       spriteID: f97782ef1b83bc540a560749ae37ca61
       internalID: -1888417864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candle
+      rect:
+        serializedVersion: 2
+        x: 219
+        y: 686
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dc9fce3379bfbd488db7e7282649912
+      internalID: 696062721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bed
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 668
+        width: 49
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a2a64627c5ef67438bd9f02b62bab76
+      internalID: 1978758476
       vertices: []
       indices: 
       edges: []
@@ -199,7 +243,9 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Battery: -1625950269
+      Bed: 1978758476
       BigBob: -1888417864
+      Candle: 696062721
       closedChest: 1994599679
       openedChest: -1536460600
   mipmapLimitGroupName: 

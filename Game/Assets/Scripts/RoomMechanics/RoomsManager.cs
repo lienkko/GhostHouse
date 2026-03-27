@@ -35,7 +35,7 @@ public class RoomsManager : MonoBehaviour
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
 
-    private int _roomNumber = 0;
+    private int _roomNumber = 1;
     private readonly float _northEntryOffset = -1.0f;
     private readonly float _southEntryOffset = 1.0f;
 
