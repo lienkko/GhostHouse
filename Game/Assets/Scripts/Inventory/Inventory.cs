@@ -101,6 +101,10 @@ public class Inventory : MonoBehaviour
         InventoryItems[_activeSlot - 1].Hide();
         InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
         InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
+        InventoryItems[_activeSlot - 1].transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
+        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingLayerName = "Default";
+        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingOrder = 0;
+ 
         DeleteItem(_activeSlot - 1);
         _activeSlot = 0;
 
@@ -129,7 +133,11 @@ public class Inventory : MonoBehaviour
             return false;
         }
         bool wasAdded = AddItem(item);
-        
+        if (wasAdded)
+        item.GetComponent<SpriteRenderer>().sortingLayerName = "Layer For Player";
+        item.GetComponent<SpriteRenderer>().sortingOrder = 11;
+        item.transform.SetParent(transform);
+        item.transform.localPosition = new Vector3(0.1f,0.5f,0);
         OnAddition?.Invoke();
         return wasAdded;
     }

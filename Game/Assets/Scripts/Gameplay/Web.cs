@@ -22,7 +22,7 @@ public class Web : MonoBehaviour
     {
         var player = other.GetComponent<PlayerController>();
         if (!player) return;
-
+        FindFirstObjectByType<Spider>().Trigger(transform.position);
         TryBurn(player);
     }
 

@@ -2651,19 +2651,31 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 7776394585266858160}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6047510260336526986, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
       propertyPath: m_Name
       value: Candle
       objectReference: {fileID: 0}
+    - target: {fileID: 6047510260336526987, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6047510260336526987, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
+      propertyPath: m_SortingOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6047510260336526987, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6047510260336526988, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.8713245
+      value: 2.11
       objectReference: {fileID: 0}
     - target: {fileID: 6047510260336526988, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.3639603
+      value: -1.51
       objectReference: {fileID: 0}
     - target: {fileID: 6047510260336526988, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2702,11 +2714,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
---- !u!4 &649333916 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6047510260336526988, guid: 3156d8042aff38d44a65fdf2de0f0707, type: 3}
-  m_PrefabInstance: {fileID: 649333915}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &676730026
 GameObject:
   m_ObjectHideFlags: 0
@@ -4977,7 +4984,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 154.65
+  m_fontSize: 91.3
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8565,7 +8572,6 @@ Transform:
   - {fileID: 910503661}
   - {fileID: 314583088}
   - {fileID: 1756740025}
-  - {fileID: 649333916}
   m_Father: {fileID: 1987403195}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7776394585791388851
@@ -11125,3 +11131,4 @@ SceneRoots:
   - {fileID: 943685418}
   - {fileID: 550614536}
   - {fileID: 568912736}
+  - {fileID: 649333915}

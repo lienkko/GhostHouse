@@ -12,10 +12,10 @@ public class PlayerHand : MonoBehaviour
     }
     private void Update()
     {
-        if (ActiveItem)
-        {
-            ActiveItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
-        }
+        // if (ActiveItem)
+        // {
+        //     ActiveItem.transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
+        // }
         if (!GameManager.Instance.CanUseKeyboard)
             return;
         if (Input.GetKeyDown(KeyCode.G))

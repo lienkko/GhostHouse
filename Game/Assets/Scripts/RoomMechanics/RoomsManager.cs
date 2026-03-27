@@ -251,7 +251,7 @@ public class RoomsManager : MonoBehaviour
     private void SetKeyClosets(RoomData roomData)
     {
         List<GameObject> keyClosets = roomData.Closets.ToList();
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 10; i++)
         {
             int closetIndex = Random.Range(0, keyClosets.Count);
             keyClosets[closetIndex].GetComponent<KeyCloset>().Initialize();

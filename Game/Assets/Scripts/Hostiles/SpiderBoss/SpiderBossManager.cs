@@ -4,7 +4,7 @@ public class SpiderBossManager : MonoBehaviour
 {
     public static SpiderBossManager Instance;
     private int _keyCount = 0;
-    private readonly int MaxKeyCount = 6;
+    private readonly int MaxKeyCount = 10;
     private DoorController _enterDoor;
     private DoorController _exitDoor;
     [SerializeField] private Spider _spider;
