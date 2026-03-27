@@ -30,7 +30,9 @@ public class RoomsManager : MonoBehaviour
     [Space(5)]
     [Header("Префаб сундука")]
     [SerializeField] private GameObject _chestPrefab;
-
+    [Space(5)]
+    [Header("Префаб руки")]
+    [SerializeField] private GameObject _handPrefab;
     [Space(5)]
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
@@ -122,9 +124,28 @@ public class RoomsManager : MonoBehaviour
 
             // ------------------------------------------------------------------------------------------------ //
             bool willSpawnChest = Random.Range(1, 11) > 7;
-            if (willSpawnChest)
+            if (willSpawnChest && (roomData.AvailableSafeSpawns.Count > 0))
             {
                 SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
+            }
+            bool willSpawnHand = Random.Range(1, 11) > 3;
+            if (willSpawnHand)
+            {
+                switch (oppositeSide)
+                {
+                    case DoorSide.North:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointBot);
+                        break;
+                    case DoorSide.South:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointTop);
+                        break;
+                    case DoorSide.West:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointRight);
+                        break;
+                    case DoorSide.East:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointLeft);
+                        break;
+                }
             }
         }
         else
@@ -207,7 +228,12 @@ public class RoomsManager : MonoBehaviour
     private void SpawnChest(Transform spawnPoint)
     {
         if (_chestPrefab == null) return;
-        GameObject chestObject = Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
+        Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
+    }
+    private void SpawnHand(Transform spawnPoint)
+    {
+        if (_handPrefab == null) return;
+        Instantiate(_handPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)

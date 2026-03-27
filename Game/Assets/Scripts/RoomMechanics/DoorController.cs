@@ -10,6 +10,10 @@ public class DoorController : MonoBehaviour
     [SerializeField] private SpriteRenderer _secondDigit;
     [SerializeField] private SpriteRenderer _firstDigit;
     [SerializeField] private Sprite[] _numbersSprites;
+    public Transform HandSpawnPointLeft;
+    public Transform HandSpawnPointRight;
+    public Transform HandSpawnPointBot;
+    public Transform HandSpawnPointTop;
 
     private DoorSide _doorSide;
     private bool _leadsToPreviousRoom;
