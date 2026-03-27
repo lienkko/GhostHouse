@@ -5,13 +5,13 @@ public class Hand : MonoBehaviour
 {
     private PlayerController _playerController;
     [SerializeField] private Slider _trapSlider;
-    private bool _isPlayerTrapped = false;
+    public static bool IsPlayerTrapped { get; private set; } = false;
     private readonly float _trapSpeed = 0.1f;
     private float _trapLeftTime = 0.4f;
 
     private void Update()
     {
-        if (_isPlayerTrapped)
+        if (IsPlayerTrapped)
         {
             _trapLeftTime -= _trapSpeed * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space) && !Pause.IsPaused)
@@ -24,6 +24,7 @@ public class Hand : MonoBehaviour
             }
             if (_trapLeftTime <= 0)
             {
+                _playerController.GetComponent<Animator>().SetBool("KilledByHand", true);
                 _playerController.InflictDamage(100);
                 ShowSlider(false);
             }
@@ -43,12 +44,12 @@ public class Hand : MonoBehaviour
     }
     private void TrapPlayer()
     {
-        _isPlayerTrapped = true;
+        IsPlayerTrapped = true;
         _playerController.GetComponent<Animator>().SetBool("Trapped", true);
     }
     private void ReleasePlayer()
     {
-        _isPlayerTrapped = false;
+        IsPlayerTrapped = false;
         _playerController.GetComponent<Animator>().SetBool("Trapped", false);
         GameManager.Instance.BlockPlayer(false);
         ShowSlider(false);
@@ -58,7 +59,7 @@ public class Hand : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         PlayerController playerCntrl = collision.GetComponent<PlayerController>();
-        if (playerCntrl && !_isPlayerTrapped)
+        if (playerCntrl && !IsPlayerTrapped)
         {
             _playerController = playerCntrl;
             CatchPlayer();
