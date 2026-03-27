@@ -5,7 +5,6 @@ public class RoomData : MonoBehaviour
 {
     [HideInInspector] public DoorController PreviousRoomDoor;
     [HideInInspector] public DoorController NextRoomDoor;
-
     [System.Serializable]
     public struct DoorSpawnPoint
     {
@@ -18,13 +17,15 @@ public class RoomData : MonoBehaviour
     public DoorSpawnPoint[] AvailableDoorSpawns;
 
     [Tooltip("������ ���� ��������� ���� ��� ���������� ����� � ���� �������.")]
+<<<<<<< HEAD
     public List<Transform> AvailableSafeSpawns;
+=======
+    public Transform[] AvailableSafeSpawns;
+>>>>>>> SpiderKeys
 
     [Tooltip("������ ���� ������ � ���� �������.")]
     public GameObject[] Closets;
 
     public DoorSpawnPoint EnterBossDoor;
     public DoorSpawnPoint ExitBossDoor;
-
-
 }

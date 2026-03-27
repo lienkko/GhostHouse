@@ -65,13 +65,13 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
-        Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
         if (_roomNumber == 26)
         {
             isBossSpiderRoom = true;
         }
+
         // -------------------------
         GameObject selectedRoomPrefab;
         if (isBossSpiderRoom)
@@ -121,32 +121,7 @@ public class RoomsManager : MonoBehaviour
                     SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
                 }
             }
-
             // ------------------------------------------------------------------------------------------------ //
-            bool willSpawnChest = Random.Range(1, 11) > 7;
-            if (willSpawnChest && (roomData.AvailableSafeSpawns.Count > 0))
-            {
-                SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
-            }
-            bool willSpawnHand = Random.Range(1, 11) > 3;
-            if (willSpawnHand)
-            {
-                switch (oppositeSide)
-                {
-                    case DoorSide.North:
-                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointBot);
-                        break;
-                    case DoorSide.South:
-                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointTop);
-                        break;
-                    case DoorSide.West:
-                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointRight);
-                        break;
-                    case DoorSide.East:
-                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointLeft);
-                        break;
-                }
-            }
         }
         else
         {
@@ -212,9 +187,7 @@ public class RoomsManager : MonoBehaviour
 
         if (willSpawnSafe)
         {
-            int safeSpawnPointNum = Random.Range(0, roomData.AvailableSafeSpawns.Count);
-            SpawnSafe(roomData.AvailableSafeSpawns[safeSpawnPointNum], dc);
-            roomData.AvailableSafeSpawns.RemoveAt(safeSpawnPointNum);
+            SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)], dc);
         }
         return dc;
     }
@@ -224,18 +197,6 @@ public class RoomsManager : MonoBehaviour
         if (_safePrefab == null) return;
         GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
-    }
-    private void SpawnChest(Transform spawnPoint)
-    {
-        if (_chestPrefab == null) return;
-        Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
-    }
-    private void SpawnHand(Transform spawnPoint)
-    {
-        if (_handPrefab == null) return;
-        GameObject hand = Instantiate(_handPrefab, Vector3.zero, Quaternion.identity, spawnPoint);
-        hand.transform.SetParent(spawnPoint);
-        hand.transform.localPosition = Vector3.zero;
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
