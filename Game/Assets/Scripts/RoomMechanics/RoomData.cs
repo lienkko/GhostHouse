@@ -4,7 +4,6 @@ public class RoomData : MonoBehaviour
 {
     [HideInInspector] public DoorController PreviousRoomDoor;
     [HideInInspector] public DoorController NextRoomDoor;
-
     [System.Serializable]
     public struct DoorSpawnPoint
     {
@@ -13,17 +12,15 @@ public class RoomData : MonoBehaviour
         public Transform SpawnPoint;
     }
 
-    [Tooltip("Список всех доступных мест для размещения дверей в этой комнате.")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.")]
     public DoorSpawnPoint[] AvailableDoorSpawns;
 
-    [Tooltip("Список всех доступных мест для размещения сейфа в этой комнате.")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.")]
     public Transform[] AvailableSafeSpawns;
 
-    [Tooltip("Список всех шкафов в этой комнате.")]
+    [Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.")]
     public GameObject[] Closets;
 
     public DoorSpawnPoint EnterBossDoor;
     public DoorSpawnPoint ExitBossDoor;
-
-
 }

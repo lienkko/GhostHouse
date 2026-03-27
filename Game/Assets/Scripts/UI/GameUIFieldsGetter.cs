@@ -17,6 +17,7 @@ public class GameUIFieldsGetter : MonoBehaviour
 
     [Space(10)]
     [SerializeField] private GameObject _deathText;
+    [SerializeField] private GameObject _winnerText;
     [SerializeField] private GameObject _buttonRestartGame;
     [SerializeField] private GameObject _buttonMenu;
 
@@ -34,6 +35,7 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject ReadSignText => _readSignText;
 
     public GameObject DeathText => _deathText;
+    public GameObject WinnerText => _winnerText;
 
     public GameObject ButtonRestartGame => _buttonRestartGame;
     public GameObject ButtonMenu => _buttonMenu;

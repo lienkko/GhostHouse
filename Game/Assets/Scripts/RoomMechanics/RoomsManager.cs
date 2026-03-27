@@ -31,7 +31,7 @@ public class RoomsManager : MonoBehaviour
     [Space(5)]
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
-
+    public static Transform StartRoomSpawner;
     private int _roomNumber = 0;
     private readonly float _northEntryOffset = -1.0f;
     private readonly float _southEntryOffset = 1.0f;
@@ -60,13 +60,13 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
-        Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
         if (_roomNumber == 26)
         {
             isBossSpiderRoom = true;
         }
+
         // -------------------------
         GameObject selectedRoomPrefab;
         if (isBossSpiderRoom)
