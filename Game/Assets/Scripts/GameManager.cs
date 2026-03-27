@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -172,14 +171,7 @@ public class GameManager : MonoBehaviour
         GameUIFields.ButtonMenu.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
     }
-    public void EndGame()
-    {
-        GameUIFields.WinnerText.SetActive(true);
-        GameUIFields.ButtonRestartGame.SetActive(true);
-        GameUIFields.ButtonMenu.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        PlayerController.Instance.gameObject.SetActive(false);
-    }
+
     private void ChangeHp(int dmg, int hp)
     {
         GameUIFields.HpField.text = hp.ToString();

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpiderBossManager : MonoBehaviour
@@ -13,7 +12,6 @@ public class SpiderBossManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        GameManager.Instance.GameUIFields.KeysCount.gameObject.SetActive(true);
     }
     public void SetDoors(DoorController EnterDoor, DoorController ExitDoor)
     {
@@ -27,7 +25,6 @@ public class SpiderBossManager : MonoBehaviour
     public void AddKey()
     {
         _keyCount++;
-        UpdateKeysField();
         if (_keyCount == MaxKeyCount)
         {
             OpenDoor();
@@ -50,9 +47,5 @@ public class SpiderBossManager : MonoBehaviour
         {
             _spider.Trigger(PlayerController.Instance.transform.position);
         }
-    }
-    private void UpdateKeysField()
-    {
-        GameManager.Instance.GameUIFields.KeysCount.text = $"{_keyCount}/{MaxKeyCount}";
     }
 }
