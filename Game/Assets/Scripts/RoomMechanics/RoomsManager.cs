@@ -32,7 +32,7 @@ public class RoomsManager : MonoBehaviour
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
 
-    private int _roomNumber = 24;
+    private int _roomNumber = 0;
     private readonly float _northEntryOffset = -1.0f;
     private readonly float _southEntryOffset = 1.0f;
 
@@ -63,7 +63,7 @@ public class RoomsManager : MonoBehaviour
         Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
-        if (_roomNumber == 25)
+        if (_roomNumber == 26)
         {
             isBossSpiderRoom = true;
         }
@@ -102,7 +102,7 @@ public class RoomsManager : MonoBehaviour
                 SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
             }
             SetHideSpots(roomData);
-            if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
+            if (Random.Range(1, 21) > 19) GameManager.Instance.SummonWraith();
             // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
             if (Random.Range(1, 101) <= 20)
             {
@@ -251,7 +251,7 @@ public class RoomsManager : MonoBehaviour
     private void SetKeyClosets(RoomData roomData)
     {
         List<GameObject> keyClosets = roomData.Closets.ToList();
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 10; i++)
         {
             int closetIndex = Random.Range(0, keyClosets.Count);
             keyClosets[closetIndex].GetComponent<KeyCloset>().Initialize();

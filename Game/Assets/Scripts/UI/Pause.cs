@@ -31,7 +31,7 @@ public class Pause : MonoBehaviour
             Settings();
             return;
         }
-        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle && !TreasureChest.IsInPuzzle)
+        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle && !TreasureChest.IsInPuzzle && !Sign.IsSignOpened)
         {
             if (IsPaused)
                 ResumeGame();

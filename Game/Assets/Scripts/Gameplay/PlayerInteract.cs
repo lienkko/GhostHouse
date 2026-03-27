@@ -11,6 +11,7 @@ public class PlayerInteract : MonoBehaviour
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
     private Interactive _keyClosetInteractive;
+    private Interactive _signInteractive;
 
     private Interactive _swappingInteractive;
 
@@ -28,6 +29,7 @@ public class PlayerInteract : MonoBehaviour
     private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
     private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
     private bool CanTakeKey() { return GameManager.Instance.CanUseKeyboard && _keyClosetInteractive; }
+    private bool CanReadSign() { return GameManager.Instance.CanUseKeyboard && _signInteractive; }
 
     private void Update()
     {
@@ -46,6 +48,11 @@ public class PlayerInteract : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && CanTakeKey())
         {
             _keyClosetInteractive.Interact();
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.E) && CanReadSign())
+        {
+            _signInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
@@ -77,8 +84,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 _itemInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeItemText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
@@ -92,8 +98,14 @@ public class PlayerInteract : MonoBehaviour
             {
                 _keyClosetInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeKeyText.SetActive(true);
+                return;
+            }
+            if (collision.GetComponent<Sign>() && interactive.isInteractive)
+            {
+                _signInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.ReadSignText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<Safe>() && interactive.isInteractive)
@@ -131,7 +143,7 @@ public class PlayerInteract : MonoBehaviour
         {
             if (collision.GetComponent<Item>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
                 _itemInteractive = null;
             }
             if (collision.GetComponent<HideSpot>())
@@ -142,8 +154,14 @@ public class PlayerInteract : MonoBehaviour
             }
             if (collision.GetComponent<KeyCloset>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeKeyText.SetActive(false);
                 _keyClosetInteractive = null;
+
+            }
+            if (collision.GetComponent<Sign>())
+            {
+                GameManager.Instance.GameUIFields.ReadSignText.SetActive(false);
+                _signInteractive = null;
 
             }
             if (collision.GetComponent<Safe>())

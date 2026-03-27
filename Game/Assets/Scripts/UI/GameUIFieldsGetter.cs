@@ -11,6 +11,9 @@ public class GameUIFieldsGetter : MonoBehaviour
     [SerializeField] private GameObject _hideText;
     [SerializeField] private GameObject _startGameText;
     [SerializeField] private GameObject _lockedImage;
+    [SerializeField] private GameObject _takeItemText;
+    [SerializeField] private GameObject _takeKeyText;
+    [SerializeField] private GameObject _readSignText;
 
     [Space(10)]
     [SerializeField] private GameObject _deathText;
@@ -25,6 +28,9 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject HideText => _hideText;
     public GameObject StartGameText => _startGameText;
     public GameObject LockedImage => _lockedImage;
+    public GameObject TakeItemText => _takeItemText;
+    public GameObject TakeKeyText => _takeKeyText;
+    public GameObject ReadSignText => _readSignText;
 
     public GameObject DeathText => _deathText;
 
@@ -47,5 +53,5 @@ public class GameUIFieldsGetter : MonoBehaviour
     {
         SceneManager.LoadScene("main menu");
     }
-    
+
 }

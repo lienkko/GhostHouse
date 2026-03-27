@@ -4,9 +4,11 @@ public class SpiderBossManager : MonoBehaviour
 {
     public static SpiderBossManager Instance;
     private int _keyCount = 0;
-    private readonly int MaxKeyCount = 6;
+    private readonly int MaxKeyCount = 10;
     private DoorController _enterDoor;
     private DoorController _exitDoor;
+    [SerializeField] private Spider _spider;
+
     private void Awake()
     {
         Instance = this;
@@ -25,14 +27,25 @@ public class SpiderBossManager : MonoBehaviour
         _keyCount++;
         if (_keyCount == MaxKeyCount)
         {
-            OpenDoors();
+            OpenDoor();
         }
+        _spider.Trigger(PlayerController.Instance.transform.position);
     }
-    private void OpenDoors()
+    private void OpenDoor()
     {
-        _enterDoor.isDoorLocked = false;
         _exitDoor.isDoorLocked = false;
-        _enterDoor.GetComponent<Interactive>().isInteractive = true;
         _exitDoor.GetComponent<Interactive>().isInteractive = true;
+    }
+    private bool IsPlayerRunning()
+    {
+        PlayerController pc = PlayerController.Instance;
+        return pc.MoveDir != Vector2.zero && !pc.IsCrouching;
+    }
+    private void Update()
+    {
+        if (IsPlayerRunning())
+        {
+            _spider.Trigger(PlayerController.Instance.transform.position);
+        }
     }
 }

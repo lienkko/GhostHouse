@@ -45,7 +45,7 @@ public class DoorController : MonoBehaviour
             GetComponent<Interactive>().SetListener(ActivateDoor);
             GetComponent<Interactive>().isInteractive = true;
             isDoorLocked = false;
-            SetTargetRoomNumber(24);
+            SetTargetRoomNumber(25);
 
         }
     }

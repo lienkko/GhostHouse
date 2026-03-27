@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
 
-    public bool CanUseKeyboard {get; private set;}
+    public bool CanUseKeyboard { get; private set; }
 
 
     private void Awake()

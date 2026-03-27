@@ -25,14 +25,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
     private float _walkSpeedValue = 4;
-
-    // ------ Boss Spider prefs ------
-
-
-
-
-
-    // -------------------------------
+    private float _normalSpeed = 4f;
 
 
     private void Awake()
@@ -67,6 +60,19 @@ public class PlayerController : MonoBehaviour
         return _walkSpeedValue;
 
     }
+    public float ChangeNormalSpeed(float value)
+    {
+        if (value < 1 || value > 8)
+            return -1;
+        _normalSpeed = value;
+        return _normalSpeed;
+
+    }
+    public void ReturnSpeedToNormal()
+    {
+        _walkSpeedValue = _normalSpeed;
+    }
+    public float GetNormalSpeed => _walkSpeedValue;
 
     private void InputMovement()
     {
