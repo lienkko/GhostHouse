@@ -3509,11 +3509,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 950032051972538312, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
       propertyPath: IsStartingDoor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 950032051972538312, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
       propertyPath: IsTestBossDoor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950032051972538313, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
       propertyPath: m_IsTrigger
