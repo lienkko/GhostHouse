@@ -21,6 +21,7 @@ public class GameUIFieldsGetter : MonoBehaviour
     [SerializeField] private GameObject _buttonMenu;
 
     [SerializeField] private TextMeshProUGUI _hpField;
+    [SerializeField] private TextMeshProUGUI _keysCount;
 
 
     public GameObject OpenSafeText => _openSafeText;
@@ -37,6 +38,7 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject ButtonRestartGame => _buttonRestartGame;
     public GameObject ButtonMenu => _buttonMenu;
     public TextMeshProUGUI HpField => _hpField;
+    public TextMeshProUGUI KeysCount => _keysCount;
 
     private void Awake()
     {
