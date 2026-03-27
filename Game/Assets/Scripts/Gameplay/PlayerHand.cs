@@ -45,7 +45,7 @@ public class PlayerHand : MonoBehaviour
         }
         ActiveItem.GetComponent<Interactive>().isInteractive = false;
     }
-    private void DropItem()
+    public void DropItem()
     {
         HideItem();
         GetComponent<Inventory>().DropActiveItem();
