@@ -27,6 +27,9 @@ public class RoomsManager : MonoBehaviour
     [Space(5)]
     [Header("Префаб сейфа")]
     [SerializeField] private GameObject _safePrefab;
+    [Space(5)]
+    [Header("Префаб сундука")]
+    [SerializeField] private GameObject _chestPrefab;
 
     [Space(5)]
     [Header("Пустой объект для комнат")]
@@ -116,7 +119,13 @@ public class RoomsManager : MonoBehaviour
                     SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
                 }
             }
+
             // ------------------------------------------------------------------------------------------------ //
+            bool willSpawnChest = Random.Range(1, 11) > 5;
+            if (willSpawnChest)
+            {
+                SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
+            }
         }
         else
         {
@@ -182,7 +191,9 @@ public class RoomsManager : MonoBehaviour
 
         if (willSpawnSafe)
         {
-            SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], dc);
+            int safeSpawnPointNum = Random.Range(0, roomData.AvailableSafeSpawns.Count);
+            SpawnSafe(roomData.AvailableSafeSpawns[safeSpawnPointNum], dc);
+            roomData.AvailableSafeSpawns.RemoveAt(safeSpawnPointNum);
         }
         return dc;
     }
@@ -192,6 +203,12 @@ public class RoomsManager : MonoBehaviour
         if (_safePrefab == null) return;
         GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
+    }
+    private void SpawnChest(Transform spawnPoint)
+    {
+        if (_chestPrefab == null) return;
+        GameObject chestObject = Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
+        chestObject.GetComponent<TreasureChest>().Initialize();
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)

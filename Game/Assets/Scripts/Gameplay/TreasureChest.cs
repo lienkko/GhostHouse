@@ -30,7 +30,11 @@ public class TreasureChest : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        _rewardValue = Random.Range(20,41);
+        _rewardValue = Random.Range(20, 41);
+    }
+    public void Initialize()
+    {
+
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -55,9 +59,9 @@ public class TreasureChest : MonoBehaviour
     public void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-        
+
         StartCoroutine(SwitchIsInPuzzle(true));
-        
+
         GameManager.Instance.BlockPlayer(true);
 
         if (_puzzle)
