@@ -1,0 +1,4 @@
+﻿<Solution>
+  <Project Path="MerryYellow.CodeAssist.Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+</Solution>

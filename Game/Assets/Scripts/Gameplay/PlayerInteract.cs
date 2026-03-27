@@ -10,8 +10,9 @@ public class PlayerInteract : MonoBehaviour
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
+    private Interactive _keyClosetInteractive;
 
-    private Interactive _swappingInteractive; 
+    private Interactive _swappingInteractive;
 
     [HideInInspector] public bool Hints;
 
@@ -26,6 +27,7 @@ public class PlayerInteract : MonoBehaviour
     private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
     private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
     private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
+    private bool CanTakeKey() { return GameManager.Instance.CanUseKeyboard && _keyClosetInteractive; }
 
     private void Update()
     {
@@ -39,6 +41,11 @@ public class PlayerInteract : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && CanHide())
         {
             _hideSpotInteractive.Interact();
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.E) && CanTakeKey())
+        {
+            _keyClosetInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
@@ -70,6 +77,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 _itemInteractive = interactive;
                 if (Hints)
+                    //!!!!!!!!!!!!!!!!!!
                     GameManager.Instance.GameUIFields.HideText.SetActive(true);
                 return;
             }
@@ -77,6 +85,14 @@ public class PlayerInteract : MonoBehaviour
             {
                 _hideSpotInteractive = interactive;
                 if (Hints)
+                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                return;
+            }
+            if (collision.GetComponent<KeyCloset>() && interactive.isInteractive)
+            {
+                _keyClosetInteractive = interactive;
+                if (Hints)
+                    //!!!!!!!!!!!!!!!!!!
                     GameManager.Instance.GameUIFields.HideText.SetActive(true);
                 return;
             }
@@ -122,6 +138,12 @@ public class PlayerInteract : MonoBehaviour
             {
                 GameManager.Instance.GameUIFields.HideText.SetActive(false);
                 _hideSpotInteractive = null;
+
+            }
+            if (collision.GetComponent<KeyCloset>())
+            {
+                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                _keyClosetInteractive = null;
 
             }
             if (collision.GetComponent<Safe>())
