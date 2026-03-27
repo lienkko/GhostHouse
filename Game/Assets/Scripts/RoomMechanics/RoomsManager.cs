@@ -121,7 +121,7 @@ public class RoomsManager : MonoBehaviour
             }
 
             // ------------------------------------------------------------------------------------------------ //
-            bool willSpawnChest = Random.Range(1, 11) > 5;
+            bool willSpawnChest = Random.Range(1, 11) > 7;
             if (willSpawnChest)
             {
                 SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
@@ -208,7 +208,6 @@ public class RoomsManager : MonoBehaviour
     {
         if (_chestPrefab == null) return;
         GameObject chestObject = Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
-        chestObject.GetComponent<TreasureChest>().Initialize();
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)

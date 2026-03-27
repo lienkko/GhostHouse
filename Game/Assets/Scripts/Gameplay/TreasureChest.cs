@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Interactive))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class TreasureChest : MonoBehaviour
 {
     private readonly string _puzzleName = "Prefabs/Puzzles/PuzzleNumbers";
@@ -15,7 +16,8 @@ public class TreasureChest : MonoBehaviour
 
     [Header("Chest Settings")]
     [SerializeField] private Sprite _openedChestSprite;
-    private int _rewardValue;
+    [SerializeField] private GameObject _batteryPrefab;
+    [SerializeField] private GameObject _bigBobPrefab;
 
     private void Awake()
     {
@@ -30,11 +32,6 @@ public class TreasureChest : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        _rewardValue = Random.Range(20, 41);
-    }
-    public void Initialize()
-    {
-
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -116,11 +113,16 @@ public class TreasureChest : MonoBehaviour
         _interactiveComp.RemoveListener();
         _interactiveComp.isInteractive = false;
         GiveReward();
+        foreach (var col in GetComponents<BoxCollider2D>())
+        {
+            col.enabled = false;
+        }
         Destroy(this);
     }
 
     private void GiveReward()
     {
-        return;
+        Instantiate(_bigBobPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        Instantiate(_batteryPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
     }
 }
