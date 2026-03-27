@@ -233,7 +233,9 @@ public class RoomsManager : MonoBehaviour
     private void SpawnHand(Transform spawnPoint)
     {
         if (_handPrefab == null) return;
-        Instantiate(_handPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
+        GameObject hand = Instantiate(_handPrefab, Vector3.zero, Quaternion.identity, spawnPoint);
+        hand.transform.SetParent(spawnPoint);
+        hand.transform.localPosition = Vector3.zero;
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)

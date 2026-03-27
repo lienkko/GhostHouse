@@ -1,14 +1,19 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Hand : MonoBehaviour
 {
     private PlayerController _playerController;
-    [SerializeField] private Slider _trapSlider;
+    private Slider _trapSlider;
     public static bool IsPlayerTrapped { get; private set; } = false;
     private readonly float _trapSpeed = 0.1f;
     private float _trapLeftTime = 0.4f;
 
+    private void Awake()
+    {
+        _trapSlider = GameManager.Instance.GameUIFields.TrapSlider.GetComponent<Slider>();
+    }
     private void Update()
     {
         if (IsPlayerTrapped)
@@ -51,8 +56,13 @@ public class Hand : MonoBehaviour
     {
         IsPlayerTrapped = false;
         _playerController.GetComponent<Animator>().SetBool("Trapped", false);
-        GameManager.Instance.BlockPlayer(false);
         ShowSlider(false);
+        StartCoroutine(UnblockPlayer());
+    }
+    private IEnumerator UnblockPlayer()
+    {
+        yield return new WaitForSeconds(1.5f);
+        GameManager.Instance.BlockPlayer(false);
         Destroy(this);
     }
 
