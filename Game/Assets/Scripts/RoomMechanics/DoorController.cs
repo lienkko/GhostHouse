@@ -119,6 +119,11 @@ public class DoorController : MonoBehaviour
         if (isDoorLocked && !IsStartingDoor && !_leadsToPreviousRoom) return;
 
         GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
+        if (_targetRoomNumber == 26)
+        {
+            GameManager.Instance.EndGame();
+            return;
+        }
 
         if (IsStartingDoor)
         {

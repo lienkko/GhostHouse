@@ -128,7 +128,7 @@ public class RoomsManager : MonoBehaviour
             {
                 SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
             }
-            bool willSpawnHand = Random.Range(1, 11) > 3;
+            bool willSpawnHand = Random.Range(1, 11) > 7;
             if (willSpawnHand)
             {
                 switch (oppositeSide)

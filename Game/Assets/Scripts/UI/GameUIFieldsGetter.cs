@@ -17,11 +17,13 @@ public class GameUIFieldsGetter : MonoBehaviour
 
     [Space(10)]
     [SerializeField] private GameObject _deathText;
+    [SerializeField] private GameObject _winnerText;
     [SerializeField] private GameObject _buttonRestartGame;
     [SerializeField] private GameObject _buttonMenu;
     [SerializeField] private GameObject _trapSlider;
 
     [SerializeField] private TextMeshProUGUI _hpField;
+    [SerializeField] private TextMeshProUGUI _keysCount;
 
 
     public GameObject OpenSafeText => _openSafeText;
@@ -34,11 +36,13 @@ public class GameUIFieldsGetter : MonoBehaviour
     public GameObject ReadSignText => _readSignText;
 
     public GameObject DeathText => _deathText;
+    public GameObject WinnerText => _winnerText;
 
     public GameObject ButtonRestartGame => _buttonRestartGame;
     public GameObject ButtonMenu => _buttonMenu;
     public TextMeshProUGUI HpField => _hpField;
     public GameObject TrapSlider => _trapSlider;
+    public TextMeshProUGUI KeysCount => _keysCount;
 
     private void Awake()
     {

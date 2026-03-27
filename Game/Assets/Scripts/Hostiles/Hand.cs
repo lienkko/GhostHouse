@@ -8,11 +8,13 @@ public class Hand : MonoBehaviour
     private Slider _trapSlider;
     public static bool IsPlayerTrapped { get; private set; } = false;
     private readonly float _trapSpeed = 0.1f;
-    private float _trapLeftTime = 0.4f;
+    private float _trapLeftTime;
 
-    private void Awake()
+    private void Start()
     {
+        _trapLeftTime = 0.4f;
         _trapSlider = GameManager.Instance.GameUIFields.TrapSlider.GetComponent<Slider>();
+        IsPlayerTrapped = false;
     }
     private void Update()
     {
