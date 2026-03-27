@@ -11135,7 +11135,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 823254525}
-  - {fileID: 297091418}
   - {fileID: 108063688443560999}
   - {fileID: 1987403195}
   - {fileID: 1645888922}
