@@ -1,4 +1,5 @@
 using System.Collections;
+using NavMeshPlus.Extensions;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,39 +9,58 @@ public class Spider : MonoBehaviour
     private readonly float DistanceToKill = 2.5f;
     private readonly int NormalSpeed = 3;
     private readonly int TriggeredSpeed = 5;
-    private NavMeshAgent _agent;
+    public NavMeshAgent Agent {get; private set;}
     private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
     [SerializeField] private GameObject _webPrefab;
     private bool _isOnPoint = true;
+    private Vector3 _lastPos;
+    public bool IsWalking {get; private set;}
+    public bool IsRunning {get; private set;}
+    public Vector3 DeltaMove { get; private set; } = Vector3.zero;
     void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
+        Agent = GetComponent<NavMeshAgent>();
 
-        _agent.updateRotation = false;
-        _agent.updateUpAxis = false;
+        Agent.updateRotation = false;
+        Agent.updateUpAxis = false;
+
+        _lastPos = transform.position;
     }
     void Update()
     {
+        DeltaMove = transform.position - _lastPos;
+        _lastPos = transform.position;
+        if (Agent.speed == NormalSpeed)
+        {
+            IsWalking = true;
+            IsRunning = false;
+        }
+        else if (Agent.speed == TriggeredSpeed)
+        {
+            IsWalking = false;
+            IsRunning = true;
+        }
+        
         float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.Instance.transform.position);
         if (distanceToPlayer < DistanceToKill)
         {
             PlayerController.Instance.InflictDamage(100);
         }
-        Vector3 direction = _agent.velocity;
+        Vector3 direction = Agent.velocity;
         if (Random.Range(0, 10000) < 5)
         {
             SpawnWeb();
         }
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            RotateSpider(direction);
-        }
+        // if (direction.sqrMagnitude > 0.01f)
+        // {
+        //     RotateSpider(direction);
+        // }
         if (_isOnPoint)
         {
             NextPoint();
         }
-        if (_agent.remainingDistance <= 0.02f)
+        if (Agent.remainingDistance <= 0.02f)
         {
             StartCoroutine(Rest());
         }
@@ -48,14 +68,14 @@ public class Spider : MonoBehaviour
     private IEnumerator Rest()
     {
         _isOnPoint = true;
-        _agent.speed = NormalSpeed;
-        _agent.isStopped = true;
+        Agent.speed = NormalSpeed;
+        Agent.isStopped = true;
         yield return new WaitForSeconds(2f);
-        _agent.isStopped = false;
+        Agent.isStopped = false;
     }
     private void NextPoint()
     {
-        _agent.SetDestination(_patrolPoints[Random.Range(0, _patrolPoints.Length)].position);
+        Agent.SetDestination(_patrolPoints[Random.Range(0, _patrolPoints.Length)].position);
         _isOnPoint = false;
 
     }
@@ -73,8 +93,8 @@ public class Spider : MonoBehaviour
     }
     public void Trigger(Vector3 target)
     {
-        _agent.isStopped = false;
-        _agent.SetDestination(target);
-        _agent.speed = TriggeredSpeed;
+        Agent.isStopped = false;
+        Agent.SetDestination(target);
+        Agent.speed = TriggeredSpeed;
     }
 }
