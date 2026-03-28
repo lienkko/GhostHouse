@@ -12,6 +12,7 @@ public class InventoryWindow : MonoBehaviour
     private IChargeableItem _chargeableItem;
     private void Start()
     {
+        _inventory = Inventory.Instance;
         _inventory.SetListener(Redraw);
         Redraw();
     }

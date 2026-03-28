@@ -12,7 +12,10 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField] private AudioClip _blinkLightsSound;
+    [SerializeField] private AudioClip _rainSound;
     public AudioSource GMAudioSource { get; private set; }
+    [SerializeField] private AudioSource _bgAudioSource;
+    public AudioSource BGAudioSource => _bgAudioSource;
 
 
     [SerializeField] private bool _testMode;
