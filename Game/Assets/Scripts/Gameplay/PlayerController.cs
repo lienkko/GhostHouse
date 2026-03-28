@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
         Instance = this;
         _lastPos = transform.position;
         _playerRB = GetComponent<Rigidbody2D>();
+        IsAlive = true;
+        HealthPoints = 100;
     }
 
     private void Update()

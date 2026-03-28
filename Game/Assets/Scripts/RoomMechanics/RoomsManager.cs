@@ -38,8 +38,8 @@ public class RoomsManager : MonoBehaviour
     [SerializeField] private Transform _roomsParentObject;
 
     private int _roomNumber = 1;
-    private readonly float _northEntryOffset = -1.0f;
-    private readonly float _southEntryOffset = 1.0f;
+    private readonly float _northEntryOffset = 0;
+    private readonly float _southEntryOffset = 0;
 
     public GameObject CurrentRoom { get; private set; }
 
@@ -65,7 +65,6 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
-        Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
         if (_roomNumber == 26)

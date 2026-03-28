@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioClip _blinkLightsSound;
     public AudioSource GMAudioSource { get; private set; }
+    [SerializeField] private AudioSource _bgAudioSource;
+    public AudioSource BGAudioSource => _bgAudioSource;
 
 
     [SerializeField] private bool _testMode;
@@ -177,6 +179,7 @@ public class GameManager : MonoBehaviour
         GameUIFields.ButtonRestartGame.SetActive(true);
         GameUIFields.ButtonMenu.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
+        BlockPlayer(true);
         PlayerController.Instance.gameObject.SetActive(false);
     }
 
