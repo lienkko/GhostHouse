@@ -7,6 +7,7 @@ public class PlayerInteract : MonoBehaviour
 
     private Interactive _hideSpotInteractive;
     private Interactive _doorInteractive;
+    private Interactive _chestInteractive;
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
@@ -25,6 +26,7 @@ public class PlayerInteract : MonoBehaviour
 
     private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
     private bool CanOpenSafe() { return GameManager.Instance.CanUseKeyboard && _safeInteractive && _safeInteractive.isInteractive; }
+    private bool CanOpenChest() { return GameManager.Instance.CanUseKeyboard && _chestInteractive && _chestInteractive.isInteractive; }
     private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
     private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
     private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
@@ -58,6 +60,11 @@ public class PlayerInteract : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
         {
             _safeInteractive.Interact();
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.E) && CanOpenChest())
+        {
+            _chestInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanOpedDoor())
@@ -115,6 +122,13 @@ public class PlayerInteract : MonoBehaviour
                     GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
                 return;
             }
+            if (collision.GetComponent<TreasureChest>() && interactive.isInteractive)
+            {
+                _chestInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
+                return;
+            }
             if (collision.GetComponent<DoorController>() && interactive.isInteractive)
             {
                 _doorInteractive = interactive;
@@ -168,6 +182,12 @@ public class PlayerInteract : MonoBehaviour
             {
                 GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
                 _safeInteractive = null;
+
+            }
+            if (collision.GetComponent<TreasureChest>())
+            {
+                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+                _chestInteractive = null;
 
             }
             if (collision.GetComponent<DoorController>())

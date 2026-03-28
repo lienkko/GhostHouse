@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
-    public int HealthPoints { get; private set; } = 40;
+    public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 
@@ -42,7 +43,12 @@ public class PlayerController : MonoBehaviour
         if (CanWalk)
             InputMovement();
         if (HealthPoints == 0)
-            Die();
+        {
+            if (Hand.IsPlayerTrapped)
+                StartCoroutine(Die(1.2f, false));
+            else
+                StartCoroutine(Die());
+        }
     }
 
     private void FixedUpdate()
@@ -130,10 +136,12 @@ public class PlayerController : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    private void Die()
+    private IEnumerator Die(float time = 0, bool hidePlayer = true)
     {
+        yield return new WaitForSeconds(time);
         IsAlive = false;
+        if (hidePlayer)
+            gameObject.SetActive(false);
         OnDeath?.Invoke();
-        gameObject.SetActive(false);
     }
 }

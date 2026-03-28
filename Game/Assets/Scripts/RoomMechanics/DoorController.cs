@@ -10,6 +10,10 @@ public class DoorController : MonoBehaviour
     [SerializeField] private SpriteRenderer _secondDigit;
     [SerializeField] private SpriteRenderer _firstDigit;
     [SerializeField] private Sprite[] _numbersSprites;
+    public Transform HandSpawnPointLeft;
+    public Transform HandSpawnPointRight;
+    public Transform HandSpawnPointBot;
+    public Transform HandSpawnPointTop;
 
     private DoorSide _doorSide;
     private bool _leadsToPreviousRoom;
@@ -105,7 +109,7 @@ public class DoorController : MonoBehaviour
         // ------------------------ fake doors 23.03.2026 ------------------------ //
         if (_isFakeDoor)
         {
-            PlayerController.Instance.InflictDamage(20);
+            PlayerController.Instance.InflictDamage(40);
             if (_linkedBackDoor != null) _linkedBackDoor.SetDoorVisualAndInteract(true);
             GetComponent<Interactive>().isInteractive = false;
             return;
@@ -115,6 +119,11 @@ public class DoorController : MonoBehaviour
         if (isDoorLocked && !IsStartingDoor && !_leadsToPreviousRoom) return;
 
         GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
+        if (_targetRoomNumber == 26)
+        {
+            GameManager.Instance.EndGame();
+            return;
+        }
 
         if (IsStartingDoor)
         {

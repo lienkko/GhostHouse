@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FollowThePlayer : MonoBehaviour
@@ -8,11 +9,12 @@ public class FollowThePlayer : MonoBehaviour
     }
     private void Update()
     {
-        transform.position = PlayerController.Instance.transform.position + new Vector3(0,0.5f,0);
+        transform.position = PlayerController.Instance.transform.position + new Vector3(0, 0.5f, 0);
     }
 
     private void TurnOff()
     {
-        gameObject.SetActive(false);
-    } 
+        if (!PlayerController.Instance.GameObject().activeSelf)
+            gameObject.SetActive(false);
+    }
 }

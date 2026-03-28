@@ -10,7 +10,6 @@ public class Spider : MonoBehaviour
     private readonly int NormalSpeed = 3;
     private readonly int TriggeredSpeed = 5;
     public NavMeshAgent Agent { get; private set; }
-    private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
     [SerializeField] private GameObject _webPrefab;
     private bool _isOnPoint = true;
@@ -45,17 +44,18 @@ public class Spider : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.Instance.transform.position);
         if (distanceToPlayer < DistanceToKill)
         {
+            GetComponent<Animator>().SetBool("IsBiting", true);
             PlayerController.Instance.InflictDamage(100);
+        }
+        else
+        {
+            GetComponent<Animator>().SetBool("IsBiting", false);
         }
         Vector3 direction = Agent.velocity;
         if (Random.Range(0, 10000) < 5)
         {
             SpawnWeb();
         }
-        // if (direction.sqrMagnitude > 0.01f)
-        // {
-        //     RotateSpider(direction);
-        // }
         if (_isOnPoint)
         {
             NextPoint();
@@ -79,14 +79,7 @@ public class Spider : MonoBehaviour
         _isOnPoint = false;
 
     }
-    private void RotateSpider(Vector3 direction)
-    {
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
 
-
-    }
     private void SpawnWeb()
     {
         Instantiate(_webPrefab, transform.position, Quaternion.identity);

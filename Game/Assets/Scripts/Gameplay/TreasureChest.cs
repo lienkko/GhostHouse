@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Interactive))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class TreasureChest : MonoBehaviour
 {
     private readonly string _puzzleName = "Prefabs/Puzzles/PuzzleNumbers";
@@ -15,7 +16,8 @@ public class TreasureChest : MonoBehaviour
 
     [Header("Chest Settings")]
     [SerializeField] private Sprite _openedChestSprite;
-    private int _rewardValue;
+    [SerializeField] private GameObject _batteryPrefab;
+    [SerializeField] private GameObject _bigBobPrefab;
 
     private void Awake()
     {
@@ -30,7 +32,6 @@ public class TreasureChest : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        _rewardValue = Random.Range(20,41);
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -50,14 +51,16 @@ public class TreasureChest : MonoBehaviour
         _puzzle = Instantiate(prefab, transform);
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenChest);
+        _puzzle.SetActive(true);
+        _puzzle.GetComponent<NumberPuzzle>().SetupPuzzle();
     }
 
     public void OpenPuzzle()
     {
         Cursor.lockState = CursorLockMode.None;
-        
+
         StartCoroutine(SwitchIsInPuzzle(true));
-        
+
         GameManager.Instance.BlockPlayer(true);
 
         if (_puzzle)
@@ -112,11 +115,17 @@ public class TreasureChest : MonoBehaviour
         _interactiveComp.RemoveListener();
         _interactiveComp.isInteractive = false;
         GiveReward();
+        foreach (var col in GetComponents<BoxCollider2D>())
+        {
+            col.enabled = false;
+        }
         Destroy(this);
     }
 
     private void GiveReward()
     {
-        return;
+        if (Random.Range(0, 11) > 6)
+            Instantiate(_bigBobPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        Instantiate(_batteryPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
     }
 }

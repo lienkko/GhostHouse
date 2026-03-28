@@ -45,6 +45,8 @@ public class CandleItem : Item, IChargeableItem
                 CandleCharge = 0;
                 _isactive = false;
                 _light2D.enabled = false;
+                PlayerHand.Instance.DropItem();
+                Destroy(gameObject);
                 return;
             }
         }
