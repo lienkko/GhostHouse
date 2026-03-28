@@ -10,7 +10,6 @@ public class Spider : MonoBehaviour
     private readonly int NormalSpeed = 3;
     private readonly int TriggeredSpeed = 5;
     public NavMeshAgent Agent { get; private set; }
-    private float _rotationSpeed = 5f;
     [SerializeField] private Transform[] _patrolPoints;
     [SerializeField] private GameObject _webPrefab;
     private bool _isOnPoint = true;

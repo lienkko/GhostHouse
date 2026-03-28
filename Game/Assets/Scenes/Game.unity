@@ -3369,8 +3369,8 @@ MonoBehaviour:
   _fakeNorthPrefab: {fileID: 3876304005829112623, guid: 0a39815a9712e384ca53494499c1441f, type: 3}
   _fakeSouthPrefab: {fileID: 3876304005829112623, guid: 35ed887dab415b7479c145956942245b, type: 3}
   _safePrefab: {fileID: 7884531472750873166, guid: 61f9fe25b38c9ef47895a7e16323f937, type: 3}
-  _chestPrefab: {fileID: 8912884197833750857, guid: c4f22782359a8db49b738b40cf48b12c, type: 3}
-  _handPrefab: {fileID: 208813965144739180, guid: ec21a2e71cab27840a3e0138ff5cebb7, type: 3}
+  _chestPrefab: {fileID: 0}
+  _handPrefab: {fileID: 0}
   _roomsParentObject: {fileID: 1987403195}
 --- !u!1 &790199994
 GameObject:
@@ -6620,12 +6620,12 @@ MonoBehaviour:
   _takeKeyText: {fileID: 544498693}
   _readSignText: {fileID: 350193877}
   _deathText: {fileID: 1432997924}
-  _winnerText: {fileID: 377620316}
+  _winnerText: {fileID: 0}
   _buttonRestartGame: {fileID: 790199994}
   _buttonMenu: {fileID: 1400677968}
-  _trapSlider: {fileID: 112739273}
+  _trapSlider: {fileID: 0}
   _hpField: {fileID: 1313004324}
-  _keysCount: {fileID: 935860978}
+  _keysCount: {fileID: 0}
 --- !u!1 &1492166619
 GameObject:
   m_ObjectHideFlags: 0
@@ -8887,7 +8887,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12, y: 12}
+    oldSize: {x: 30, y: 30}
     newSize: {x: 1.5, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -8959,7 +8959,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 20
-  m_Sprite: {fileID: 21300000, guid: ea2aa9784bbf560448ca9cda2709d7d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b487aa2472ebc3d458742b0a5615dc76, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
