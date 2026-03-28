@@ -51,6 +51,8 @@ public class TreasureChest : MonoBehaviour
         _puzzle = Instantiate(prefab, transform);
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenChest);
+        _puzzle.SetActive(true);
+        _puzzle.GetComponent<NumberPuzzle>().SetupPuzzle();
     }
 
     public void OpenPuzzle()
@@ -122,7 +124,8 @@ public class TreasureChest : MonoBehaviour
 
     private void GiveReward()
     {
-        Instantiate(_bigBobPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        if (Random.Range(0, 11) > 6)
+            Instantiate(_bigBobPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
         Instantiate(_batteryPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
     }
 }

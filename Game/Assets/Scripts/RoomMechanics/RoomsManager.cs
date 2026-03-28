@@ -107,7 +107,7 @@ public class RoomsManager : MonoBehaviour
                 SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
             }
             SetHideSpots(roomData);
-            if (Random.Range(1, 21) > 19) GameManager.Instance.SummonWraith();
+            if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
             // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
             if (Random.Range(1, 101) <= 20)
             {

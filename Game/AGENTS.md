@@ -8,7 +8,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-  - Name: WraithModel
+  - Name: RoomManager
   - Tag: Untagged
-  - Layer: Hostiles
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

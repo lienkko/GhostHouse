@@ -109,7 +109,7 @@ public class DoorController : MonoBehaviour
         // ------------------------ fake doors 23.03.2026 ------------------------ //
         if (_isFakeDoor)
         {
-            PlayerController.Instance.InflictDamage(20);
+            PlayerController.Instance.InflictDamage(40);
             if (_linkedBackDoor != null) _linkedBackDoor.SetDoorVisualAndInteract(true);
             GetComponent<Interactive>().isInteractive = false;
             return;

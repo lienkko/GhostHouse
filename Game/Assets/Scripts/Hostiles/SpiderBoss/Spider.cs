@@ -44,7 +44,12 @@ public class Spider : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.Instance.transform.position);
         if (distanceToPlayer < DistanceToKill)
         {
+            GetComponent<Animator>().SetBool("IsBiting", true);
             PlayerController.Instance.InflictDamage(100);
+        }
+        else
+        {
+            GetComponent<Animator>().SetBool("IsBiting", false);
         }
         Vector3 direction = Agent.velocity;
         if (Random.Range(0, 10000) < 5)

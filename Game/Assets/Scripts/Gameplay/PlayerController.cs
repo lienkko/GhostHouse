@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
-    public int HealthPoints { get; private set; } = 40;
+    public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 

@@ -3369,8 +3369,8 @@ MonoBehaviour:
   _fakeNorthPrefab: {fileID: 3876304005829112623, guid: 0a39815a9712e384ca53494499c1441f, type: 3}
   _fakeSouthPrefab: {fileID: 3876304005829112623, guid: 35ed887dab415b7479c145956942245b, type: 3}
   _safePrefab: {fileID: 7884531472750873166, guid: 61f9fe25b38c9ef47895a7e16323f937, type: 3}
-  _chestPrefab: {fileID: 0}
-  _handPrefab: {fileID: 0}
+  _chestPrefab: {fileID: 8912884197833750857, guid: c4f22782359a8db49b738b40cf48b12c, type: 3}
+  _handPrefab: {fileID: 208813965144739180, guid: ec21a2e71cab27840a3e0138ff5cebb7, type: 3}
   _roomsParentObject: {fileID: 1987403195}
 --- !u!1 &790199994
 GameObject:
@@ -4011,7 +4011,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3/10
+  m_text: 0/10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6620,12 +6620,12 @@ MonoBehaviour:
   _takeKeyText: {fileID: 544498693}
   _readSignText: {fileID: 350193877}
   _deathText: {fileID: 1432997924}
-  _winnerText: {fileID: 0}
+  _winnerText: {fileID: 377620316}
   _buttonRestartGame: {fileID: 790199994}
   _buttonMenu: {fileID: 1400677968}
-  _trapSlider: {fileID: 0}
+  _trapSlider: {fileID: 112739273}
   _hpField: {fileID: 1313004324}
-  _keysCount: {fileID: 0}
+  _keysCount: {fileID: 935860978}
 --- !u!1 &1492166619
 GameObject:
   m_ObjectHideFlags: 0
