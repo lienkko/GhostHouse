@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Interactive))]
+[RequireComponent(typeof(IInteractive))]
 public class Sign : MonoBehaviour
 {
     [SerializeField] private GameObject _textSign;
@@ -8,8 +8,8 @@ public class Sign : MonoBehaviour
     public static bool IsSignOpened { get; private set; } = false;
     private void Awake()
     {
-        GetComponent<Interactive>().isInteractive = true;
-        GetComponent<Interactive>().SetListener(ShowSign);
+        GetComponent<IInteractive>().isInteractive = true;
+        GetComponent<IInteractive>().SetListener(ShowSign);
         _collider = GetComponent<BoxCollider2D>();
     }
     private void Update()

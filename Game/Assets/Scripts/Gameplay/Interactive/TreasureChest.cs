@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Interactive))]
+[RequireComponent(typeof(IInteractive))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class TreasureChest : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class TreasureChest : MonoBehaviour
     public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;
-    private Interactive _interactiveComp;
+    private IInteractive _interactiveComp;
     private SpriteRenderer _spriteRenderer;
 
     [Header("Chest Settings")]
@@ -22,7 +22,7 @@ public class TreasureChest : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _interactiveComp = GetComponent<Interactive>();
+        _interactiveComp = GetComponent<IInteractive>();
         _interactiveComp.SetListener(OpenPuzzle);
         _interactiveComp.isInteractive = true;
 

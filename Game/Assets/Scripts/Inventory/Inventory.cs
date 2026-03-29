@@ -97,10 +97,10 @@ public class Inventory : MonoBehaviour
         if (_activeSlot == 0)
             return;
         InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
-        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
+        InventoryItems[_activeSlot - 1].GetComponent<IInteractive>().isInteractive = true;
         InventoryItems[_activeSlot - 1].Hide();
         InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
-        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
+        InventoryItems[_activeSlot - 1].GetComponent<IInteractive>().isInteractive = true;
         InventoryItems[_activeSlot - 1].transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
         InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingLayerName = "Default";
         InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingOrder = 0;

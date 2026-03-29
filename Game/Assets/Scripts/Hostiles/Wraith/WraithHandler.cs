@@ -16,7 +16,7 @@ public class WraithHandler : MonoBehaviour
 
     private Vector3 _startPoint = Vector3.zero;
     private Vector3 _endPoint = Vector3.zero;
-    
+
     public bool IsWraithSummoned { get; private set; } = false;
     private bool _isMoving;
     private bool _isWhispering = false;
@@ -37,11 +37,11 @@ public class WraithHandler : MonoBehaviour
     {
         if (_isMoving)
         {
-            _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1-(_remainingDsitance/_distance));
+            _wraithModel.transform.position = Vector3.Lerp(_startPoint, _endPoint, 1 - (_remainingDsitance / _distance));
             _remainingDsitance -= 7f * Time.deltaTime;
-            if (_remainingDsitance < 0.8 * _distance && !_isWhispering) 
-            { 
-                GameManager.Instance.TurnOffLights(true); 
+            if (_remainingDsitance < 0.8 * _distance && !_isWhispering)
+            {
+                GameManager.Instance.TurnOffLights(true);
             }
             if (_remainingDsitance < 0.2 * _distance && !_isWhispering)
             {
@@ -49,7 +49,7 @@ public class WraithHandler : MonoBehaviour
                 _isWhispering = true;
             }
         }
-        
+
         if (_isMoving && (_wraithModel.transform.position == _endPoint))
         {
             EndOfTheFlight();
@@ -62,7 +62,7 @@ public class WraithHandler : MonoBehaviour
         {
             _audioSource.Pause();
         }
-        
+
     }
     private void ResumeAudio()
     {
@@ -78,15 +78,15 @@ public class WraithHandler : MonoBehaviour
     {
         RoomData currentRoomData = RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>();
         if (!currentRoomData.PreviousRoomDoor.isDoorLocked)
-            currentRoomData.PreviousRoomDoor.GetComponent<Interactive>().isInteractive = true;
+            currentRoomData.PreviousRoomDoor.GetComponent<IInteractive>().isInteractive = true;
         if (!currentRoomData.NextRoomDoor.isDoorLocked)
-            currentRoomData.NextRoomDoor.GetComponent<Interactive>().isInteractive = true;
+            currentRoomData.NextRoomDoor.GetComponent<IInteractive>().isInteractive = true;
     }
     private void CloseDoors()
     {
         RoomData currentRoomData = RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>();
-        currentRoomData.PreviousRoomDoor.GetComponent<Interactive>().isInteractive = false;
-        currentRoomData.NextRoomDoor.GetComponent<Interactive>().isInteractive = false;
+        currentRoomData.PreviousRoomDoor.GetComponent<IInteractive>().isInteractive = false;
+        currentRoomData.NextRoomDoor.GetComponent<IInteractive>().isInteractive = false;
     }
 
     public void StartWraith(Vector3 point1, Vector3 point2)

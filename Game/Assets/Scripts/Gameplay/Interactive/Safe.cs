@@ -2,34 +2,42 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Safe : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+public class Safe : MonoBehaviour, IInteractive
 {
     private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
     public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;
     private DoorController _doorToOpen;
-    private Interactive _interactiveComp;
-
     [SerializeField] private Sprite _rightLeftSafeSprite;
     [SerializeField] private Sprite _topSafeSprite;
     [SerializeField] private Sprite _botSafeSprite;
 
     [SerializeField] private Collider2D _borderCollider;
 
+    // Interactive fields
+    public override void Interact()
+    {
+        OpenPuzzle();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.Instance.CanUseKeyboard && IsInteractive;
+    }
+    // -------------------
 
     private void Awake()
     {
-        _interactiveComp = GetComponent<Interactive>();
-        _interactiveComp.SetListener(OpenPuzzle);
-        _interactiveComp.isInteractive = true;
-
+        IsInteractive = true;
         Pause.OnResume += SafeOnResume;
     }
+
 
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
+        HintField = GameManager.Instance.GameUIFields.OpenSafeText;
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -118,7 +126,7 @@ public class Safe : MonoBehaviour
     private IEnumerator SwitchIsInPuzzle(bool state)
     {
         yield return null;
-        _interactiveComp.isInteractive = !state;
+        IsInteractive = false;
         IsInPuzzle = state;
         GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
     }
@@ -141,8 +149,7 @@ public class Safe : MonoBehaviour
         }
         else
             GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
-        _interactiveComp.RemoveListener();
-        _interactiveComp.isInteractive = false;
+        IsInteractive = false;
         _doorToOpen.UnlockDoor();
         Destroy(this);
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Interactive))]
+[RequireComponent(typeof(IInteractive))]
 public class Item : MonoBehaviour
 {
     [SerializeField] private string Name;
@@ -8,8 +8,8 @@ public class Item : MonoBehaviour
     public bool IsCollectable { get; protected set; } = true;
     protected virtual void Awake()
     {
-        GetComponent<Interactive>().isInteractive = true;
-        GetComponent<Interactive>().SetListener(Hide);
+        GetComponent<IInteractive>().isInteractive = true;
+        GetComponent<IInteractive>().SetListener(Hide);
     }
 
     public virtual void Hide()

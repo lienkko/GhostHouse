@@ -4,10 +4,10 @@ public class Ghost : MonoBehaviour
 {
     public static Ghost Instance { get; private set; }
 
-    public Interactive InteractiveInstance { get; private set; }
+    public IInteractive InteractiveInstance { get; private set; }
 
 
-    enum MD {Up, Down};
+    enum MD { Up, Down };
 
 
     [SerializeField] private float _speed = 1;
@@ -23,7 +23,7 @@ public class Ghost : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        InteractiveInstance = GetComponent<Interactive>();
+        InteractiveInstance = GetComponent<IInteractive>();
         InteractiveInstance.isInteractive = true;
     }
 

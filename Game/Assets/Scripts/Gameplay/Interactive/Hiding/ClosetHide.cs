@@ -8,8 +8,8 @@ public class ClosetHide : HideSpot
     [SerializeField] private Sprite _backSprite;
     public override void Initialize()
     {
-        GetComponent<Interactive>().isInteractive = true;
-        GetComponent<Interactive>().SetListener(Hide);
+        GetComponent<IInteractive>().isInteractive = true;
+        GetComponent<IInteractive>().SetListener(Hide);
         switch (tag)
         {
             case "TopLeftPoint":

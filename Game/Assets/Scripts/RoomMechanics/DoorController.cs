@@ -40,14 +40,14 @@ public class DoorController : MonoBehaviour
     {
         if (IsStartingDoor)
         {
-            GetComponent<Interactive>().SetListener(ActivateDoor);
-            GetComponent<Interactive>().isInteractive = false;
+            GetComponent<IInteractive>().SetListener(ActivateDoor);
+            GetComponent<IInteractive>().isInteractive = false;
             SetTargetRoomNumber(1);
         }
         if (IsTestBossDoor)
         {
-            GetComponent<Interactive>().SetListener(ActivateDoor);
-            GetComponent<Interactive>().isInteractive = true;
+            GetComponent<IInteractive>().SetListener(ActivateDoor);
+            GetComponent<IInteractive>().isInteractive = true;
             isDoorLocked = false;
             SetTargetRoomNumber(25);
 
@@ -76,8 +76,8 @@ public class DoorController : MonoBehaviour
         _linkedBackDoor = backDoor;
 
         SetTargetRoomNumber(fakeNumber);
-        GetComponent<Interactive>().SetListener(ActivateDoor);
-        GetComponent<Interactive>().isInteractive = true;
+        GetComponent<IInteractive>().SetListener(ActivateDoor);
+        GetComponent<IInteractive>().isInteractive = true;
     }
 
     public void SetDoorVisualAndInteract(bool state)
@@ -85,7 +85,7 @@ public class DoorController : MonoBehaviour
         _isBlockedByFake = !state;
         if (_firstDigit != null) _firstDigit.enabled = state;
         if (_secondDigit != null) _secondDigit.enabled = state;
-        GetComponent<Interactive>().isInteractive = state;
+        GetComponent<IInteractive>().isInteractive = state;
     }
     // --------------------------------------------------------------------------- //
 
@@ -98,8 +98,8 @@ public class DoorController : MonoBehaviour
         _previousRoomRoot = previousRoomRoot;
         isDoorLocked = isLocked;
 
-        GetComponent<Interactive>().SetListener(ActivateDoor);
-        GetComponent<Interactive>().isInteractive = !isLocked;
+        GetComponent<IInteractive>().SetListener(ActivateDoor);
+        GetComponent<IInteractive>().isInteractive = !isLocked;
     }
 
     public void ActivateDoor()
@@ -111,7 +111,7 @@ public class DoorController : MonoBehaviour
         {
             PlayerController.Instance.InflictDamage(40);
             if (_linkedBackDoor != null) _linkedBackDoor.SetDoorVisualAndInteract(true);
-            GetComponent<Interactive>().isInteractive = false;
+            GetComponent<IInteractive>().isInteractive = false;
             return;
         }
         // ---------------------------------------------------------------------- //
@@ -195,7 +195,7 @@ public class DoorController : MonoBehaviour
 
     public void UnlockDoor()
     {
-        GetComponent<Interactive>().isInteractive = true;
+        GetComponent<IInteractive>().isInteractive = true;
         isDoorLocked = false;
     }
 }

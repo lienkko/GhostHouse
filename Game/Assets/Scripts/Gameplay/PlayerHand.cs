@@ -37,13 +37,13 @@ public class PlayerHand : MonoBehaviour
     public void TakeItem(Item item)
     {
         ActiveItem = item;
-        ActiveItem.GetComponent<Interactive>().isInteractive = false;
+        ActiveItem.GetComponent<IInteractive>().isInteractive = false;
         ActiveItem.gameObject.SetActive(true);
         if (item is IChargeableItem chargeableItem)
         {
             Inventory.Instance.InventoryWin.FlashLightSliderAppear(chargeableItem);
         }
-        ActiveItem.GetComponent<Interactive>().isInteractive = false;
+        ActiveItem.GetComponent<IInteractive>().isInteractive = false;
     }
     public void DropItem()
     {
@@ -57,7 +57,7 @@ public class PlayerHand : MonoBehaviour
         {
             Inventory.Instance.InventoryWin.FlashLightSliderDisappear();
         }
-        ActiveItem.GetComponent<Interactive>().isInteractive = true;
+        ActiveItem.GetComponent<IInteractive>().isInteractive = true;
         ActiveItem = null;
     }
 

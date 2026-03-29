@@ -5,16 +5,17 @@ public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract Instance { get; private set; }
 
-    private Interactive _hideSpotInteractive;
-    private Interactive _doorInteractive;
-    private Interactive _chestInteractive;
-    private Interactive _safeInteractive;
-    private Interactive _ghostInteractive;
-    private Interactive _itemInteractive;
-    private Interactive _keyClosetInteractive;
-    private Interactive _signInteractive;
+    private IInteractive _interactiveObj;
+    private IInteractive _hideSpotInteractive;
+    private IInteractive _doorInteractive;
+    private IInteractive _chestInteractive;
+    private IInteractive _safeInteractive;
+    private IInteractive _ghostInteractive;
+    private IInteractive _itemInteractive;
+    private IInteractive _keyClosetInteractive;
+    private IInteractive _signInteractive;
 
-    private Interactive _swappingInteractive;
+    private IInteractive _swappingInteractive;
 
     [HideInInspector] public bool Hints;
 
@@ -25,7 +26,6 @@ public class PlayerInteract : MonoBehaviour
 
 
     private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
-    private bool CanOpenSafe() { return GameManager.Instance.CanUseKeyboard && _safeInteractive && _safeInteractive.isInteractive; }
     private bool CanOpenChest() { return GameManager.Instance.CanUseKeyboard && _chestInteractive && _chestInteractive.isInteractive; }
     private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
     private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
@@ -35,6 +35,10 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
+        if (_interactiveObj)
+        {
+            if (Input.GetKeyDown(_interactiveObj))
+        }
         if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
         {
             _swappingInteractive = _itemInteractive;
@@ -84,7 +88,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<Interactive>();
+        var interactive = collision.GetComponent<IInteractive>();
         if (interactive)
         {
             if (collision.GetComponent<Item>() && interactive.isInteractive)
@@ -152,7 +156,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<Interactive>();
+        var interactive = collision.GetComponent<IInteractive>();
         if (interactive)
         {
             if (collision.GetComponent<Item>())

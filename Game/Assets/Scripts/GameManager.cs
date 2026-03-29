@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
         Ghost.Instance.InteractiveInstance.isInteractive = false;
         RoomsManager.Instance.CurrentRoom.
             GetComponent<RoomData>().NextRoomDoor.
-            GetComponent<Interactive>().isInteractive = true;
+            GetComponent<IInteractive>().isInteractive = true;
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
         var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
