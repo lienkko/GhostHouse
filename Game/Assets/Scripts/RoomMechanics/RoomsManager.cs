@@ -9,6 +9,7 @@ public class RoomsManager : MonoBehaviour
     [Header("Префабы комнат")]
     [SerializeField] private GameObject[] _roomPrefabs;
     [SerializeField] private GameObject _bossSpiderRoomPrefab;
+    [SerializeField] private GameObject _bossBloodCleanerRoomPrefab;
 
     [Space(10)]
     [Header("Префабы дверей")]
@@ -72,9 +73,19 @@ public class RoomsManager : MonoBehaviour
             isBossSpiderRoom = true;
         }
         // -------------------------
+
+        // ------ Blood Ghost ------
+        bool isBossBloodCleanerRoom = false;
+        if (_roomNumber == 3)
+        {
+            Debug.Log($"Генерирую Blood Ghost комнату, префаб: {_bossBloodCleanerRoomPrefab.name}");
+            isBossBloodCleanerRoom = true;
+        }
         GameObject selectedRoomPrefab;
         if (isBossSpiderRoom)
             selectedRoomPrefab = _bossSpiderRoomPrefab;
+        else if (isBossBloodCleanerRoom)
+            selectedRoomPrefab = _bossBloodCleanerRoomPrefab;
         else
             selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
         CurrentRoom = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, _roomsParentObject);
@@ -84,7 +95,7 @@ public class RoomsManager : MonoBehaviour
         DoorController enterBossDoor;
         DoorController exitBossDoor;
         RoomData.DoorSpawnPoint? actualExitPoint = null;
-        if (!isBossSpiderRoom)
+        if (!isBossSpiderRoom && !isBossBloodCleanerRoom)
         {
             List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
                 .Where(d => d.Side == oppositeSide).ToList();
@@ -147,7 +158,7 @@ public class RoomsManager : MonoBehaviour
                 }
             }
         }
-        else
+        else if (isBossSpiderRoom)
         {
             finalEntryPoint = roomData.EnterBossDoor;
             enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
@@ -156,7 +167,20 @@ public class RoomsManager : MonoBehaviour
             SetKeyClosets(roomData);
             CurrentRoom.GetComponentInChildren<SpiderBossManager>().SetDoors(enterBossDoor, exitBossDoor);
         }
+        else
+        {
+            finalEntryPoint = roomData.EnterBossDoor;
+            enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
+            actualExitPoint = roomData.ExitBossDoor;
+            exitBossDoor = SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber, true);
+            CurrentRoom.GetComponentInChildren<BloodCleanerBossManager>().SetDoors(enterBossDoor, exitBossDoor);
+        }
         Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
+        Debug.Log($"=== СПАВН ИГРОКА ===");
+        Debug.Log($"Выбранная точка: {playerSpawnPoint.name}");
+        Debug.Log($"Позиция точки в локальных координатах комнаты: {playerSpawnPoint.localPosition}");
+        Debug.Log($"Глобальная позиция: {playerSpawnPoint.position}");
+        Debug.Log($"Сторона входа: {oppositeSide}");
         if (playerSpawnPoint != null)
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);

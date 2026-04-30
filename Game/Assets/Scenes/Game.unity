@@ -3313,6 +3313,7 @@ MonoBehaviour:
   - {fileID: 8103860337959506060, guid: 02c6c521b930ea6438b15bebf6731f52, type: 3}
   - {fileID: 7788039770513656768, guid: e3cc309b1420c7b4d86c74adf55067cc, type: 3}
   _bossSpiderRoomPrefab: {fileID: 5511730685514120321, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
+  _bossBloodCleanerRoomPrefab: {fileID: 1331013032420184348, guid: d938b9dbc7b7b4e47bf5f883775f7970, type: 3}
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
   _southDoorPrefab: {fileID: 3876304005829112623, guid: 84161e873fc9895448be8ddbdbd780ea, type: 3}
