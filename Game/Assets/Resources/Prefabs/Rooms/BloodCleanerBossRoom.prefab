@@ -4163,6 +4163,7 @@ Transform:
   - {fileID: 8145945726212017315}
   - {fileID: 2698118916985995962}
   - {fileID: 967291772086697027}
+  - {fileID: 935061973705859818}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &-8112443275430411492
@@ -4353,7 +4354,6 @@ MonoBehaviour:
   _bossPrefab: {fileID: 5901044383088267052}
   _spawnOnRoomEnter: 1
   _spawnDelay: 15
-  _warningEffect: {fileID: 0}
 --- !u!1 &1739141393104846169
 GameObject:
   m_ObjectHideFlags: 0
@@ -13997,6 +13997,38 @@ Transform:
   - {fileID: 5544584768179078379}
   m_Father: {fileID: 4893689497360936042}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8953054979551633225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 935061973705859818}
+  m_Layer: 0
+  m_Name: BloodPuddles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &935061973705859818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8953054979551633225}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -38.646435, y: 4.4996634, z: -0.036321193}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6809081519397400391}
+  m_Father: {fileID: 4893689497360936042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &355117000938338894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15618,6 +15650,72 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 583069119188711423, guid: 20eecaaa2ff91ce4bb2b0401c7c34f98, type: 3}
   m_PrefabInstance: {fileID: 3236396630786816793}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3590638872635736251
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 935061973705859818}
+    m_Modifications:
+    - target: {fileID: 143012267762293697, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_Name
+      value: BloodPuddle
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461662528919422556, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+      propertyPath: _splashEffect
+      value: 
+      objectReference: {fileID: 6447933413816454082, guid: 6728ad44dc4e46045b2bfebb88e8840d, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+--- !u!4 &6809081519397400391 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8046301507436572668, guid: 4d241c2511d0dc9498c7d4f22790d0c1, type: 3}
+  m_PrefabInstance: {fileID: 3590638872635736251}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3594187941967865609
 PrefabInstance:
