@@ -28,6 +28,7 @@ public class BloodCleanerBossManager : MonoBehaviour
 
         if (_spawnOnRoomEnter)
         {
+            // Босс активируется через _spawnDelay после входа в комнату
             StartSpawnTimer();
         }
     }
@@ -67,7 +68,6 @@ public class BloodCleanerBossManager : MonoBehaviour
         }
 
         _isEnemyActive = true;
-        Debug.Log($"Босс появился через {_spawnDelay} секунд!");
     }
 
     public void SetDoors(DoorController EnterDoor, DoorController ExitDoor)

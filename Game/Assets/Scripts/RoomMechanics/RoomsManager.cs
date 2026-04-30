@@ -74,13 +74,13 @@ public class RoomsManager : MonoBehaviour
         }
         // -------------------------
 
-        // ------ Blood Ghost ------
+        // --------------------------------- blood cleaner boss 30.04.2026 -------------------------------- //
         bool isBossBloodCleanerRoom = false;
-        if (_roomNumber == 3)
+        if (_roomNumber == 3) // Номер для тестов, поменять 
         {
-            Debug.Log($"Генерирую Blood Ghost комнату, префаб: {_bossBloodCleanerRoomPrefab.name}");
             isBossBloodCleanerRoom = true;
         }
+        // ------------------------------------------------------------------------------------------------ //
         GameObject selectedRoomPrefab;
         if (isBossSpiderRoom)
             selectedRoomPrefab = _bossSpiderRoomPrefab;
@@ -167,6 +167,7 @@ public class RoomsManager : MonoBehaviour
             SetKeyClosets(roomData);
             CurrentRoom.GetComponentInChildren<SpiderBossManager>().SetDoors(enterBossDoor, exitBossDoor);
         }
+        // --------------------------------- blood cleaner boss 30.04.2026 -------------------------------- //
         else
         {
             finalEntryPoint = roomData.EnterBossDoor;
@@ -175,12 +176,8 @@ public class RoomsManager : MonoBehaviour
             exitBossDoor = SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber, true);
             CurrentRoom.GetComponentInChildren<BloodCleanerBossManager>().SetDoors(enterBossDoor, exitBossDoor);
         }
+        // ------------------------------------------------------------------------------------------------ //
         Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
-        Debug.Log($"=== СПАВН ИГРОКА ===");
-        Debug.Log($"Выбранная точка: {playerSpawnPoint.name}");
-        Debug.Log($"Позиция точки в локальных координатах комнаты: {playerSpawnPoint.localPosition}");
-        Debug.Log($"Глобальная позиция: {playerSpawnPoint.position}");
-        Debug.Log($"Сторона входа: {oppositeSide}");
         if (playerSpawnPoint != null)
         {
             SetPlayerPositionWithOffset(playerSpawnPoint.position, oppositeSide);
