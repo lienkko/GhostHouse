@@ -8,7 +8,7 @@ public class BloodCleanerBossManager : MonoBehaviour
 
     [Header("Таймер спавна")]
     [SerializeField] private bool _spawnOnRoomEnter = true;
-    [SerializeField] private float _spawnDelay = 15f;
+    [SerializeField] private float _spawnDelay = 5f;
 
     public static BloodCleanerBossManager Instance;
     private BloodCleaner _bloodCleanerBoss;

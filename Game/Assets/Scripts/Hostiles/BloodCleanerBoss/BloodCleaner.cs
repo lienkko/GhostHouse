@@ -3,13 +3,15 @@ using UnityEngine;
 public class BloodCleaner : MonoBehaviour
 {
     [Header("Движение")]
-    [SerializeField] private float _speed = 3f;
-    [SerializeField] private float _killDistance = 1.5f;
+    [SerializeField] private float _speed = 2.5f;
+    [SerializeField] private float _killDistance = 1f;
 
     [Header("Обнаружение")]
-    [SerializeField] private float _detectionRange = 15f;
+    [SerializeField] private float _detectionRange = 30f;
 
     private bool _isActive = true;
+    public bool IsWalking { get; private set; }
+    public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 
     void Start()
     {
@@ -24,6 +26,7 @@ public class BloodCleaner : MonoBehaviour
 
         if (distance <= _killDistance)
         {
+            GetComponent<Animator>().SetBool("IsAttacking", true);
             PlayerController.Instance.InflictDamage(100);
         }
 
@@ -35,6 +38,7 @@ public class BloodCleaner : MonoBehaviour
 
     private void FollowPlayer()
     {
+        IsWalking = true;
         Vector2 direction = (PlayerController.Instance.transform.position - transform.position).normalized;
 
         Vector2 newPosition = (Vector2)transform.position + direction * _speed * Time.deltaTime;
