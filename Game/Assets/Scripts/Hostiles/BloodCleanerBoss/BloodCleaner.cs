@@ -22,6 +22,9 @@ public class BloodCleaner : MonoBehaviour
     {
         if (!_isActive) return;
 
+        // Ничего не делает, пока открыта табличка с правилами
+        if (Sign.IsSignOpened) return;
+
         float distance = Vector2.Distance(transform.position, PlayerController.Instance.transform.position);
 
         if (distance <= _killDistance)
