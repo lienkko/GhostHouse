@@ -1,10 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-public class HideSpot : MonoBehaviour
+public class HideSpot : MonoBehaviour, IInteractive
 {
     private bool _isHidingSomeone = false;
     private Vector3 _unhidePos;
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public string HintText { get; } = "Hide - E";
+    public bool IsInteractive { get; protected set; } = false;
+    public void Interact()
+    {
+        Hide();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     private void Update()
     {
         if (!Pause.IsPaused && _isHidingSomeone && Input.GetKeyDown(KeyCode.E) && !FindAnyObjectByType<CommandLine>())
@@ -21,7 +32,7 @@ public class HideSpot : MonoBehaviour
         GameManager.Instance.BlockPlayer(true);
         if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActiveItem.Hide();
+            PlayerHand.Instance.ActiveItem.HideItem();
         }
     }
 
@@ -34,7 +45,7 @@ public class HideSpot : MonoBehaviour
         GameManager.Instance.BlockPlayer(false);
         if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActiveItem.Unhide();
+            PlayerHand.Instance.ActiveItem.ShowItem();
         }
     }
     public virtual void Initialize() { }

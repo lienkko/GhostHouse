@@ -7,6 +7,9 @@ public class Safe : MonoBehaviour, IInteractive
 {
     private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
     public static bool IsInPuzzle { get; private set; } = false;
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public string HintText { get; } = "Open - E";
+    public bool IsInteractive { get; private set; } = true;
 
     private GameObject _puzzle;
     private DoorController _doorToOpen;
@@ -17,19 +20,18 @@ public class Safe : MonoBehaviour, IInteractive
     [SerializeField] private Collider2D _borderCollider;
 
     // Interactive fields
-    public override void Interact()
+    public void Interact()
     {
         OpenPuzzle();
     }
     public bool CanInteract()
     {
-        return GameManager.Instance.CanUseKeyboard && IsInteractive;
+        return GameManager.CanUseKeyboard && IsInteractive;
     }
     // -------------------
 
     private void Awake()
     {
-        IsInteractive = true;
         Pause.OnResume += SafeOnResume;
     }
 
@@ -37,7 +39,6 @@ public class Safe : MonoBehaviour, IInteractive
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-        HintField = GameManager.Instance.GameUIFields.OpenSafeText;
     }
 
     private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
@@ -95,7 +96,7 @@ public class Safe : MonoBehaviour, IInteractive
         GameManager.Instance.BlockPlayer(true);
         if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActiveItem.Hide();
+            PlayerHand.Instance.ActiveItem.HideItem();
         }
 
         if (_puzzle)
@@ -119,7 +120,7 @@ public class Safe : MonoBehaviour, IInteractive
         GameManager.Instance.BlockPlayer(false);
         if (PlayerHand.Instance.ActiveItem)
         {
-            PlayerHand.Instance.ActiveItem.Unhide();
+            PlayerHand.Instance.ActiveItem.ShowItem();
         }
     }
 

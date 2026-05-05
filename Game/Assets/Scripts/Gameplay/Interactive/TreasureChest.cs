@@ -3,29 +3,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(IInteractive))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class TreasureChest : MonoBehaviour
+public class TreasureChest : MonoBehaviour, IInteractive
 {
     private readonly string _puzzleName = "Prefabs/Puzzles/PuzzleNumbers";
-    public static bool IsInPuzzle { get; private set; } = false;
-
     private GameObject _puzzle;
-    private IInteractive _interactiveComp;
     private SpriteRenderer _spriteRenderer;
+
+    public static bool IsInPuzzle { get; private set; } = false;
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public string HintText { get; } = "Open chest - E";
+    public bool IsInteractive { get; private set; } = true;
+
 
     [Header("Chest Settings")]
     [SerializeField] private Sprite _openedChestSprite;
     [SerializeField] private GameObject _batteryPrefab;
     [SerializeField] private GameObject _bigBobPrefab;
-
+    public void Interact()
+    {
+        OpenPuzzle();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _interactiveComp = GetComponent<IInteractive>();
-        _interactiveComp.SetListener(OpenPuzzle);
-        _interactiveComp.isInteractive = true;
-
+        IsInteractive = true;
         Pause.OnResume += ChestOnResume;
     }
 
@@ -62,6 +68,10 @@ public class TreasureChest : MonoBehaviour
         StartCoroutine(SwitchIsInPuzzle(true));
 
         GameManager.Instance.BlockPlayer(true);
+        if (PlayerHand.Instance.ActiveItem)
+        {
+            PlayerHand.Instance.ActiveItem.HideItem();
+        }
 
         if (_puzzle)
         {
@@ -83,12 +93,16 @@ public class TreasureChest : MonoBehaviour
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
+        if (PlayerHand.Instance.ActiveItem)
+        {
+            PlayerHand.Instance.ActiveItem.ShowItem();
+        }
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
     {
         yield return null;
-        _interactiveComp.isInteractive = !state;
+        IsInteractive = !state;
         IsInPuzzle = state;
         GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
     }
@@ -112,8 +126,7 @@ public class TreasureChest : MonoBehaviour
         else
             GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
         _spriteRenderer.sprite = _openedChestSprite;
-        _interactiveComp.RemoveListener();
-        _interactiveComp.isInteractive = false;
+        IsInteractive = false;
         GiveReward();
         foreach (var col in GetComponents<BoxCollider2D>())
         {

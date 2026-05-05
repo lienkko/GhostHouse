@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Light2D))]
-public class FlashlightItem : Item, IChargeableItem
+public class FlashlightItem : CollectableItem, IChargeableItem
 {
     private bool _isactive = false;
     private float _flashLightCharge = 0.5f;
@@ -27,7 +27,7 @@ public class FlashlightItem : Item, IChargeableItem
         }
     }
     public float CurrentChargeNormalized => FlaslightCharge;
-    public Item ItemObj => this;
+    public CollectableItem ItemObj => this;
     private Light2D _light2D;
     protected override void Awake()
     {
@@ -57,22 +57,19 @@ public class FlashlightItem : Item, IChargeableItem
             }
         }
     }
-    public override bool UseAndDestroy()
+    public override void Use()
     {
         ChangeMode();
-        return false;
     }
-    public override void Hide()
+    public override void HideItem()
     {
-        base.Hide();
+        base.HideItem();
         _isactive = false;
         _light2D.enabled = false;
     }
-    public override void Unhide()
+    public override void ShowItem()
     {
-        base.Unhide();
-        _isactive = true;
-        _light2D.enabled = true;
+        base.ShowItem();
     }
     private void ChangeMode()
     {

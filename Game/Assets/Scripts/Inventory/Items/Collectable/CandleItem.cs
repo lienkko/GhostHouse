@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Light2D))]
-public class CandleItem : Item, IChargeableItem
+public class CandleItem : CollectableItem, IChargeableItem
 {
     private bool _isactive = false;
     private const float MaxCharge = 100f;
@@ -26,7 +26,7 @@ public class CandleItem : Item, IChargeableItem
         }
     }
     public float CurrentChargeNormalized => CandleCharge / MaxCharge;
-    public Item ItemObj => this;
+    public CollectableItem ItemObj => this;
     private Light2D _light2D;
     protected override void Awake()
     {
@@ -51,25 +51,15 @@ public class CandleItem : Item, IChargeableItem
             }
         }
     }
-    public override bool UseAndDestroy()
+    public override void Use()
     {
         ChangeMode();
-        return false;
     }
-    public override void Hide()
+    public override void HideItem()
     {
-        base.Hide();
+        base.HideItem();
         _isactive = false;
         _light2D.enabled = false;
-    }
-    public override void Unhide()
-    {
-        base.Unhide();
-        if (CandleCharge <= 0f)
-            return;
-
-        _isactive = true;
-        _light2D.enabled = true;
     }
 
     private void ChangeMode()
@@ -79,11 +69,8 @@ public class CandleItem : Item, IChargeableItem
             _isactive = false;
             _light2D.enabled = false;
         }
-        else
+        else if (CandleCharge > 0)
         {
-            if (CandleCharge <= 0)
-                return;
-
             _isactive = true;
             _light2D.enabled = true;
         }

@@ -1,15 +1,23 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(IInteractive))]
-public class KeyCloset : MonoBehaviour
+public class KeyCloset : MonoBehaviour, IInteractive
 {
     private Light2D _keyLight;
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public string HintText { get; } = "Take key - E";
+    public bool IsInteractive { get; private set; } = false;
+    public void Interact()
+    {
+        TakeKey();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     public void Initialize()
     {
-        IInteractive closetInteractive = GetComponent<IInteractive>();
-        closetInteractive.isInteractive = true;
-        closetInteractive.SetListener(TakeKey);
+        IsInteractive = true;
         _keyLight = GetComponentInChildren<Light2D>();
         _keyLight.enabled = true;
     }
@@ -18,8 +26,7 @@ public class KeyCloset : MonoBehaviour
         if (SpiderBossManager.Instance)
             SpiderBossManager.Instance.AddKey();
         _keyLight.enabled = false;
-        GetComponent<IInteractive>().isInteractive = false;
-        GetComponent<IInteractive>().RemoveListener();
+        IsInteractive = false;
         gameObject.SetActive(false);
         gameObject.SetActive(true);
     }

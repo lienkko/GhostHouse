@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerHand : MonoBehaviour
 {
     public static PlayerHand Instance { get; private set; }
-    public Item ActiveItem { get; private set; }
+    public CollectableItem ActiveItem { get; private set; }
 
     private void Awake()
     {
@@ -27,14 +27,14 @@ public class PlayerHand : MonoBehaviour
             bool needToDestroy = ActiveItem.UseAndDestroy();
             if (needToDestroy)
             {
-                Item itemToDestroy = ActiveItem;
+                CollectableItem itemToDestroy = ActiveItem;
                 GetComponent<Inventory>().DropActiveItem();
                 Destroy(itemToDestroy.gameObject);
             }
         }
 
     }
-    public void TakeItem(Item item)
+    public void TakeItem(CollectableItem item)
     {
         ActiveItem = item;
         ActiveItem.GetComponent<IInteractive>().isInteractive = false;

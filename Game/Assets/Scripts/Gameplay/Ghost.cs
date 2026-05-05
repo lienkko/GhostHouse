@@ -1,11 +1,8 @@
 using UnityEngine;
 
-public class Ghost : MonoBehaviour
+public class Ghost : Interactive
 {
     public static Ghost Instance { get; private set; }
-
-    public IInteractive InteractiveInstance { get; private set; }
-
 
     enum MD { Up, Down };
 
@@ -19,12 +16,21 @@ public class Ghost : MonoBehaviour
 
     private MD _moveDirection = MD.Down;
     private float _flightTime = 0;
+    public override string HintText { get; } = "Start game - E";
+    public override KeyCode KeyToInteract { get; } = KeyCode.E;
 
+    public override void Interact()
+    {
+        GameManager.Instance.StartGame();
+    }
+    public override bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     private void Awake()
     {
         Instance = this;
-        InteractiveInstance = GetComponent<IInteractive>();
-        InteractiveInstance.isInteractive = true;
+        IsInteractive = true;
     }
 
     private void FixedUpdate()

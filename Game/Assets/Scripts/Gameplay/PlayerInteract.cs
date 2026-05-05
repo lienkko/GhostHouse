@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(Inventory))]
@@ -5,17 +6,9 @@ public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract Instance { get; private set; }
 
-    private IInteractive _interactiveObj;
-    private IInteractive _hideSpotInteractive;
-    private IInteractive _doorInteractive;
-    private IInteractive _chestInteractive;
-    private IInteractive _safeInteractive;
-    private IInteractive _ghostInteractive;
-    private IInteractive _itemInteractive;
-    private IInteractive _keyClosetInteractive;
-    private IInteractive _signInteractive;
+    private Interactive _interactiveObj;
 
-    private IInteractive _swappingInteractive;
+    private Interactive _swappingInteractive;
 
     [HideInInspector] public bool Hints;
 
@@ -23,190 +16,41 @@ public class PlayerInteract : MonoBehaviour
     {
         Instance = this;
     }
-
-
-    private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
-    private bool CanOpenChest() { return GameManager.Instance.CanUseKeyboard && _chestInteractive && _chestInteractive.isInteractive; }
-    private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
-    private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
-    private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
-    private bool CanTakeKey() { return GameManager.Instance.CanUseKeyboard && _keyClosetInteractive; }
-    private bool CanReadSign() { return GameManager.Instance.CanUseKeyboard && _signInteractive; }
-
     private void Update()
     {
         if (_interactiveObj)
         {
-            if (Input.GetKeyDown(_interactiveObj))
+            if (Input.GetKeyDown(_interactiveObj.KeyToInteract))
+            {
+                _interactiveObj.Interact();
+                return;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.F) && CanPickUp())
-        {
-            _swappingInteractive = _itemInteractive;
-            if (GetComponent<Inventory>().PickUp(_itemInteractive.GetComponent<Item>()))
-                _swappingInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanHide())
-        {
-            _hideSpotInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanTakeKey())
-        {
-            _keyClosetInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanReadSign())
-        {
-            _signInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
-        {
-            _safeInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanOpenChest())
-        {
-            _chestInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanOpedDoor())
-        {
-            _doorInteractive.Interact();
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.E) && CanStartGame())
-        {
-            _ghostInteractive.Interact();
-            GameManager.Instance.GameUIFields.StartGameText.SetActive(false);
-            return;
-        }
-
     }
 
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<IInteractive>();
-        if (interactive)
+        var interactive = collision.GetComponent<Interactive>();
+        if (interactive && interactive.IsInteractive)
         {
-            if (collision.GetComponent<Item>() && interactive.isInteractive)
+            _interactiveObj = interactive;
+            if (Hints)
             {
-                _itemInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.TakeItemText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
-            {
-                _hideSpotInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<KeyCloset>() && interactive.isInteractive)
-            {
-                _keyClosetInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.TakeKeyText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<Sign>() && interactive.isInteractive)
-            {
-                _signInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.ReadSignText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<Safe>() && interactive.isInteractive)
-            {
-                _safeInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<TreasureChest>() && interactive.isInteractive)
-            {
-                _chestInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<DoorController>() && interactive.isInteractive)
-            {
-                _doorInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.OpenDoorText.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<DoorController>() && !interactive.isInteractive)
-            {
-                GameManager.Instance.GameUIFields.LockedImage.SetActive(true);
-                return;
-            }
-            if (collision.GetComponent<Ghost>() && interactive.isInteractive)
-            {
-                _ghostInteractive = interactive;
-                if (Hints)
-                    GameManager.Instance.GameUIFields.StartGameText.SetActive(true);
+                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
+                GameManager.Instance.GameUIFields.OpenSafeText.GetComponent<TextMeshPro>().text = _interactiveObj.HintText;
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<IInteractive>();
+        var interactive = collision.GetComponent<Interactive>();
         if (interactive)
         {
-            if (collision.GetComponent<Item>())
-            {
-                GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
-                _itemInteractive = null;
-            }
-            if (collision.GetComponent<HideSpot>())
-            {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
-                _hideSpotInteractive = null;
-
-            }
-            if (collision.GetComponent<KeyCloset>())
-            {
-                GameManager.Instance.GameUIFields.TakeKeyText.SetActive(false);
-                _keyClosetInteractive = null;
-
-            }
-            if (collision.GetComponent<Sign>())
-            {
-                GameManager.Instance.GameUIFields.ReadSignText.SetActive(false);
-                _signInteractive = null;
-
-            }
-            if (collision.GetComponent<Safe>())
-            {
-                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
-                _safeInteractive = null;
-
-            }
-            if (collision.GetComponent<TreasureChest>())
-            {
-                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
-                _chestInteractive = null;
-
-            }
-            if (collision.GetComponent<DoorController>())
-            {
-                GameManager.Instance.GameUIFields.OpenDoorText.SetActive(false);
-                GameManager.Instance.GameUIFields.LockedImage.SetActive(false);
-                _doorInteractive = null;
-
-            }
-        }
-        if (collision.GetComponent<Ghost>())
-        {
-            GameManager.Instance.GameUIFields.StartGameText.SetActive(false);
-            _ghostInteractive = null;
-
+            GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+            GameManager.Instance.GameUIFields.OpenSafeText.GetComponent<TextMeshPro>().text = "Interact";
+            _interactiveObj = null;
         }
     }
 }

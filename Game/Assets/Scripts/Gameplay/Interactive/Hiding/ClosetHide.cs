@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class ClosetHide : HideSpot
 {
     [SerializeField] private Sprite _topSideSprite;
@@ -8,8 +9,7 @@ public class ClosetHide : HideSpot
     [SerializeField] private Sprite _backSprite;
     public override void Initialize()
     {
-        GetComponent<IInteractive>().isInteractive = true;
-        GetComponent<IInteractive>().SetListener(Hide);
+        IsInteractive = true;
         switch (tag)
         {
             case "TopLeftPoint":

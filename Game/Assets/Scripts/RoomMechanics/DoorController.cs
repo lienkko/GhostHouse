@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class DoorController : MonoBehaviour
+public class DoorController : Interactive
 {
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
@@ -35,19 +35,27 @@ public class DoorController : MonoBehaviour
 
     public delegate void ChangeRoom(GameObject room);
     public static event ChangeRoom OnRoomChanged;
+    public override string HintText { get; } = "Open door - E";
+    public override KeyCode KeyToInteract { get; } = KeyCode.E;
+    public override void Interact()
+    {
+        ActivateDoor();
+    }
+    public override bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
 
     private void Awake()
     {
         if (IsStartingDoor)
         {
-            GetComponent<IInteractive>().SetListener(ActivateDoor);
-            GetComponent<IInteractive>().isInteractive = false;
+            IsInteractive = false;
             SetTargetRoomNumber(1);
         }
         if (IsTestBossDoor)
         {
-            GetComponent<IInteractive>().SetListener(ActivateDoor);
-            GetComponent<IInteractive>().isInteractive = true;
+            IsInteractive = true;
             isDoorLocked = false;
             SetTargetRoomNumber(25);
 
@@ -76,8 +84,7 @@ public class DoorController : MonoBehaviour
         _linkedBackDoor = backDoor;
 
         SetTargetRoomNumber(fakeNumber);
-        GetComponent<IInteractive>().SetListener(ActivateDoor);
-        GetComponent<IInteractive>().isInteractive = true;
+        IsInteractive = true;
     }
 
     public void SetDoorVisualAndInteract(bool state)
@@ -85,7 +92,7 @@ public class DoorController : MonoBehaviour
         _isBlockedByFake = !state;
         if (_firstDigit != null) _firstDigit.enabled = state;
         if (_secondDigit != null) _secondDigit.enabled = state;
-        GetComponent<IInteractive>().isInteractive = state;
+        IsInteractive = state;
     }
     // --------------------------------------------------------------------------- //
 
@@ -98,8 +105,7 @@ public class DoorController : MonoBehaviour
         _previousRoomRoot = previousRoomRoot;
         isDoorLocked = isLocked;
 
-        GetComponent<IInteractive>().SetListener(ActivateDoor);
-        GetComponent<IInteractive>().isInteractive = !isLocked;
+        IsInteractive = !isLocked;
     }
 
     public void ActivateDoor()
@@ -111,7 +117,7 @@ public class DoorController : MonoBehaviour
         {
             PlayerController.Instance.InflictDamage(40);
             if (_linkedBackDoor != null) _linkedBackDoor.SetDoorVisualAndInteract(true);
-            GetComponent<IInteractive>().isInteractive = false;
+            IsInteractive = false;
             return;
         }
         // ---------------------------------------------------------------------- //
@@ -195,7 +201,7 @@ public class DoorController : MonoBehaviour
 
     public void UnlockDoor()
     {
-        GetComponent<IInteractive>().isInteractive = true;
+        IsInteractive = true;
         isDoorLocked = false;
     }
 }

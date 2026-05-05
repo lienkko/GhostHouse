@@ -7,8 +7,8 @@ public class Inventory : MonoBehaviour
     public static Inventory Instance { get; private set; }
     [SerializeField] private InventoryWindow _inventoryWin;
     public InventoryWindow InventoryWin { get { return _inventoryWin; } }
-    private Item _emptyItem;
-    public List<Item> InventoryItems { get; private set; }
+    private CollectableItem _emptyItem;
+    public List<CollectableItem> InventoryItems { get; private set; }
     private uint _size = 0;
     private int _activeSlot = 0;
     public readonly uint MaxSize = 4;
@@ -19,15 +19,15 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _emptyItem = new GameObject("emptyItem").AddComponent<Item>();
+        _emptyItem = new GameObject("emptyItem").AddComponent<CollectableItem>();
         _emptyItem.gameObject.SetActive(false);
-        InventoryItems = new List<Item>();
+        InventoryItems = new List<CollectableItem>();
         for (int i = 0; i < MaxSize; i++)
             InventoryItems.Add(_emptyItem);
     }
     private void Update()
     {
-        if (!GameManager.Instance.CanUseKeyboard)
+        if (!GameManager.CanUseKeyboard)
             return;
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
@@ -39,6 +39,26 @@ public class Inventory : MonoBehaviour
             ChangeActiveSlot(4);
         OnAddition?.Invoke();
         return;
+    }
+    public bool PickUp(CollectableItem item)
+    {
+        if (!item.IsCollectable)
+        {
+            if (item.UseAndDestroy())
+            {
+                Destroy(item.gameObject);
+            }
+            return false;
+        }
+        bool wasAdded = AddItem(item);
+        if (wasAdded)
+            item.GetComponent<SpriteRenderer>().sortingLayerName = "Layer For Player";
+        item.GetComponent<SpriteRenderer>().sortingOrder = 11;
+        item.transform.SetParent(transform);
+        item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
+        GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
+        OnAddition?.Invoke();
+        return wasAdded;
     }
 
     private void ChangeActiveSlot(int index)
@@ -61,7 +81,7 @@ public class Inventory : MonoBehaviour
         _activeSlot = 0;
         GetComponent<PlayerHand>().HideItem();
     }
-    private bool AddItem(Item item)
+    private bool AddItem(CollectableItem item)
     {
         if ((_size == MaxSize) && (_activeSlot == 0))
             return false;
@@ -109,7 +129,7 @@ public class Inventory : MonoBehaviour
         _activeSlot = 0;
 
     }
-    public Item GetEmptyItem()
+    public CollectableItem GetEmptyItem()
     {
         return _emptyItem;
     }
@@ -122,28 +142,9 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
-    public bool PickUp(Item item)
-    {
-        if (!item.IsCollectable)
-        {
-            if (item.UseAndDestroy())
-            {
-                Destroy(item.gameObject);
-            }
-            return false;
-        }
-        bool wasAdded = AddItem(item);
-        if (wasAdded)
-            item.GetComponent<SpriteRenderer>().sortingLayerName = "Layer For Player";
-        item.GetComponent<SpriteRenderer>().sortingOrder = 11;
-        item.transform.SetParent(transform);
-        item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
-        GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
-        OnAddition?.Invoke();
-        return wasAdded;
-    }
 
-    public Item GetItem(int index)
+
+    public CollectableItem GetItem(int index)
     {
         return InventoryItems[index];
     }

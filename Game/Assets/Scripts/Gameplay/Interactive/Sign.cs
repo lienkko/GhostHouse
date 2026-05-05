@@ -1,15 +1,25 @@
 using UnityEngine;
 
-[RequireComponent(typeof(IInteractive))]
-public class Sign : MonoBehaviour
+[RequireComponent(typeof(BoxCollider2D))]
+public class Sign : MonoBehaviour, IInteractive
 {
     [SerializeField] private GameObject _textSign;
     private BoxCollider2D _collider;
     public static bool IsSignOpened { get; private set; } = false;
+    public string HintText { get; } = "Show sign = E";
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public bool IsInteractive { get; private set; } = true;
+    public void Interact()
+    {
+        ShowSign();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     private void Awake()
     {
-        GetComponent<IInteractive>().isInteractive = true;
-        GetComponent<IInteractive>().SetListener(ShowSign);
+        IsInteractive = true;
         _collider = GetComponent<BoxCollider2D>();
     }
     private void Update()
@@ -25,6 +35,10 @@ public class Sign : MonoBehaviour
         IsSignOpened = true;
         _textSign.SetActive(true);
         GameManager.Instance.BlockPlayer(true);
+        if (PlayerHand.Instance.ActiveItem)
+        {
+            PlayerHand.Instance.ActiveItem.HideItem();
+        }
     }
     private void HideSign()
     {
@@ -32,5 +46,9 @@ public class Sign : MonoBehaviour
         IsSignOpened = false;
         _textSign.SetActive(false);
         GameManager.Instance.BlockPlayer(false);
+        if (PlayerHand.Instance.ActiveItem)
+        {
+            PlayerHand.Instance.ActiveItem.ShowItem();
+        }
     }
 }
