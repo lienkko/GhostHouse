@@ -155,9 +155,9 @@ public class GameManager : MonoBehaviour
             UnlockDoor();
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
-        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
-        Inventory.Instance.PickUp(flashlight.GetComponent<CollectableItem>());
-        flashlight.SetActive(false);
+        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<CollectableItem>();
+        Inventory.Instance.PickUp(flashlight.GetInventoryItem, true);
+        flashlight.HideItem();
     }
 
 

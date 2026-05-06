@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class DoorController : Interactive
+public class DoorController : MonoBehaviour, IInteractive
 {
     [Tooltip("Если true, эта дверь ГЕНЕРИРУЕТ ПЕРВУЮ комнату.")]
     public bool IsStartingDoor = false;
@@ -35,13 +35,14 @@ public class DoorController : Interactive
 
     public delegate void ChangeRoom(GameObject room);
     public static event ChangeRoom OnRoomChanged;
-    public override string HintText { get; } = "Open door - E";
-    public override KeyCode KeyToInteract { get; } = KeyCode.E;
-    public override void Interact()
+    public string HintText { get; } = "Open door - E";
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public bool IsInteractive { get; private set; } = true;
+    public void Interact()
     {
         ActivateDoor();
     }
-    public override bool CanInteract()
+    public bool CanInteract()
     {
         return GameManager.CanUseKeyboard && IsInteractive;
     }
@@ -199,9 +200,16 @@ public class DoorController : Interactive
         }
     }
 
-    public void UnlockDoor()
+    public void UnlockDoor(bool isCompleteUnlock = true)
     {
         IsInteractive = true;
-        isDoorLocked = false;
+        if (isCompleteUnlock)
+            isDoorLocked = false;
+    }
+    public void LockDoor(bool isCompleteLock = true)
+    {
+        IsInteractive = false;
+        if (isCompleteLock)
+            isDoorLocked = true;
     }
 }

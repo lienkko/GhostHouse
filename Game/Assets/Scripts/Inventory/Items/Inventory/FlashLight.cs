@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Light2D))]
-public class FlashlightItem : CollectableItem, IChargeableItem
+public class Flashlight : InventoryItem, IChargeableItem
 {
     private bool _isactive = false;
     private float _flashLightCharge = 0.5f;
@@ -27,11 +27,10 @@ public class FlashlightItem : CollectableItem, IChargeableItem
         }
     }
     public float CurrentChargeNormalized => FlaslightCharge;
-    public CollectableItem ItemObj => this;
+    public InventoryItem ItemObj => this;
     private Light2D _light2D;
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         _light2D = GetComponent<Light2D>();
     }
     private void Update()
@@ -61,16 +60,13 @@ public class FlashlightItem : CollectableItem, IChargeableItem
     {
         ChangeMode();
     }
-    public override void HideItem()
+    public override void Hide()
     {
-        base.HideItem();
+        base.Hide();
         _isactive = false;
         _light2D.enabled = false;
     }
-    public override void ShowItem()
-    {
-        base.ShowItem();
-    }
+
     private void ChangeMode()
     {
         if (_isactive)
@@ -87,3 +83,4 @@ public class FlashlightItem : CollectableItem, IChargeableItem
         }
     }
 }
+

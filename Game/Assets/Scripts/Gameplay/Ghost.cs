@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Ghost : Interactive
+public class Ghost : MonoBehaviour, IInteractive
 {
     public static Ghost Instance { get; private set; }
 
@@ -16,14 +16,15 @@ public class Ghost : Interactive
 
     private MD _moveDirection = MD.Down;
     private float _flightTime = 0;
-    public override string HintText { get; } = "Start game - E";
-    public override KeyCode KeyToInteract { get; } = KeyCode.E;
+    public string HintText { get; } = "Start game - E";
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public bool IsInteractive { get; private set; } = true;
 
-    public override void Interact()
+    public void Interact()
     {
         GameManager.Instance.StartGame();
     }
-    public override bool CanInteract()
+    public bool CanInteract()
     {
         return GameManager.CanUseKeyboard && IsInteractive;
     }

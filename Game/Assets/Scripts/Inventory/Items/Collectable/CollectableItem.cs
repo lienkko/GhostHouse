@@ -1,44 +1,38 @@
 using UnityEngine;
 
-public abstract class CollectableItem : MonoBehaviour, IInteractive
+public class CollectableItem : MonoBehaviour, IInteractive
 {
     [SerializeField] private GameObject _inventoryItemPrefab;
-    public InventoryItem InventoryItem { get; private set; }
+    private InventoryItem _inventoryItem;
+    public InventoryItem GetInventoryItem => _inventoryItem;
     public string HintText { get; } = "Pick up - F";
     public KeyCode KeyToInteract { get; } = KeyCode.F;
     public bool IsInteractive { get; protected set; } = true;
-    public bool IsUsable { get; protected set; } = true;
+    protected bool _isUsable = true;
 
     protected virtual void Awake()
     {
-        InventoryItem = _inventoryItemPrefab.GetComponent<InventoryItem>();
+        _inventoryItem = Instantiate(_inventoryItemPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<InventoryItem>();
+        _inventoryItem.SetCollectableItem(this);
     }
     public virtual void HideItem()
     {
         gameObject.SetActive(false);
     }
 
-    public void Interact()
+    public virtual void Interact()
     {
-        HideItem();
+        if (Inventory.Instance.PickUp(_inventoryItem, _isUsable))
+            HideItem();
     }
     public bool CanInteract()
     {
         return GameManager.CanUseKeyboard && IsInteractive;
     }
-    public abstract void Use();
 
     public virtual void ShowItem()
     {
         gameObject.SetActive(true);
-    }
-    public InventoryItem GetInventoryItem()
-    {
-        if (InventoryItem)
-        {
-            return InventoryItem;
-        }
-        return null;
     }
 
 }

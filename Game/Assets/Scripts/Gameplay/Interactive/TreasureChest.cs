@@ -68,10 +68,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
         StartCoroutine(SwitchIsInPuzzle(true));
 
         GameManager.Instance.BlockPlayer(true);
-        if (PlayerHand.Instance.ActiveItem)
-        {
-            PlayerHand.Instance.ActiveItem.HideItem();
-        }
+        Inventory.Instance.HideActiveItem();
 
         if (_puzzle)
         {
@@ -86,17 +83,14 @@ public class TreasureChest : MonoBehaviour, IInteractive
     {
         if (PlayerController.Instance.IsAlive)
             Cursor.lockState = CursorLockMode.Locked;
-        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
         if (_puzzle)
         {
             StartCoroutine(SwitchIsInPuzzle(false));
             _puzzle.SetActive(false);
         }
         GameManager.Instance.BlockPlayer(false);
-        if (PlayerHand.Instance.ActiveItem)
-        {
-            PlayerHand.Instance.ActiveItem.ShowItem();
-        }
+        Inventory.Instance.ShowActiveItem();
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
@@ -104,7 +98,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
         yield return null;
         IsInteractive = !state;
         IsInPuzzle = state;
-        GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+        GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
     }
 
     private void ChestOnResume()
@@ -124,7 +118,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
             Destroy(_puzzle);
         }
         else
-            GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+            GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
         _spriteRenderer.sprite = _openedChestSprite;
         IsInteractive = false;
         GiveReward();

@@ -78,15 +78,15 @@ public class WraithHandler : MonoBehaviour
     {
         RoomData currentRoomData = RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>();
         if (!currentRoomData.PreviousRoomDoor.isDoorLocked)
-            currentRoomData.PreviousRoomDoor.GetComponent<IInteractive>().isInteractive = true;
+            currentRoomData.PreviousRoomDoor.UnlockDoor(false);
         if (!currentRoomData.NextRoomDoor.isDoorLocked)
-            currentRoomData.NextRoomDoor.GetComponent<IInteractive>().isInteractive = true;
+            currentRoomData.NextRoomDoor.UnlockDoor(false);
     }
     private void CloseDoors()
     {
         RoomData currentRoomData = RoomsManager.Instance.CurrentRoom.GetComponent<RoomData>();
-        currentRoomData.PreviousRoomDoor.GetComponent<IInteractive>().isInteractive = false;
-        currentRoomData.NextRoomDoor.GetComponent<IInteractive>().isInteractive = false;
+        currentRoomData.PreviousRoomDoor.LockDoor(false);
+        currentRoomData.NextRoomDoor.LockDoor(false);
     }
 
     public void StartWraith(Vector3 point1, Vector3 point2)

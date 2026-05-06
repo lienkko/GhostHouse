@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(PlayerHand))]
 public class Inventory : MonoBehaviour
 {
     public static Inventory Instance { get; private set; }
     [SerializeField] private InventoryWindow _inventoryWin;
     public InventoryWindow InventoryWin { get { return _inventoryWin; } }
-    private CollectableItem _emptyItem;
-    public List<CollectableItem> InventoryItems { get; private set; }
+    private InventoryItem _emptyItem;
+    private InventoryItem _activeItem;
+    public List<InventoryItem> InventoryItems { get; private set; }
     private uint _size = 0;
     private int _activeSlot = 0;
     public readonly uint MaxSize = 4;
@@ -19,9 +21,9 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _emptyItem = new GameObject("emptyItem").AddComponent<CollectableItem>();
+        _emptyItem = new GameObject("emptyItem").AddComponent<Empty>();
         _emptyItem.gameObject.SetActive(false);
-        InventoryItems = new List<CollectableItem>();
+        InventoryItems = new List<InventoryItem>();
         for (int i = 0; i < MaxSize; i++)
             InventoryItems.Add(_emptyItem);
     }
@@ -29,6 +31,22 @@ public class Inventory : MonoBehaviour
     {
         if (!GameManager.CanUseKeyboard)
             return;
+        UseDropActiveItemHandle();
+        ChangeSlotHandle();
+    }
+    private void UseDropActiveItemHandle()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            UseActiveItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            DropActiveItem();
+        }
+    }
+    private void ChangeSlotHandle()
+    {
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -38,26 +56,22 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha4))
             ChangeActiveSlot(4);
         OnAddition?.Invoke();
-        return;
     }
-    public bool PickUp(CollectableItem item)
+    public bool PickUp(InventoryItem item, bool isUsable)
     {
-        if (!item.IsCollectable)
+        if (!isUsable)
         {
-            if (item.UseAndDestroy())
-            {
-                Destroy(item.gameObject);
-            }
+            item.Use();
+            Destroy(item.gameObject);
             return false;
         }
         bool wasAdded = AddItem(item);
         if (wasAdded)
-            item.GetComponent<SpriteRenderer>().sortingLayerName = "Layer For Player";
-        item.GetComponent<SpriteRenderer>().sortingOrder = 11;
-        item.transform.SetParent(transform);
-        item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
-        GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
-        OnAddition?.Invoke();
+        {
+            item.transform.SetParent(transform);
+            item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
+            OnAddition?.Invoke();
+        }
         return wasAdded;
     }
 
@@ -65,23 +79,37 @@ public class Inventory : MonoBehaviour
     {
         if (_activeSlot == index)
         {
-            ShutDownSlot(index);
+            ShutDownSlot();
             return;
         }
         if (InventoryItems[index - 1] == _emptyItem)
             return;
         if (_activeSlot != 0)
-            ShutDownSlot(_activeSlot);
-        _activeSlot = index;
-        GetComponent<PlayerHand>().TakeItem(InventoryItems[index - 1]);
+            ShutDownSlot();
+        SetActiveSlot(index);
     }
-    private void ShutDownSlot(int index)
+    private void SetActiveSlot(int index)
     {
-        InventoryItems[index - 1].Hide();
-        _activeSlot = 0;
-        GetComponent<PlayerHand>().HideItem();
+        _activeSlot = index;
+        _activeItem = InventoryItems[index - 1];
+        _activeItem.Show();
+        if (_activeItem is IChargeableItem chargeableItem)
+        {
+            InventoryWin.FlashLightSliderAppear(chargeableItem);
+        }
     }
-    private bool AddItem(CollectableItem item)
+    private void ShutDownSlot()
+    {
+        _activeItem.Hide();
+        _activeSlot = 0;
+        if (_activeItem is IChargeableItem)
+        {
+            InventoryWin.FlashLightSliderDisappear();
+        }
+        _activeItem.Hide();
+        _activeItem = null;
+    }
+    private bool AddItem(InventoryItem item)
     {
         if ((_size == MaxSize) && (_activeSlot == 0))
             return false;
@@ -107,6 +135,7 @@ public class Inventory : MonoBehaviour
         _size++;
         return true;
     }
+
     private void DeleteItem(int index)
     {
         InventoryItems[index] = _emptyItem;
@@ -116,20 +145,34 @@ public class Inventory : MonoBehaviour
     {
         if (_activeSlot == 0)
             return;
-        InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
-        InventoryItems[_activeSlot - 1].GetComponent<IInteractive>().isInteractive = true;
         InventoryItems[_activeSlot - 1].Hide();
-        InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
-        InventoryItems[_activeSlot - 1].GetComponent<IInteractive>().isInteractive = true;
-        InventoryItems[_activeSlot - 1].transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
-        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingLayerName = "Default";
-        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingOrder = 0;
-
+        CollectableItem colItem = InventoryItems[_activeSlot - 1].GetCollectableItem;
+        colItem.transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
+        colItem.transform.position = transform.position;
+        colItem.ShowItem();
         DeleteItem(_activeSlot - 1);
-        _activeSlot = 0;
-
+        ShutDownSlot();
     }
-    public CollectableItem GetEmptyItem()
+    public void HideActiveItem()
+    {
+        if (_activeItem != null)
+            _activeItem.Hide();
+    }
+    public void ShowActiveItem()
+    {
+        if (_activeItem != null)
+            _activeItem.Show();
+    }
+    private void UseActiveItem()
+    {
+        var item = _activeItem;
+        if (!_activeItem.CanKeep)
+        {
+            DropActiveItem();
+        }
+        item.Use();
+    }
+    public InventoryItem GetEmptyItem()
     {
         return _emptyItem;
     }
@@ -142,9 +185,18 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
+    public bool ActiveSlotIsBurningCandle()
+    {
+        var candle = _activeItem as Candle;
+        if (candle == null) return false;
 
+        var light = candle.GetComponent<Light2D>();
+        if (light == null || !light.enabled) return false;
 
-    public CollectableItem GetItem(int index)
+        return true;
+    }
+
+    public InventoryItem GetItem(int index)
     {
         return InventoryItems[index];
     }

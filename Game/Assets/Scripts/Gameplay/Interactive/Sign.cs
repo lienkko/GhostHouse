@@ -35,10 +35,7 @@ public class Sign : MonoBehaviour, IInteractive
         IsSignOpened = true;
         _textSign.SetActive(true);
         GameManager.Instance.BlockPlayer(true);
-        if (PlayerHand.Instance.ActiveItem)
-        {
-            PlayerHand.Instance.ActiveItem.HideItem();
-        }
+        Inventory.Instance.HideActiveItem();
     }
     private void HideSign()
     {
@@ -46,9 +43,6 @@ public class Sign : MonoBehaviour, IInteractive
         IsSignOpened = false;
         _textSign.SetActive(false);
         GameManager.Instance.BlockPlayer(false);
-        if (PlayerHand.Instance.ActiveItem)
-        {
-            PlayerHand.Instance.ActiveItem.ShowItem();
-        }
+        Inventory.Instance.ShowActiveItem();
     }
 }

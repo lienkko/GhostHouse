@@ -6,9 +6,9 @@ public class PlayerInteract : MonoBehaviour
 {
     public static PlayerInteract Instance { get; private set; }
 
-    private Interactive _interactiveObj;
+    private IInteractive _interactiveObj;
 
-    private Interactive _swappingInteractive;
+    private IInteractive _swappingInteractive;
 
     [HideInInspector] public bool Hints;
 
@@ -18,7 +18,7 @@ public class PlayerInteract : MonoBehaviour
     }
     private void Update()
     {
-        if (_interactiveObj)
+        if (_interactiveObj != null)
         {
             if (Input.GetKeyDown(_interactiveObj.KeyToInteract))
             {
@@ -31,25 +31,33 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<Interactive>();
-        if (interactive && interactive.IsInteractive)
+        if (collision.TryGetComponent<IInteractive>(out var interactive))
         {
             _interactiveObj = interactive;
-            if (Hints)
+            if ((interactive is DoorController dc) && (dc.isDoorLocked || !dc.IsInteractive))
             {
-                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
-                GameManager.Instance.GameUIFields.OpenSafeText.GetComponent<TextMeshPro>().text = _interactiveObj.HintText;
+                GameManager.Instance.GameUIFields.LockedImage.SetActive(true);
             }
+            else if (interactive.IsInteractive)
+            {
+                if (Hints)
+                {
+                    GameManager.Instance.GameUIFields.HintFieldText.SetActive(true);
+                    GameManager.Instance.GameUIFields.HintFieldText.GetComponent<TextMeshProUGUI>().text = _interactiveObj.HintText;
+                }
+            }
+
         }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        var interactive = collision.GetComponent<Interactive>();
-        if (interactive)
+        if (collision.TryGetComponent<IInteractive>(out _))
         {
-            GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
-            GameManager.Instance.GameUIFields.OpenSafeText.GetComponent<TextMeshPro>().text = "Interact";
+            GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
+            GameManager.Instance.GameUIFields.HintFieldText.GetComponent<TextMeshProUGUI>().text = "Interact";
+            GameManager.Instance.GameUIFields.LockedImage.SetActive(false);
             _interactiveObj = null;
         }
     }

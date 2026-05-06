@@ -1,13 +1,14 @@
 public class BatteryItem : CollectableItem
 {
     private readonly float _procentage = 0.3f;
-    public override void Use()
+    public override void Interact()
     {
         foreach (var item in Inventory.Instance.InventoryItems)
         {
-            if (item is FlashlightItem flashlight)
+            if (item is Flashlight flashlight)
             {
                 flashlight.FlaslightCharge += _procentage;
+                Destroy(gameObject);
                 return;
             }
         }
@@ -16,7 +17,7 @@ public class BatteryItem : CollectableItem
     protected override void Awake()
     {
         base.Awake();
-        IsUsable = false;
+        _isUsable = false;
     }
 
 
