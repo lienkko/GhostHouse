@@ -7,13 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-<<<<<<< HEAD
-  - Name: RotationPuzzlePattern1
+  - Name: PuzzleRotationPuzzlePattern3
   - Tag: Untagged
   - Layer: UI
-=======
-  - Name: CarpetedDoor1
-  - Tag: Untagged
-  - Layer: Default
->>>>>>> main
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

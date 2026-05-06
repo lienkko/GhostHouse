@@ -72,7 +72,7 @@ public class Safe : MonoBehaviour
 
     private void CreatePuzzle()
     {
-        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 4)]}";
+        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, _puzzleNames.Length)]}";
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenSafe);
