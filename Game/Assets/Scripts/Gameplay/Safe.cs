@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Safe : MonoBehaviour
 {
-    private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
+    private readonly string[] _puzzleNames = new string[] { "Circles", "Star", "RotationPuzzlePattern1", "RotationPuzzlePattern2", "RotationPuzzlePattern3" };
     public static bool IsInPuzzle { get; private set; } = false;
 
     private GameObject _puzzle;
@@ -72,7 +72,7 @@ public class Safe : MonoBehaviour
 
     private void CreatePuzzle()
     {
-        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
+        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 4)]}";
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenSafe);
