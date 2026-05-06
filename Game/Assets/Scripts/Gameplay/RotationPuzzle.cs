@@ -60,6 +60,8 @@ public class RotationPuzzle : MonoBehaviour
     [SerializeField] private GameObject _completeButton;
     [SerializeField] private Sprite[] _buttonSprites = new Sprite[2];
     [SerializeField] private Text _statusText;
+    [SerializeField] private Color _lockedButtonColor = new Color(0.65f, 0.65f, 0.65f, 0.7f);
+    [SerializeField] private Color _readyButtonColor = Color.white;
 
     [Header("Completion")]
     [SerializeField] private UnityEvent _onPuzzleCompleted;
@@ -148,10 +150,13 @@ public class RotationPuzzle : MonoBehaviour
 
     public void CompletePuzzle()
     {
+        CheckPuzzle();
+
         if (!_isSolved)
             return;
 
         _onPuzzleCompleted?.Invoke();
+        ClosePuzzleAfterCompletion();
     }
 
     [ContextMenu("Load Selected Pattern")]
@@ -451,6 +456,9 @@ public class RotationPuzzle : MonoBehaviour
 
         if (_completeButtonImage != null && _buttonSprites != null && _buttonSprites.Length >= 2)
             _completeButtonImage.sprite = _buttonSprites[solved ? 1 : 0];
+
+        if (_completeButtonImage != null)
+            _completeButtonImage.color = solved ? _readyButtonColor : _lockedButtonColor;
     }
 
     private void SetStatus(string message)
@@ -478,6 +486,24 @@ public class RotationPuzzle : MonoBehaviour
 
         _completeButtonButton.onClick.RemoveListener(CompletePuzzle);
         _completeButtonButton.onClick.AddListener(CompletePuzzle);
+    }
+
+    private void ClosePuzzleAfterCompletion()
+    {
+        if (GameManager.Instance != null && PlayerController.Instance != null)
+            GameManager.Instance.BlockPlayer(false);
+
+        if (PlayerHand.Instance != null && PlayerHand.Instance.ActiveItem != null)
+            PlayerHand.Instance.ActiveItem.Unhide();
+
+        if (PlayerController.Instance != null && PlayerController.Instance.IsAlive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        if (gameObject.activeSelf)
+            gameObject.SetActive(false);
     }
 
     private void EnablePuzzleCursor()

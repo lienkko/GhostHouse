@@ -175,16 +175,16 @@ public class PipeTile : MonoBehaviour
         switch (_pipeType)
         {
             case PipeType.End:
-                return UpMask;
+                return RightMask;
 
             case PipeType.Straight:
                 return UpMask | DownMask;
 
             case PipeType.Corner:
-                return UpMask | RightMask;
+                return DownMask | LeftMask;
 
             case PipeType.Tee:
-                return UpMask | RightMask | LeftMask;
+                return RightMask | DownMask | LeftMask;
 
             default:
                 return 0;
