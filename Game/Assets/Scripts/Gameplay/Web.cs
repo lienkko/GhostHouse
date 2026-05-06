@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class Web : MonoBehaviour
 {
-    [SerializeField] private float webSpeed = 1.1f;
-    [SerializeField] private float normalSpeed = 4f;
+    private readonly float webSpeed = 1f;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         var player = other.GetComponent<PlayerController>();
         if (!player) return;
-
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider.offset = new Vector2(0, 0);
+        boxCollider.size = new Vector2(1.8f, 1.8f);
         if (TryBurn(player)) return;
 
         player.ChangeSpeed(webSpeed);
@@ -20,7 +22,7 @@ public class Web : MonoBehaviour
     {
         var player = other.GetComponent<PlayerController>();
         if (!player) return;
-
+        FindFirstObjectByType<Spider>().Trigger(transform.position);
         TryBurn(player);
     }
 
@@ -29,7 +31,10 @@ public class Web : MonoBehaviour
         var player = other.GetComponent<PlayerController>();
         if (!player) return;
 
-        player.ChangeSpeed(normalSpeed);
+        player.ReturnSpeedToNormal();
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider.offset = new Vector2(0, 0);
+        boxCollider.size = new Vector2(0.7f, 0.7f);
     }
 
     private bool TryBurn(PlayerController player)
@@ -42,7 +47,7 @@ public class Web : MonoBehaviour
         var light = candle.GetComponent<Light2D>();
         if (light == null || !light.enabled) return false;
 
-        player.ChangeSpeed(normalSpeed);
+        player.ReturnSpeedToNormal();
         Destroy(gameObject);
         return true;
     }

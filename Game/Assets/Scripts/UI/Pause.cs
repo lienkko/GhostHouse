@@ -31,7 +31,7 @@ public class Pause : MonoBehaviour
             Settings();
             return;
         }
-        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle && !TreasureChest.IsInPuzzle)
+        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle && !TreasureChest.IsInPuzzle && !Sign.IsSignOpened)
         {
             if (IsPaused)
                 ResumeGame();
@@ -47,6 +47,7 @@ public class Pause : MonoBehaviour
         _pauseWindow.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         GameManager.Instance.BlockPlayer(true);
+        GameManager.Instance.BGAudioSource.Pause();
         OnPause?.Invoke();
     }
     private void ResumeGame()
@@ -57,6 +58,7 @@ public class Pause : MonoBehaviour
         if (PlayerController.Instance.IsAlive)
             Cursor.lockState = CursorLockMode.Locked;
         GameManager.Instance.BlockPlayer(false);
+        GameManager.Instance.BGAudioSource.UnPause();
         OnResume?.Invoke();
     }
 

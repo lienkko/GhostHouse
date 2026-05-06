@@ -7,7 +7,6 @@ public class KeyCloset : MonoBehaviour
     private Light2D _keyLight;
     public void Initialize()
     {
-        Debug.Log(gameObject.name);
         Interactive closetInteractive = GetComponent<Interactive>();
         closetInteractive.isInteractive = true;
         closetInteractive.SetListener(TakeKey);

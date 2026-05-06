@@ -13,16 +13,18 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioClip _blinkLightsSound;
     public AudioSource GMAudioSource { get; private set; }
+    [SerializeField] private AudioSource _bgAudioSource;
+    public AudioSource BGAudioSource => _bgAudioSource;
 
 
     [SerializeField] private bool _testMode;
-
+    [SerializeField] private GameObject _flashlightPrefab;
 
     private bool _inGame = false;
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
 
-    public bool CanUseKeyboard {get; private set;}
+    public bool CanUseKeyboard { get; private set; }
 
 
     private void Awake()
@@ -158,6 +160,9 @@ public class GameManager : MonoBehaviour
             GetComponent<Interactive>().isInteractive = true;
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
+        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        Inventory.Instance.PickUp(flashlight.GetComponent<Item>());
+        flashlight.SetActive(false);
     }
 
 
@@ -168,6 +173,16 @@ public class GameManager : MonoBehaviour
         GameUIFields.ButtonMenu.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
     }
+    public void EndGame()
+    {
+        GameUIFields.WinnerText.SetActive(true);
+        GameUIFields.ButtonRestartGame.SetActive(true);
+        GameUIFields.ButtonMenu.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        BlockPlayer(true);
+        PlayerController.Instance.gameObject.SetActive(false);
+    }
+
 
     private void ChangeHp(int dmg, int hp)
     {

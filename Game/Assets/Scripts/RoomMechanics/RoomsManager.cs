@@ -27,14 +27,19 @@ public class RoomsManager : MonoBehaviour
     [Space(5)]
     [Header("Префаб сейфа")]
     [SerializeField] private GameObject _safePrefab;
-
+    [Space(5)]
+    [Header("Префаб сундука")]
+    [SerializeField] private GameObject _chestPrefab;
+    [Space(5)]
+    [Header("Префаб руки")]
+    [SerializeField] private GameObject _handPrefab;
     [Space(5)]
     [Header("Пустой объект для комнат")]
     [SerializeField] private Transform _roomsParentObject;
 
-    private int _roomNumber = 24;
-    private readonly float _northEntryOffset = -1.0f;
-    private readonly float _southEntryOffset = 1.0f;
+    private int _roomNumber = 1;
+    private readonly float _northEntryOffset = 0;
+    private readonly float _southEntryOffset = 0;
 
     public GameObject CurrentRoom { get; private set; }
 
@@ -60,10 +65,9 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
-        Debug.Log(_roomNumber);
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
-        if (_roomNumber == 25)
+        if (_roomNumber == 26)
         {
             isBossSpiderRoom = true;
         }
@@ -116,7 +120,32 @@ public class RoomsManager : MonoBehaviour
                     SpawnFakeDoor(roomData, remainingPoints[Random.Range(0, remainingPoints.Count)]);
                 }
             }
+
             // ------------------------------------------------------------------------------------------------ //
+            bool willSpawnChest = Random.Range(1, 11) > 7;
+            if (willSpawnChest && (roomData.AvailableSafeSpawns.Count > 0))
+            {
+                SpawnChest(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Count)]);
+            }
+            bool willSpawnHand = Random.Range(1, 11) > 7;
+            if (willSpawnHand)
+            {
+                switch (oppositeSide)
+                {
+                    case DoorSide.North:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointBot);
+                        break;
+                    case DoorSide.South:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointTop);
+                        break;
+                    case DoorSide.West:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointRight);
+                        break;
+                    case DoorSide.East:
+                        SpawnHand(roomData.PreviousRoomDoor.HandSpawnPointLeft);
+                        break;
+                }
+            }
         }
         else
         {
@@ -182,7 +211,9 @@ public class RoomsManager : MonoBehaviour
 
         if (willSpawnSafe)
         {
-            SpawnSafe(roomData.AvailableSafeSpawns[Random.Range(0, roomData.AvailableSafeSpawns.Length)], dc);
+            int safeSpawnPointNum = Random.Range(0, roomData.AvailableSafeSpawns.Count);
+            SpawnSafe(roomData.AvailableSafeSpawns[safeSpawnPointNum], dc);
+            roomData.AvailableSafeSpawns.RemoveAt(safeSpawnPointNum);
         }
         return dc;
     }
@@ -192,6 +223,18 @@ public class RoomsManager : MonoBehaviour
         if (_safePrefab == null) return;
         GameObject safeObject = Instantiate(_safePrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
         safeObject.GetComponent<Safe>().Initialize(spawnPoint.tag, door);
+    }
+    private void SpawnChest(Transform spawnPoint)
+    {
+        if (_chestPrefab == null) return;
+        Instantiate(_chestPrefab, spawnPoint.position, Quaternion.identity, CurrentRoom.transform);
+    }
+    private void SpawnHand(Transform spawnPoint)
+    {
+        if (_handPrefab == null) return;
+        GameObject hand = Instantiate(_handPrefab, Vector3.zero, Quaternion.identity, spawnPoint);
+        hand.transform.SetParent(spawnPoint);
+        hand.transform.localPosition = Vector3.zero;
     }
 
     public void SetPlayerPositionWithOffset(Vector3 doorPosition, DoorSide entrySide)
@@ -251,7 +294,7 @@ public class RoomsManager : MonoBehaviour
     private void SetKeyClosets(RoomData roomData)
     {
         List<GameObject> keyClosets = roomData.Closets.ToList();
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 10; i++)
         {
             int closetIndex = Random.Range(0, keyClosets.Count);
             keyClosets[closetIndex].GetComponent<KeyCloset>().Initialize();

@@ -7,10 +7,12 @@ public class PlayerInteract : MonoBehaviour
 
     private Interactive _hideSpotInteractive;
     private Interactive _doorInteractive;
+    private Interactive _chestInteractive;
     private Interactive _safeInteractive;
     private Interactive _ghostInteractive;
     private Interactive _itemInteractive;
     private Interactive _keyClosetInteractive;
+    private Interactive _signInteractive;
 
     private Interactive _swappingInteractive;
 
@@ -24,10 +26,12 @@ public class PlayerInteract : MonoBehaviour
 
     private bool CanHide() { return GameManager.Instance.CanUseKeyboard && _hideSpotInteractive && _hideSpotInteractive.isInteractive; }
     private bool CanOpenSafe() { return GameManager.Instance.CanUseKeyboard && _safeInteractive && _safeInteractive.isInteractive; }
+    private bool CanOpenChest() { return GameManager.Instance.CanUseKeyboard && _chestInteractive && _chestInteractive.isInteractive; }
     private bool CanOpedDoor() { return GameManager.Instance.CanUseKeyboard && _doorInteractive && _doorInteractive.isInteractive; }
     private bool CanStartGame() { return GameManager.Instance.CanUseKeyboard && _ghostInteractive && _ghostInteractive.isInteractive; }
     private bool CanPickUp() { return GameManager.Instance.CanUseKeyboard && _itemInteractive; }
     private bool CanTakeKey() { return GameManager.Instance.CanUseKeyboard && _keyClosetInteractive; }
+    private bool CanReadSign() { return GameManager.Instance.CanUseKeyboard && _signInteractive; }
 
     private void Update()
     {
@@ -48,9 +52,19 @@ public class PlayerInteract : MonoBehaviour
             _keyClosetInteractive.Interact();
             return;
         }
+        if (Input.GetKeyDown(KeyCode.E) && CanReadSign())
+        {
+            _signInteractive.Interact();
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.E) && CanOpenSafe())
         {
             _safeInteractive.Interact();
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.E) && CanOpenChest())
+        {
+            _chestInteractive.Interact();
             return;
         }
         if (Input.GetKeyDown(KeyCode.E) && CanOpedDoor())
@@ -77,8 +91,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 _itemInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeItemText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<HideSpot>() && interactive.isInteractive)
@@ -92,13 +105,26 @@ public class PlayerInteract : MonoBehaviour
             {
                 _keyClosetInteractive = interactive;
                 if (Hints)
-                    //!!!!!!!!!!!!!!!!!!
-                    GameManager.Instance.GameUIFields.HideText.SetActive(true);
+                    GameManager.Instance.GameUIFields.TakeKeyText.SetActive(true);
+                return;
+            }
+            if (collision.GetComponent<Sign>() && interactive.isInteractive)
+            {
+                _signInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.ReadSignText.SetActive(true);
                 return;
             }
             if (collision.GetComponent<Safe>() && interactive.isInteractive)
             {
                 _safeInteractive = interactive;
+                if (Hints)
+                    GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
+                return;
+            }
+            if (collision.GetComponent<TreasureChest>() && interactive.isInteractive)
+            {
+                _chestInteractive = interactive;
                 if (Hints)
                     GameManager.Instance.GameUIFields.OpenSafeText.SetActive(true);
                 return;
@@ -131,7 +157,7 @@ public class PlayerInteract : MonoBehaviour
         {
             if (collision.GetComponent<Item>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
                 _itemInteractive = null;
             }
             if (collision.GetComponent<HideSpot>())
@@ -142,14 +168,26 @@ public class PlayerInteract : MonoBehaviour
             }
             if (collision.GetComponent<KeyCloset>())
             {
-                GameManager.Instance.GameUIFields.HideText.SetActive(false);
+                GameManager.Instance.GameUIFields.TakeKeyText.SetActive(false);
                 _keyClosetInteractive = null;
+
+            }
+            if (collision.GetComponent<Sign>())
+            {
+                GameManager.Instance.GameUIFields.ReadSignText.SetActive(false);
+                _signInteractive = null;
 
             }
             if (collision.GetComponent<Safe>())
             {
                 GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
                 _safeInteractive = null;
+
+            }
+            if (collision.GetComponent<TreasureChest>())
+            {
+                GameManager.Instance.GameUIFields.OpenSafeText.SetActive(false);
+                _chestInteractive = null;
 
             }
             if (collision.GetComponent<DoorController>())

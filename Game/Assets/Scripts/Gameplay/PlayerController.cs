@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -18,21 +19,14 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
-    public int HealthPoints { get; private set; } = 40;
+    public int HealthPoints { get; private set; } = 100;
     public float LastHorizontalVector { get; private set; }
     public Vector3 DeltaMove { get; private set; } = Vector3.zero;
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
     private float _walkSpeedValue = 4;
-
-    // ------ Boss Spider prefs ------
-
-
-
-
-
-    // -------------------------------
+    private float _normalSpeed = 4f;
 
 
     private void Awake()
@@ -40,6 +34,8 @@ public class PlayerController : MonoBehaviour
         Instance = this;
         _lastPos = transform.position;
         _playerRB = GetComponent<Rigidbody2D>();
+        IsAlive = true;
+        HealthPoints = 100;
     }
 
     private void Update()
@@ -49,7 +45,12 @@ public class PlayerController : MonoBehaviour
         if (CanWalk)
             InputMovement();
         if (HealthPoints == 0)
-            Die();
+        {
+            if (Hand.IsPlayerTrapped)
+                StartCoroutine(Die(1.2f, false));
+            else
+                StartCoroutine(Die());
+        }
     }
 
     private void FixedUpdate()
@@ -67,6 +68,19 @@ public class PlayerController : MonoBehaviour
         return _walkSpeedValue;
 
     }
+    public float ChangeNormalSpeed(float value)
+    {
+        if (value < 1 || value > 8)
+            return -1;
+        _normalSpeed = value;
+        return _normalSpeed;
+
+    }
+    public void ReturnSpeedToNormal()
+    {
+        _walkSpeedValue = _normalSpeed;
+    }
+    public float GetNormalSpeed => _walkSpeedValue;
 
     private void InputMovement()
     {
@@ -124,10 +138,12 @@ public class PlayerController : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    private void Die()
+    private IEnumerator Die(float time = 0, bool hidePlayer = true)
     {
+        yield return new WaitForSeconds(time);
         IsAlive = false;
+        if (hidePlayer)
+            gameObject.SetActive(false);
         OnDeath?.Invoke();
-        gameObject.SetActive(false);
     }
 }
