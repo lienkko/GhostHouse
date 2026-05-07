@@ -18,10 +18,8 @@ public class SpiderBossManager : MonoBehaviour
     {
         _enterDoor = EnterDoor;
         _exitDoor = ExitDoor;
-        _enterDoor.isDoorLocked = true;
-        _exitDoor.isDoorLocked = true;
-        _enterDoor.GetComponent<Interactive>().isInteractive = false;
-        _exitDoor.GetComponent<Interactive>().isInteractive = false;
+        _enterDoor.LockDoor();
+        _exitDoor.LockDoor();
     }
     public void AddKey()
     {
@@ -35,8 +33,7 @@ public class SpiderBossManager : MonoBehaviour
     }
     private void OpenDoor()
     {
-        _exitDoor.isDoorLocked = false;
-        _exitDoor.GetComponent<Interactive>().isInteractive = true;
+        _exitDoor.UnlockDoor();
     }
     private bool IsPlayerRunning()
     {
