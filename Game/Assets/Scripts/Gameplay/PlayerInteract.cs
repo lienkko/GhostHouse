@@ -20,7 +20,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (_interactiveObj != null)
         {
-            if (Input.GetKeyDown(_interactiveObj.KeyToInteract))
+            if (Input.GetKeyDown(_interactiveObj.KeyToInteract) && _interactiveObj.CanInteract())
             {
                 _interactiveObj.Interact();
                 return;
@@ -33,13 +33,14 @@ public class PlayerInteract : MonoBehaviour
     {
         if (collision.TryGetComponent<IInteractive>(out var interactive))
         {
-            _interactiveObj = interactive;
+
             if ((interactive is DoorController dc) && (dc.isDoorLocked || !dc.IsInteractive))
             {
                 GameManager.Instance.GameUIFields.LockedImage.SetActive(true);
             }
             else if (interactive.IsInteractive)
             {
+                _interactiveObj = interactive;
                 if (Hints)
                 {
                     GameManager.Instance.GameUIFields.HintFieldText.SetActive(true);

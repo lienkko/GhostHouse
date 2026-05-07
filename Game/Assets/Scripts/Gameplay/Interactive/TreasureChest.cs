@@ -98,7 +98,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
         yield return null;
         IsInteractive = !state;
         IsInPuzzle = state;
-        GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
+        GameManager.Instance.GameUIFields.HintFieldText.SetActive(!state);
     }
 
     private void ChestOnResume()

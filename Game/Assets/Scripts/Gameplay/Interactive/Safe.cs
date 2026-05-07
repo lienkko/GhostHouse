@@ -120,10 +120,11 @@ public class Safe : MonoBehaviour, IInteractive
 
     private IEnumerator SwitchIsInPuzzle(bool state)
     {
+
         yield return null;
-        IsInteractive = false;
+        IsInteractive = !state;
         IsInPuzzle = state;
-        GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
+        GameManager.Instance.GameUIFields.HintFieldText.SetActive(!state);
     }
 
     private void SafeOnResume()

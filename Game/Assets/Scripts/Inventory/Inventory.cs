@@ -36,6 +36,8 @@ public class Inventory : MonoBehaviour
     }
     private void UseDropActiveItemHandle()
     {
+        if (!_activeItem)
+            return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             UseActiveItem();
@@ -97,6 +99,29 @@ public class Inventory : MonoBehaviour
         {
             InventoryWin.FlashLightSliderAppear(chargeableItem);
         }
+        ChangeAnimation();
+    }
+    private void ChangeAnimation()
+    {
+        if (_activeItem)
+        {
+            if (_activeItem is Flashlight)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.FlashLight);
+            }
+            else if (_activeItem is BigBob)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.BigBob);
+            }
+            else if (_activeItem is Candle)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.Candle);
+            }
+        }
+        else
+        {
+            PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.Nothing);
+        }
     }
     private void ShutDownSlot()
     {
@@ -108,6 +133,7 @@ public class Inventory : MonoBehaviour
         }
         _activeItem.Hide();
         _activeItem = null;
+        ChangeAnimation();
     }
     private bool AddItem(InventoryItem item)
     {
