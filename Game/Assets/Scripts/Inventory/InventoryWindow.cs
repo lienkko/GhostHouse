@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class InventoryWindow : MonoBehaviour
 {
     [SerializeField] private Inventory _inventory;
@@ -27,7 +28,7 @@ public class InventoryWindow : MonoBehaviour
                 _inventoryIcons[i].gameObject.SetActive(false);
             else
             {
-                _inventoryIcons[i].sprite = item.GetIcon();
+                _inventoryIcons[i].sprite = item.GetIcon;
                 _inventoryIcons[i].gameObject.SetActive(true);
             }
         }
@@ -39,7 +40,7 @@ public class InventoryWindow : MonoBehaviour
     }
     public void FlashLightSliderAppear(IChargeableItem chargeableItem)
     {
-        if (chargeableItem.ItemObj is FlashlightItem)
+        if (chargeableItem.ItemObj is Flashlight)
         {
             _flashLightSlider.transform.Find("Background").GetComponent<Image>().sprite = _flashlightSliderBG;
             _flashLightSlider.transform.Find("Fill Area/Fill").GetComponent<Image>().color = new Color32(17, 170, 0, 255);

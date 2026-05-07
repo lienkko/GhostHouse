@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(PlayerHand))]
 public class Inventory : MonoBehaviour
 {
     public static Inventory Instance { get; private set; }
     [SerializeField] private InventoryWindow _inventoryWin;
     public InventoryWindow InventoryWin { get { return _inventoryWin; } }
-    private Item _emptyItem;
-    public List<Item> InventoryItems { get; private set; }
+    private InventoryItem _emptyItem;
+    private InventoryItem _activeItem;
+    public List<InventoryItem> InventoryItems { get; private set; }
     private uint _size = 0;
     private int _activeSlot = 0;
     public readonly uint MaxSize = 4;
@@ -19,16 +21,34 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _emptyItem = new GameObject("emptyItem").AddComponent<Item>();
+        _emptyItem = new GameObject("emptyItem").AddComponent<Empty>();
         _emptyItem.gameObject.SetActive(false);
-        InventoryItems = new List<Item>();
+        InventoryItems = new List<InventoryItem>();
         for (int i = 0; i < MaxSize; i++)
             InventoryItems.Add(_emptyItem);
     }
     private void Update()
     {
-        if (!GameManager.Instance.CanUseKeyboard)
+        if (!GameManager.CanUseKeyboard)
             return;
+        UseDropActiveItemHandle();
+        ChangeSlotHandle();
+    }
+    private void UseDropActiveItemHandle()
+    {
+        if (!_activeItem)
+            return;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            UseActiveItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            DropActiveItem();
+        }
+    }
+    private void ChangeSlotHandle()
+    {
         if (Input.GetKeyDown(KeyCode.Alpha1))
             ChangeActiveSlot(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -38,30 +58,84 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha4))
             ChangeActiveSlot(4);
         OnAddition?.Invoke();
-        return;
+    }
+    public bool PickUp(InventoryItem item, bool isUsable)
+    {
+        if (!isUsable)
+        {
+            item.Use();
+            Destroy(item.gameObject);
+            return false;
+        }
+        bool wasAdded = AddItem(item);
+        if (wasAdded)
+        {
+            item.transform.SetParent(transform);
+            item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
+            OnAddition?.Invoke();
+        }
+        return wasAdded;
     }
 
     private void ChangeActiveSlot(int index)
     {
         if (_activeSlot == index)
         {
-            ShutDownSlot(index);
+            ShutDownSlot();
             return;
         }
         if (InventoryItems[index - 1] == _emptyItem)
             return;
         if (_activeSlot != 0)
-            ShutDownSlot(_activeSlot);
-        _activeSlot = index;
-        GetComponent<PlayerHand>().TakeItem(InventoryItems[index - 1]);
+            ShutDownSlot();
+        SetActiveSlot(index);
     }
-    private void ShutDownSlot(int index)
+    private void SetActiveSlot(int index)
     {
-        InventoryItems[index - 1].Hide();
-        _activeSlot = 0;
-        GetComponent<PlayerHand>().HideItem();
+        _activeSlot = index;
+        _activeItem = InventoryItems[index - 1];
+        _activeItem.Show();
+        if (_activeItem is IChargeableItem chargeableItem)
+        {
+            InventoryWin.FlashLightSliderAppear(chargeableItem);
+        }
+        ChangeAnimation();
     }
-    private bool AddItem(Item item)
+    private void ChangeAnimation()
+    {
+        if (_activeItem)
+        {
+            if (_activeItem is Flashlight)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.FlashLight);
+            }
+            else if (_activeItem is BigBob)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.BigBob);
+            }
+            else if (_activeItem is Candle)
+            {
+                PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.Candle);
+            }
+        }
+        else
+        {
+            PlayerAnimator.ChangeAnimState(PlayerAnimator.AnimStates.Nothing);
+        }
+    }
+    private void ShutDownSlot()
+    {
+        _activeItem.Hide();
+        _activeSlot = 0;
+        if (_activeItem is IChargeableItem)
+        {
+            InventoryWin.FlashLightSliderDisappear();
+        }
+        _activeItem.Hide();
+        _activeItem = null;
+        ChangeAnimation();
+    }
+    private bool AddItem(InventoryItem item)
     {
         if ((_size == MaxSize) && (_activeSlot == 0))
             return false;
@@ -87,6 +161,7 @@ public class Inventory : MonoBehaviour
         _size++;
         return true;
     }
+
     private void DeleteItem(int index)
     {
         InventoryItems[index] = _emptyItem;
@@ -96,20 +171,34 @@ public class Inventory : MonoBehaviour
     {
         if (_activeSlot == 0)
             return;
-        InventoryItems[_activeSlot - 1].transform.position = gameObject.transform.position;
-        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
         InventoryItems[_activeSlot - 1].Hide();
-        InventoryItems[_activeSlot - 1].gameObject.SetActive(true);
-        InventoryItems[_activeSlot - 1].GetComponent<Interactive>().isInteractive = true;
-        InventoryItems[_activeSlot - 1].transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
-        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingLayerName = "Default";
-        InventoryItems[_activeSlot - 1].GetComponent<SpriteRenderer>().sortingOrder = 0;
-
+        CollectableItem colItem = InventoryItems[_activeSlot - 1].GetCollectableItem;
+        colItem.transform.SetParent(RoomsManager.Instance.CurrentRoom.transform);
+        colItem.transform.position = transform.position;
+        colItem.ShowItem();
         DeleteItem(_activeSlot - 1);
-        _activeSlot = 0;
-
+        ShutDownSlot();
     }
-    public Item GetEmptyItem()
+    public void HideActiveItem()
+    {
+        if (_activeItem != null)
+            _activeItem.Hide();
+    }
+    public void ShowActiveItem()
+    {
+        if (_activeItem != null)
+            _activeItem.Show();
+    }
+    private void UseActiveItem()
+    {
+        var item = _activeItem;
+        if (!_activeItem.CanKeep)
+        {
+            DropActiveItem();
+        }
+        item.Use();
+    }
+    public InventoryItem GetEmptyItem()
     {
         return _emptyItem;
     }
@@ -122,28 +211,18 @@ public class Inventory : MonoBehaviour
     {
         return _size;
     }
-    public bool PickUp(Item item)
+    public bool ActiveSlotIsBurningCandle()
     {
-        if (!item.IsCollectable)
-        {
-            if (item.UseAndDestroy())
-            {
-                Destroy(item.gameObject);
-            }
-            return false;
-        }
-        bool wasAdded = AddItem(item);
-        if (wasAdded)
-            item.GetComponent<SpriteRenderer>().sortingLayerName = "Layer For Player";
-        item.GetComponent<SpriteRenderer>().sortingOrder = 11;
-        item.transform.SetParent(transform);
-        item.transform.localPosition = new Vector3(0.1f, 0.5f, 0);
-        GameManager.Instance.GameUIFields.TakeItemText.SetActive(false);
-        OnAddition?.Invoke();
-        return wasAdded;
+        var candle = _activeItem as Candle;
+        if (candle == null) return false;
+
+        var light = candle.GetComponent<Light2D>();
+        if (light == null || !light.enabled) return false;
+
+        return true;
     }
 
-    public Item GetItem(int index)
+    public InventoryItem GetItem(int index)
     {
         return InventoryItems[index];
     }

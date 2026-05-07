@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 583069119188711422}
   - component: {fileID: 6734100488830735182}
   - component: {fileID: 2901921570714354967}
-  - component: {fileID: -5313465595518102647}
   - component: {fileID: 2969778395239986934}
   m_Layer: 0
   m_Name: ClosetBotRight
@@ -184,19 +183,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.5992951, y: 2.4375}
   m_EdgeRadius: 0
---- !u!114 &-5313465595518102647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 583069119188711421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25afff67658c27439ea3a9700c05b89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isInteractive: 0
 --- !u!114 &2969778395239986934
 MonoBehaviour:
   m_ObjectHideFlags: 0

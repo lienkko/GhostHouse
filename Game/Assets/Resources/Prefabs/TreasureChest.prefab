@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8912884197833750859}
   - component: {fileID: 8912884197833750858}
   - component: {fileID: 8912884197833750902}
-  - component: {fileID: 8912884197833750903}
   - component: {fileID: 8912884197833750896}
   - component: {fileID: -8965800421803854478}
   m_Layer: 0
@@ -137,19 +136,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2227788, y: 0.7505305}
   m_EdgeRadius: 0
---- !u!114 &8912884197833750903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8912884197833750857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25afff67658c27439ea3a9700c05b89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isInteractive: 0
 --- !u!114 &8912884197833750896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,8 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _openedChestSprite: {fileID: -1536460600, guid: 1006b938c5d4c4f488f50bb38e378f96, type: 3}
-  _batteryPrefab: {fileID: 6047510260336526986, guid: 543288c700a0e924f9ee80fe989295e3, type: 3}
-  _bigBobPrefab: {fileID: 6047510260336526986, guid: c5c2a2b77b884f243b3f30f6bb2c5a29, type: 3}
+  _batteryPrefab: {fileID: 6047510260336526986, guid: bbd2548e362191e469e4e9b8694230a5, type: 3}
+  _bigBobPrefab: {fileID: 6047510260336526986, guid: 3d2dd130e389fa440a6c933bfd8d0a72, type: 3}
 --- !u!61 &-8965800421803854478
 BoxCollider2D:
   m_ObjectHideFlags: 0
