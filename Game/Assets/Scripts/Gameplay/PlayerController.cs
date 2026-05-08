@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         DeltaMove = transform.position - _lastPos;
         _lastPos = transform.position;
-        if (CanWalk)
+        if (CanWalk && GameManager.CanUseKeyboard)
             InputMovement();
         if (HealthPoints == 0)
         {
