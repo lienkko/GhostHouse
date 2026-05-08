@@ -407,6 +407,10 @@ MonoBehaviour:
   AnimatedTarget: {fileID: 2044197440}
   LayerIndex: 0
   Instructions:
+  - FullHash: 1432961145
+    Camera: {fileID: 1140321968}
+    ActivateAfter: 0
+    MinDuration: 0
   - FullHash: 81563449
     Camera: {fileID: 1140321968}
     ActivateAfter: 0
@@ -415,21 +419,11 @@ MonoBehaviour:
     Camera: {fileID: 1979979444}
     ActivateAfter: 0
     MinDuration: 0
-  - FullHash: 81563449
-    Camera: {fileID: 1140321968}
-    ActivateAfter: 0
-    MinDuration: 0
   - FullHash: 704852230
     Camera: {fileID: 1111356189}
     ActivateAfter: 0
     MinDuration: 0
   HashOfParent:
-  - Hash: 1432961145
-    HashOfParent: 756556552
-  - Hash: 81563449
-    HashOfParent: 756556552
-  - Hash: -2065082259
-    HashOfParent: 756556552
   - Hash: 704852230
     HashOfParent: 756556552
   - Hash: 113385647
@@ -440,6 +434,42 @@ MonoBehaviour:
     HashOfParent: 756556552
   - Hash: -1560527724
     HashOfParent: 756556552
+  - Hash: 1432961145
+    HashOfParent: 756556552
+  - Hash: 178069618
+    HashOfParent: 1432961145
+  - Hash: 919650705
+    HashOfParent: 1432961145
+  - Hash: 964553293
+    HashOfParent: 1432961145
+  - Hash: -480368893
+    HashOfParent: 1432961145
+  - Hash: 1717234592
+    HashOfParent: 1432961145
+  - Hash: 81563449
+    HashOfParent: 756556552
+  - Hash: 1304435141
+    HashOfParent: 81563449
+  - Hash: -778275695
+    HashOfParent: 81563449
+  - Hash: -567189683
+    HashOfParent: 81563449
+  - Hash: 1114205226
+    HashOfParent: 81563449
+  - Hash: 1723705109
+    HashOfParent: 81563449
+  - Hash: -2065082259
+    HashOfParent: 756556552
+  - Hash: 2041964879
+    HashOfParent: -2065082259
+  - Hash: 1493175952
+    HashOfParent: -2065082259
+  - Hash: 1454187852
+    HashOfParent: -2065082259
+  - Hash: -1658574643
+    HashOfParent: -2065082259
+  - Hash: 288492537
+    HashOfParent: -2065082259
   m_LegacyLookAt: {fileID: 0}
   m_LegacyFollow: {fileID: 0}
 --- !u!1 &34864061
@@ -2901,6 +2931,8 @@ MonoBehaviour:
   - {fileID: 5569701789731649767, guid: d1eef1327f584404faf4c21cf06e524d, type: 3}
   - {fileID: 8103860337959506060, guid: 02c6c521b930ea6438b15bebf6731f52, type: 3}
   - {fileID: 7788039770513656768, guid: e3cc309b1420c7b4d86c74adf55067cc, type: 3}
+  - {fileID: 4759157274855943110, guid: 9c1adc79d823ba64ea52d0e07b5b9d2c, type: 3}
+  - {fileID: 5969910197876881971, guid: 8567ef97314649c47b72122f13dc40f7, type: 3}
   _bossSpiderRoomPrefab: {fileID: 5511730685514120321, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
@@ -4983,7 +5015,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 95.55
+  m_fontSize: 133.5
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
