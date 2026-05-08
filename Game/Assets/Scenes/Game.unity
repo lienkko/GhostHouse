@@ -2931,6 +2931,8 @@ MonoBehaviour:
   - {fileID: 5569701789731649767, guid: d1eef1327f584404faf4c21cf06e524d, type: 3}
   - {fileID: 8103860337959506060, guid: 02c6c521b930ea6438b15bebf6731f52, type: 3}
   - {fileID: 7788039770513656768, guid: e3cc309b1420c7b4d86c74adf55067cc, type: 3}
+  - {fileID: 4759157274855943110, guid: 9c1adc79d823ba64ea52d0e07b5b9d2c, type: 3}
+  - {fileID: 5969910197876881971, guid: 8567ef97314649c47b72122f13dc40f7, type: 3}
   _bossSpiderRoomPrefab: {fileID: 5511730685514120321, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
