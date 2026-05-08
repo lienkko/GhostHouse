@@ -27,6 +27,10 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < MaxSize; i++)
             InventoryItems.Add(_emptyItem);
     }
+    private void Start()
+    {
+        ChangeAnimation();
+    }
     private void Update()
     {
         if (!GameManager.CanUseKeyboard)
@@ -101,7 +105,7 @@ public class Inventory : MonoBehaviour
         }
         ChangeAnimation();
     }
-    private void ChangeAnimation()
+    public void ChangeAnimation()
     {
         if (_activeItem)
         {
