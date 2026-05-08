@@ -3,20 +3,17 @@ using System.Collections;
 
 public class BloodCleanerBossManager : MonoBehaviour
 {
-    [Header("Настройка врага")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private GameObject _bossPrefab;
 
-    [Header("Таймер спавна")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private bool _spawnOnRoomEnter = true;
     [SerializeField] private float _spawnDelay = 5f;
 
     public static BloodCleanerBossManager Instance;
     private BloodCleaner _bloodCleanerBoss;
     private Coroutine _spawnCoroutine;
-    private bool _isSpawning = false;
-    private bool _isEnemyActive = false;
     private DoorController _enterDoor;
-    private DoorController _exitDoor;
 
     void Awake()
     {
@@ -28,7 +25,7 @@ public class BloodCleanerBossManager : MonoBehaviour
 
         if (_spawnOnRoomEnter)
         {
-            // Босс активируется через _spawnDelay после входа в комнату
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ _spawnDelay пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             StartSpawnTimer();
         }
     }
@@ -43,7 +40,6 @@ public class BloodCleanerBossManager : MonoBehaviour
 
     private IEnumerator SpawnWithDelay()
     {
-        _isSpawning = true;
 
         float timer = _spawnDelay;
         while (timer > 0)
@@ -53,7 +49,6 @@ public class BloodCleanerBossManager : MonoBehaviour
         }
 
         ActivateBoss();
-        _isSpawning = false;
     }
 
     private void ActivateBoss()
@@ -67,15 +62,12 @@ public class BloodCleanerBossManager : MonoBehaviour
             _bloodCleanerBoss.Activate();
         }
 
-        _isEnemyActive = true;
     }
 
     public void SetDoors(DoorController EnterDoor, DoorController ExitDoor)
     {
         _enterDoor = EnterDoor;
-        _exitDoor = ExitDoor;
-        _enterDoor.isDoorLocked = true;
-        _enterDoor.GetComponent<Interactive>().isInteractive = false;
+        _enterDoor.LockDoor(true);
     }
 
     public void DespawnEnemy()
@@ -85,7 +77,6 @@ public class BloodCleanerBossManager : MonoBehaviour
             Destroy(_bloodCleanerBoss);
             _bloodCleanerBoss = null;
         }
-        _isEnemyActive = false;
     }
 
     private void OnDisable()

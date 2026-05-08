@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Spider : MonoBehaviour
 {
-    private readonly float DistanceToKill = 2.2f;
+    private readonly float DistanceToKill = 2f;
     private readonly int NormalSpeed = 3;
     private readonly int TriggeredSpeed = 5;
     public NavMeshAgent Agent { get; private set; }
@@ -86,6 +86,7 @@ public class Spider : MonoBehaviour
     }
     public void Trigger(Vector3 target)
     {
+        StartCoroutine(SpiderBossManager.Instance.ActivateWarning());
         Agent.isStopped = false;
         Agent.SetDestination(target);
         Agent.speed = TriggeredSpeed;

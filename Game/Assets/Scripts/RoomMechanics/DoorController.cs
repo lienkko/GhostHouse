@@ -23,7 +23,7 @@ public class DoorController : MonoBehaviour, IInteractive
 
     [HideInInspector] public Transform TargetEntrySpawnPoint;
     [HideInInspector] public Transform ReturnTargetPoint;
-    [HideInInspector] public bool isDoorLocked = true;
+    [HideInInspector] public bool isDoorLocked = false;
 
     // ---- fake doors 23.03.2026 --- //
     private bool _isFakeDoor = false;
@@ -126,7 +126,7 @@ public class DoorController : MonoBehaviour, IInteractive
         if (isDoorLocked && !IsStartingDoor && !_leadsToPreviousRoom) return;
 
         GameObject currentRoomRoot = gameObject.transform.parent.gameObject;
-        if (_targetRoomNumber == 26)
+        if (_targetRoomNumber == 61)
         {
             GameManager.Instance.EndGame();
             return;

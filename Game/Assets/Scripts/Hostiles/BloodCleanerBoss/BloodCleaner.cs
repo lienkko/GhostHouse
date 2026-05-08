@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class BloodCleaner : MonoBehaviour
 {
-    [Header("Движение")]
-    [SerializeField] private float _speed = 2.5f;
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
+    [SerializeField] private float _speed = 3.5f;
     [SerializeField] private float _killDistance = 1f;
 
-    [Header("Обнаружение")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     [SerializeField] private float _detectionRange = 30f;
 
     private bool _isActive = true;
@@ -22,7 +22,7 @@ public class BloodCleaner : MonoBehaviour
     {
         if (!_isActive) return;
 
-        // Ничего не делает, пока открыта табличка с правилами
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (Sign.IsSignOpened) return;
 
         float distance = Vector2.Distance(transform.position, PlayerController.Instance.transform.position);

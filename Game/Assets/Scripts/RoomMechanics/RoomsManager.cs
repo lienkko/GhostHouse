@@ -68,7 +68,7 @@ public class RoomsManager : MonoBehaviour
         _roomNumber++;
         // ------ Boss Spider ------
         bool isBossSpiderRoom = false;
-        if (_roomNumber == 26)
+        if (_roomNumber == 61)
         {
             isBossSpiderRoom = true;
         }
@@ -76,7 +76,7 @@ public class RoomsManager : MonoBehaviour
 
         // --------------------------------- blood cleaner boss 30.04.2026 -------------------------------- //
         bool isBossBloodCleanerRoom = false;
-        if (_roomNumber == 3) // Номер для тестов, поменять 
+        if (_roomNumber == 21) // Номер для тестов, поменять 
         {
             isBossBloodCleanerRoom = true;
         }
@@ -117,7 +117,7 @@ public class RoomsManager : MonoBehaviour
                 SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
             }
             SetHideSpots(roomData);
-            if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
+            if (Random.Range(1, 21) > 15) GameManager.Instance.SummonWraith();
             // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
             if (Random.Range(1, 101) <= 20)
             {
