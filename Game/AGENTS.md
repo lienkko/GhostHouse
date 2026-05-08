@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-  - Name: CarpetedDoor1
-  - Tag: Untagged
+  - Name: ClosetBotRight
+  - Tag: BotRightPoint
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
