@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
 
-    public bool CanUseKeyboard { get; private set; }
+    public static bool CanUseKeyboard { get; private set; }
 
 
     private void Awake()
@@ -91,8 +91,6 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         GameUIFields = FindAnyObjectByType<GameUIFieldsGetter>();
-        if (Ghost.Instance)
-            Ghost.Instance.InteractiveInstance.SetListener(StartGame);
         PlayerController.Instance.OnDeath += Death;
         PlayerController.Instance.OnChangeHp += ChangeHp;
         ChangeHp(0, PlayerController.Instance.HealthPoints);
@@ -152,17 +150,14 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if (Ghost.Instance.InteractiveInstance.isInteractive == false)
-            return;
-        Ghost.Instance.InteractiveInstance.isInteractive = false;
         RoomsManager.Instance.CurrentRoom.
             GetComponent<RoomData>().NextRoomDoor.
-            GetComponent<Interactive>().isInteractive = true;
+            UnlockDoor();
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
-        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
-        Inventory.Instance.PickUp(flashlight.GetComponent<Item>());
-        flashlight.SetActive(false);
+        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<CollectableItem>();
+        Inventory.Instance.PickUp(flashlight.GetInventoryItem, true);
+        flashlight.HideItem();
     }
 
 

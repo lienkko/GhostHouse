@@ -39,13 +39,7 @@ public class Web : MonoBehaviour
 
     private bool TryBurn(PlayerController player)
     {
-        if (PlayerHand.Instance == null) return false;
-
-        var candle = PlayerHand.Instance.ActiveItem as CandleItem;
-        if (candle == null) return false;
-
-        var light = candle.GetComponent<Light2D>();
-        if (light == null || !light.enabled) return false;
+        if (!Inventory.Instance.ActiveSlotIsBurningCandle()) return false;
 
         player.ReturnSpeedToNormal();
         Destroy(gameObject);
