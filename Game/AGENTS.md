@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-  - Name: PuzzleRotationPuzzlePattern3
-  - Tag: Untagged
-  - Layer: UI
+  - Name: ClosetBotRight
+  - Tag: BotRightPoint
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
