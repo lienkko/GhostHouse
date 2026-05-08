@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Safe : MonoBehaviour, IInteractive
 {
-    private readonly string[] _puzzleNames = new string[] { /*"Circles", "Star",*/ "ColorSequence" };
+    private readonly string[] _puzzleNames = new string[] { "Circles", "Star", "ColorSequence" };
     public static bool IsInPuzzle { get; private set; } = false;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public string HintText { get; } = "Open - E";
