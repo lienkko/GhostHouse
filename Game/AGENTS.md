@@ -7,7 +7,7 @@
   - Layers:
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
-  - Name: ClosetBotRight
-  - Tag: BotRightPoint
+  - Name: Room5
+  - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

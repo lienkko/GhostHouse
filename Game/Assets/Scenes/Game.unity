@@ -2934,6 +2934,7 @@ MonoBehaviour:
   - {fileID: 4759157274855943110, guid: 9c1adc79d823ba64ea52d0e07b5b9d2c, type: 3}
   - {fileID: 5969910197876881971, guid: 8567ef97314649c47b72122f13dc40f7, type: 3}
   _bossSpiderRoomPrefab: {fileID: 5511730685514120321, guid: 5f9e8724b084052dbae8fe4041d09f41, type: 3}
+  _bossBloodCleanerRoomPrefab: {fileID: 1331013032420184348, guid: d938b9dbc7b7b4e47bf5f883775f7970, type: 3}
   _eastWestDoorPrefab: {fileID: 3876304005829112623, guid: 0965b6d60073ad348b3c20d203ff53e1, type: 3}
   _northDoorPrefab: {fileID: 3876304005829112623, guid: ff57617d8fee5944fb1ef16d8e1a2e67, type: 3}
   _southDoorPrefab: {fileID: 3876304005829112623, guid: 84161e873fc9895448be8ddbdbd780ea, type: 3}
@@ -5015,7 +5016,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 133.5
+  m_fontSize: 157
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1

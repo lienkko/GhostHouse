@@ -143,7 +143,7 @@ public class Inventory : MonoBehaviour
     {
         if ((_size == MaxSize) && (_activeSlot == 0))
             return false;
-        else if (_activeSlot != 0)
+        else if (_size == MaxSize && _activeSlot != 0)
         {
             int curSlot = _activeSlot;
             if (InventoryItems[_activeSlot - 1] != _emptyItem)
