@@ -23,6 +23,7 @@ public class Hand : MonoBehaviour
     {
         if (IsPlayerTrapped)
         {
+            GameManager.Instance.BlockPlayer(true);
             _trapLeftTime -= _trapSpeed * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space) && !Pause.IsPaused)
             {
