@@ -98,4 +98,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: FlashLight
-  _icon: {fileID: 21300000, guid: 2f2196b4ecdd8b74c892803ec6a38392, type: 3}
+  _icon: {fileID: 1542850246, guid: ba9fa38c514564e9ab053102441c15d4, type: 3}
