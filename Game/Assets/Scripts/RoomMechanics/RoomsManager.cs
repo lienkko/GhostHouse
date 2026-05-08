@@ -74,7 +74,7 @@ public class RoomsManager : MonoBehaviour
             isBossBloodCleanerRoom = true;
         }
         bool isBossFiendRoom = false;
-        if (_roomNumber == 3)
+        if (_roomNumber == 41)
         {
             isBossFiendRoom = true;
         }

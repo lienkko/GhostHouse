@@ -9,6 +9,7 @@
     - Default, TransparentFX, Ignore Raycast, Water, UI, Hostiles, Menu
 - Active game object:
   - Name: FiendManager
+  - Name: Safe
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
