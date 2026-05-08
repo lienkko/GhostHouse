@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2617b1668160ad04a9010a280718e718
+guid: 7b4e96de8bd1e7449bd5538550048ec3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 34
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: demon is crying 2_0
+      name: Dialogue_window_fiend_0
       rect:
         serializedVersion: 2
-        x: 44
+        x: 0
         y: 0
-        width: 120
-        height: 200
+        width: 1920
+        height: 269
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,96 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a28200195a538cc4eb9568d5864dc127
-      internalID: 525534025
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: demon is crying 2_1
-      rect:
-        serializedVersion: 2
-        x: 244
-        y: 0
-        width: 120
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a2ab94c23f1ff8544a94b54920a298cd
-      internalID: -612260889
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: demon is crying 2_2
-      rect:
-        serializedVersion: 2
-        x: 444
-        y: 0
-        width: 120
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d0602a1e7124e70498ba61354ecad04c
-      internalID: -858877305
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: demon is crying 2_3
-      rect:
-        serializedVersion: 2
-        x: 644
-        y: 0
-        width: 120
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 49254f15604d81e40aee8b9a9d50e1d5
-      internalID: -1651105237
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: demon is crying 2_4
-      rect:
-        serializedVersion: 2
-        x: 844
-        y: 0
-        width: 120
-        height: 200
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 41dbf568309aeff4a9544064a1f5b23a
-      internalID: 2025243095
+      spriteID: 8089798f758228845b6f8bd75993ac59
+      internalID: 234947035
       vertices: []
       indices: 
       edges: []
@@ -210,7 +122,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 296599676fe23814a8a54016e309f637
+    spriteID: d13433d486bbe6b4c8907a30e2bd7125
     internalID: 0
     vertices: []
     indices: 
@@ -220,11 +132,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      demon is crying 2_0: 525534025
-      demon is crying 2_1: -612260889
-      demon is crying 2_2: -858877305
-      demon is crying 2_3: -1651105237
-      demon is crying 2_4: 2025243095
+      Dialogue_window_fiend_0: 234947035
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

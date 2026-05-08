@@ -82,31 +82,42 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
 
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public bool IsInteractive { get; private set; } = true;
-    public string HintText { get; }
+    public string HintText { get; } = "Talk - E";
 
+    [SerializeField] private GameObject _frontBarrier;
 
     [SerializeField] private Transform _playerBindPoint;
 
     [SerializeField] private Animator _fiendAnimator;
 
+    [SerializeField] private GameObject _dialogueWindow;
+    [SerializeField] private TextMeshProUGUI _dialogueTextField;
     [SerializeField] private TextMeshProUGUI _riddleTextField;
     [SerializeField] private TextMeshProUGUI[] _variantsTextFields;
     private readonly int NumOfVariants = 4;
 
-    private bool _isWaitingForAnswer = false;
-    private bool _isWaitingForSkip = false;
-    private bool _isPlaying = false;
+    [SerializeField] private bool _isWaitingForAnswer = false;
+    [SerializeField] private bool _isWaitingForSkip = false;
+    [SerializeField] private bool _isPlaying = false;
+    [SerializeField] private bool _isGameOver = false;
     private int _rightAnswer;
 
     private FiendStates _fiendState = FiendStates.Calm;
 
+    private void Awake()
+    {
+        UpdateAnimatorState();
+    }
     private void Update()
     {
         if (!_isPlaying) return;
 
-        if (System.Math.Abs((int)_fiendState) == 3) EndGame();
+        if (_isPlaying || _isGameOver)
+            GameManager.Instance.BlockPlayer(true);
+        if (_fiendState == FiendStates.PlayerWon) FinalDialogue();
+        else if (_fiendState == FiendStates.PlayerLost) EndGame();
 
-        if (!Pause.IsPaused) return;
+        if (Pause.IsPaused) return;
 
         if (!_isWaitingForSkip && !_isWaitingForAnswer)
         {
@@ -117,6 +128,8 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
         if (_isWaitingForSkip && Input.GetKeyDown(KeyCode.Space))
         {
             _isWaitingForSkip = false;
+            if (_isGameOver)
+                EndGame();
             return;
         }
         if (_isWaitingForAnswer)
@@ -138,9 +151,6 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
                 ChangeStateWithAnswer(4);
             }
         }
-
-
-
     }
     public void Interact()
     {
@@ -158,21 +168,47 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     }
     private void FirstDialogue()
     {
-        return;
+        _dialogueWindow.SetActive(true);
+        _dialogueTextField.text = "Приветствую тебя!" + "\n" + "Я Fiend" + "\n" + " Чтобы пройти дальше, тебе нужно верно ответить на мои вопросы!";
+        _isWaitingForSkip = true;
+    }
+    private void FinalDialogue()
+    {
+        _isGameOver = true;
+        _dialogueTextField.text = "Ну что же..." + "\n" + "Ты умный смертный" + "\n" + "Можешь проходить дальше";
+        _isWaitingForSkip = true;
+    }
+    private void RightAnswerDialogue()
+    {
+        _riddleTextField.text = null;
+        foreach (var f in _variantsTextFields)
+        {
+            f.text = null;
+        }
+        _dialogueTextField.text = "Верно((((";
+        _isWaitingForSkip = true;
+    }
+    private void WrongAnswerDialogue()
+    {
+        _riddleTextField.text = null;
+        foreach (var f in _variantsTextFields)
+        {
+            f.text = null;
+        }
+        _dialogueTextField.text = "Не верно!";
+        _isWaitingForSkip = true;
     }
     private void EndGame()
     {
-        switch (_fiendState)
-        {
-            case FiendStates.PlayerWon:
-                BindPlayer(false);
-                _fiendAnimator.SetBool(_fiendStates[_fiendState], true);
-                break;
-            case FiendStates.PlayerLost:
-                PlayerController.Instance.InflictDamage(100);
-                break;
-        }
+        if (_fiendState == FiendStates.PlayerLost)
+            PlayerController.Instance.InflictDamage(100);
+        BindPlayer(false);
+        _frontBarrier.SetActive(false);
+        _isPlaying = false;
+        _isGameOver = false;
+        _dialogueWindow.SetActive(false);
         UpdateAnimatorState();
+        Destroy(gameObject);
     }
 
 
@@ -192,6 +228,7 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     }
     private void SetRiddle()
     {
+        _dialogueTextField.text = null;
         var rid = ChooseRiddle();
         _riddleTextField.text = rid.Riddle;
         var randVariants = rid.VariantsOfAnswer;
@@ -205,9 +242,16 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     private void ChangeStateWithAnswer(int answer)
     {
         if (answer == _rightAnswer)
+        {
             _fiendState += 1;
+            RightAnswerDialogue();
+        }
         else
+        {
             _fiendState -= 1;
+            WrongAnswerDialogue();
+        }
+        _isWaitingForAnswer = false;
         UpdateAnimatorState();
     }
     private void UpdateAnimatorState()
@@ -215,9 +259,9 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
         foreach (var st in _fiendStates.Keys)
         {
             if (st == _fiendState)
-                _fiendAnimator.SetBool(_fiendStates[_fiendState], true);
+                _fiendAnimator.SetBool(_fiendStates[st], true);
             else
-                _fiendAnimator.SetBool(_fiendStates[_fiendState], false);
+                _fiendAnimator.SetBool(_fiendStates[st], false);
         }
     }
 }
