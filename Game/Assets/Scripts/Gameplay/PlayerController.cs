@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public delegate void ChangeHpDelegate(int damage, int hp);
     public event ChangeHpDelegate OnChangeHp;
 
-    public float CurrentSpeed { get; private set; } = 4f;
+    public float CurrentSpeed { get; private set; } = 5.5f;
     public Vector2 MoveDir { get; private set; }
     public bool IsCrouching { get; private set; }
     public bool IsAlive { get; private set; } = true;
@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _playerRB;
     private Vector3 _lastPos;
-    private float _walkSpeedValue = 4;
-    private float _normalSpeed = 4f;
+    private float _walkSpeedValue = 5.5f;
+    private float _normalSpeed = 5.5f;
 
 
     private void Awake()
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         DeltaMove = transform.position - _lastPos;
         _lastPos = transform.position;
-        if (CanWalk)
+        if (CanWalk && GameManager.CanUseKeyboard)
             InputMovement();
         if (HealthPoints == 0)
         {
