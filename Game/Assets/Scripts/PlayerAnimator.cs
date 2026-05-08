@@ -1,34 +1,55 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
+    private static readonly int CrouchHash = Animator.StringToHash("Crouch");
+    private static readonly int WalkHash = Animator.StringToHash("Walk");
+    private static readonly int IdleHash = Animator.StringToHash("Idle");
+    private static readonly int TrappedHash = Animator.StringToHash("Trapped");
+
+    public enum AnimStates { Nothing, BigBob, FlashLight, Candle }
+    private static Dictionary<AnimStates, string> _animParams = new() { { AnimStates.Nothing, "WithN" }, { AnimStates.BigBob, "WithBB" }, { AnimStates.Candle, "WithC" }, { AnimStates.FlashLight, "WithFL" } };
     private PlayerController _pc;
-    private Animator _am;
-    private BoxCollider2D _bc;
+    private static Animator _am;
     private SpriteRenderer _sr;
 
 
-    private void Start()
+    private void Awake()
     {
         _pc = GetComponent<PlayerController>();
         _am = GetComponent<Animator>();
-        _bc = GetComponent<BoxCollider2D>();
         _sr = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        if (_pc.DeltaMove != Vector3.zero)
-            _am.SetBool("Walk", true);
-        else
-            _am.SetBool("Walk", false);
-        if (_pc.IsCrouching)
+        if (_am.GetBool(TrappedHash))
         {
-            _am.SetBool("Crouch", true);
+            _am.SetBool(IdleHash, false);
+            _am.SetBool(WalkHash, false);
+            _am.SetBool(CrouchHash, false);
+            return;
+        }
+        if (_pc.DeltaMove != Vector3.zero)
+        {
+            _am.SetBool(WalkHash, true);
+            _am.SetBool(IdleHash, false);
         }
         else
         {
-            _am.SetBool("Crouch", false);
+            _am.SetBool(WalkHash, false);
+            _am.SetBool(IdleHash, true);
+        }
+        if (_pc.IsCrouching && _pc.DeltaMove != Vector3.zero)
+        {
+            _am.SetBool(WalkHash, false);
+            _am.SetBool(CrouchHash, true);
+            _am.SetBool(IdleHash, false);
+        }
+        else
+        {
+            _am.SetBool(CrouchHash, false);
         }
 
         if (_pc.LastHorizontalVector > 0)
@@ -36,6 +57,20 @@ public class PlayerAnimator : MonoBehaviour
         else if (_pc.LastHorizontalVector < 0)
             _sr.flipX = false;
 
+    }
+    public static void ChangeAnimState(AnimStates state)
+    {
+        foreach (var key in _animParams.Keys)
+        {
+            if (key == state)
+            {
+                _am.SetBool(_animParams[key], true);
+            }
+            else
+            {
+                _am.SetBool(_animParams[key], false);
+            }
+        }
     }
 
 }

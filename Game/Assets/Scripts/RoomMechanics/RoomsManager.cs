@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 
 public class RoomsManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class RoomsManager : MonoBehaviour
     [Header("Префабы комнат")]
     [SerializeField] private GameObject[] _roomPrefabs;
     [SerializeField] private GameObject _bossSpiderRoomPrefab;
+    [SerializeField] private GameObject _bossBloodCleanerRoomPrefab;
+    [SerializeField] private GameObject _bossFiendRoomPrefab;
 
     [Space(10)]
     [Header("Префабы дверей")]
@@ -65,16 +68,28 @@ public class RoomsManager : MonoBehaviour
     {
         if (previousRoomRoot != null) previousRoomRoot.SetActive(false);
         _roomNumber++;
-        // ------ Boss Spider ------
+        bool isBossBloodCleanerRoom = false;
+        if (_roomNumber == 21)
+        {
+            isBossBloodCleanerRoom = true;
+        }
+        bool isBossFiendRoom = false;
+        if (_roomNumber == 41)
+        {
+            isBossFiendRoom = true;
+        }
         bool isBossSpiderRoom = false;
-        if (_roomNumber == 26)
+        if (_roomNumber == 61)
         {
             isBossSpiderRoom = true;
         }
-        // -------------------------
         GameObject selectedRoomPrefab;
         if (isBossSpiderRoom)
             selectedRoomPrefab = _bossSpiderRoomPrefab;
+        else if (isBossFiendRoom)
+            selectedRoomPrefab = _bossFiendRoomPrefab;
+        else if (isBossBloodCleanerRoom)
+            selectedRoomPrefab = _bossBloodCleanerRoomPrefab;
         else
             selectedRoomPrefab = _roomPrefabs[Random.Range(0, _roomPrefabs.Length)];
         CurrentRoom = Instantiate(selectedRoomPrefab, spawnPosition, Quaternion.identity, _roomsParentObject);
@@ -84,7 +99,7 @@ public class RoomsManager : MonoBehaviour
         DoorController enterBossDoor;
         DoorController exitBossDoor;
         RoomData.DoorSpawnPoint? actualExitPoint = null;
-        if (!isBossSpiderRoom)
+        if (!isBossSpiderRoom && !isBossBloodCleanerRoom && !isBossFiendRoom)
         {
             List<RoomData.DoorSpawnPoint> entryCandidates = roomData.AvailableDoorSpawns
                 .Where(d => d.Side == oppositeSide).ToList();
@@ -106,7 +121,7 @@ public class RoomsManager : MonoBehaviour
                 SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber);
             }
             SetHideSpots(roomData);
-            if (Random.Range(1, 21) > 17) GameManager.Instance.SummonWraith();
+            if (Random.Range(1, 21) > 15) GameManager.Instance.SummonWraith();
             // -------------------------------------- fake doors 23.03.2026 ------------------------------------ //
             if (Random.Range(1, 101) <= 20)
             {
@@ -147,7 +162,7 @@ public class RoomsManager : MonoBehaviour
                 }
             }
         }
-        else
+        else if (isBossSpiderRoom)
         {
             finalEntryPoint = roomData.EnterBossDoor;
             enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
@@ -156,6 +171,24 @@ public class RoomsManager : MonoBehaviour
             SetKeyClosets(roomData);
             CurrentRoom.GetComponentInChildren<SpiderBossManager>().SetDoors(enterBossDoor, exitBossDoor);
         }
+        else if (isBossFiendRoom)
+        {
+            finalEntryPoint = roomData.EnterBossDoor;
+            enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
+            enterBossDoor.LockDoor();
+            actualExitPoint = roomData.ExitBossDoor;
+            SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber, true);
+        }
+        // --------------------------------- blood cleaner boss 30.04.2026 -------------------------------- //
+        else
+        {
+            finalEntryPoint = roomData.EnterBossDoor;
+            enterBossDoor = SpawnDoor(roomData, finalEntryPoint, true, previousRoomRoot, lastDoorTransform, _roomNumber - 1, true);
+            actualExitPoint = roomData.ExitBossDoor;
+            exitBossDoor = SpawnDoor(roomData, actualExitPoint.Value, false, null, null, _roomNumber, true);
+            CurrentRoom.GetComponentInChildren<BloodCleanerBossManager>().SetDoors(enterBossDoor, exitBossDoor);
+        }
+        // ------------------------------------------------------------------------------------------------ //
         Transform playerSpawnPoint = finalEntryPoint.SpawnPoint;
         if (playerSpawnPoint != null)
         {

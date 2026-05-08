@@ -19,7 +19,7 @@
     2D игра в жанре Roguelike с элементами хоррора
     <br />
   </p>
-  <h3><a href="https://github.com/lienkko/GhostHouse/releases/tag/v0.1.4">Скачать последнюю версию игры - v0.1.4</a></h3>
+  <h3><a href="https://github.com/lienkko/GhostHouse/releases/tag/v0.2.0">Скачать последнюю версию игры - v0.2.0</a></h3>
 </div>
 
 

@@ -1,13 +1,10 @@
 using UnityEngine;
 
-public class Ghost : MonoBehaviour
+public class Ghost : MonoBehaviour, IInteractive
 {
     public static Ghost Instance { get; private set; }
 
-    public Interactive InteractiveInstance { get; private set; }
-
-
-    enum MD {Up, Down};
+    enum MD { Up, Down };
 
 
     [SerializeField] private float _speed = 1;
@@ -19,12 +16,22 @@ public class Ghost : MonoBehaviour
 
     private MD _moveDirection = MD.Down;
     private float _flightTime = 0;
+    public string HintText { get; } = "Start game - E";
+    public KeyCode KeyToInteract { get; } = KeyCode.E;
+    public bool IsInteractive { get; private set; } = true;
 
+    public void Interact()
+    {
+        GameManager.Instance.StartGame();
+    }
+    public bool CanInteract()
+    {
+        return GameManager.CanUseKeyboard && IsInteractive;
+    }
     private void Awake()
     {
         Instance = this;
-        InteractiveInstance = GetComponent<Interactive>();
-        InteractiveInstance.isInteractive = true;
+        IsInteractive = true;
     }
 
     private void FixedUpdate()

@@ -192,7 +192,7 @@ public class CommandLine : MonoBehaviour
             Log("startgame ����� ���������� ������ � ��������� �������");
             return;
         }
-        if (!Ghost.Instance.InteractiveInstance.isInteractive)
+        if (!Ghost.Instance.IsInteractive)
         {
             Log("���� ��� ��������");
             return;

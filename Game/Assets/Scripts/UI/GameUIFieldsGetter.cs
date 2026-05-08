@@ -6,14 +6,9 @@ using UnityEngine.UI;
 public class GameUIFieldsGetter : MonoBehaviour
 {
     [Header("���� ���������")]
-    [SerializeField] private GameObject _openSafeText;
-    [SerializeField] private GameObject _openDoorText;
-    [SerializeField] private GameObject _hideText;
-    [SerializeField] private GameObject _startGameText;
+    [SerializeField] private GameObject _hintFieldText;
     [SerializeField] private GameObject _lockedImage;
-    [SerializeField] private GameObject _takeItemText;
-    [SerializeField] private GameObject _takeKeyText;
-    [SerializeField] private GameObject _readSignText;
+
 
     [Space(10)]
     [SerializeField] private GameObject _deathText;
@@ -26,14 +21,8 @@ public class GameUIFieldsGetter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _keysCount;
 
 
-    public GameObject OpenSafeText => _openSafeText;
-    public GameObject OpenDoorText => _openDoorText;
-    public GameObject HideText => _hideText;
-    public GameObject StartGameText => _startGameText;
+    public GameObject HintFieldText => _hintFieldText;
     public GameObject LockedImage => _lockedImage;
-    public GameObject TakeItemText => _takeItemText;
-    public GameObject TakeKeyText => _takeKeyText;
-    public GameObject ReadSignText => _readSignText;
 
     public GameObject DeathText => _deathText;
     public GameObject WinnerText => _winnerText;
