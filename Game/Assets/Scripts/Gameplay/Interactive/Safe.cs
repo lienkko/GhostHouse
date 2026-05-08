@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Safe : MonoBehaviour, IInteractive
 {
-    private readonly string[] _puzzleNames = new string[] { "Circles", "Star" };
+    private readonly string[] _puzzleNames = new string[] { /*"Circles", "Star",*/ "ColorSequence" };
     public static bool IsInPuzzle { get; private set; } = false;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public string HintText { get; } = "Open - E";
@@ -81,7 +81,7 @@ public class Safe : MonoBehaviour, IInteractive
 
     private void CreatePuzzle()
     {
-        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, 2)]}";
+        string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, _puzzleNames.Length)]}";
         _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenSafe);
