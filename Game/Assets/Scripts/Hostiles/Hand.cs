@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class Hand : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds1_5 = new(1.5f);
+    private static readonly int KilledByHandHash = Animator.StringToHash("KilledByHand");
+    private static readonly int TrappedHash = Animator.StringToHash("Trapped");
     private PlayerController _playerController;
     private Slider _trapSlider;
     public static bool IsPlayerTrapped { get; private set; } = false;
@@ -20,6 +23,7 @@ public class Hand : MonoBehaviour
     {
         if (IsPlayerTrapped)
         {
+            GameManager.Instance.BlockPlayer(true);
             _trapLeftTime -= _trapSpeed * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space) && !Pause.IsPaused)
             {
@@ -31,7 +35,7 @@ public class Hand : MonoBehaviour
             }
             if (_trapLeftTime <= 0)
             {
-                _playerController.GetComponent<Animator>().SetBool("KilledByHand", true);
+                _playerController.GetComponent<Animator>().SetBool(KilledByHandHash, true);
                 _playerController.InflictDamage(100);
                 ShowSlider(false);
             }
@@ -52,18 +56,20 @@ public class Hand : MonoBehaviour
     private void TrapPlayer()
     {
         IsPlayerTrapped = true;
-        _playerController.GetComponent<Animator>().SetBool("Trapped", true);
+        var am = _playerController.GetComponent<Animator>();
+        am.SetBool(TrappedHash, true);
     }
     private void ReleasePlayer()
     {
         IsPlayerTrapped = false;
-        _playerController.GetComponent<Animator>().SetBool("Trapped", false);
+        _playerController.GetComponent<Animator>().SetBool(TrappedHash, false);
         ShowSlider(false);
         StartCoroutine(UnblockPlayer());
+        Inventory.Instance.ChangeAnimation();
     }
     private IEnumerator UnblockPlayer()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return _waitForSeconds1_5;
         GameManager.Instance.BlockPlayer(false);
         Destroy(this);
     }

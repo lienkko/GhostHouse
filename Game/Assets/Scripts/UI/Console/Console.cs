@@ -33,6 +33,8 @@ public class Console : MonoBehaviour
         {
             CloseConsole();
         }
+        else if (IsConsoleOpened)
+            GameManager.Instance.BlockPlayer(true);
     }
     private void OpenConsole()
     {
@@ -56,5 +58,6 @@ public class Console : MonoBehaviour
     {
         yield return null;
         IsConsoleOpened = state;
+        GameManager.Instance.BlockPlayer(state);
     }
 }
