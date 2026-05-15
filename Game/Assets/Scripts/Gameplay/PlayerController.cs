@@ -84,12 +84,11 @@ public class PlayerController : MonoBehaviour
 
     private void InputMovement()
     {
-        float moveH = Input.GetAxisRaw("Horizontal");
-        float moveV = Input.GetAxisRaw("Vertical");
-        IsCrouching = Input.GetKey(KeyCode.LeftShift);
+        MoveDir = ControlsManager.Instance.MoveDirection;
+        IsCrouching = ControlsManager.Instance.IsCrouching;
+        float moveH = MoveDir.x;
         if (moveH != 0)
             LastHorizontalVector = moveH;
-        MoveDir = new Vector2(moveH, moveV).normalized;
     }
 
     private void Move()

@@ -16,7 +16,6 @@ public class BatteryItem : CollectableItem
 
     protected override void Awake()
     {
-        base.Awake();
         _isUsable = false;
     }
 

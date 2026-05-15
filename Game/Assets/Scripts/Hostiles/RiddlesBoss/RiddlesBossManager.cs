@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RiddlesBossManager : MonoBehaviour, IInteractive
 {
+    public static RiddlesBossManager Instance { get; private set; }
     private enum FiendStates
     {
         PlayerLost = -3,
@@ -82,7 +84,7 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
 
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public bool IsInteractive { get; private set; } = true;
-    public string HintText { get; } = "Talk - E";
+    public string HintText { get; } = "Talk";
 
     [SerializeField] private GameObject _frontBarrier;
 
@@ -94,6 +96,7 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     [SerializeField] private TextMeshProUGUI _dialogueTextField;
     [SerializeField] private TextMeshProUGUI _riddleTextField;
     [SerializeField] private TextMeshProUGUI[] _variantsTextFields;
+    [SerializeField] private GameObject _skipTrigger;
     private readonly int NumOfVariants = 4;
 
     [SerializeField] private bool _isWaitingForAnswer = false;
@@ -106,6 +109,7 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
 
     private void Awake()
     {
+        Instance = this;
         UpdateAnimatorState();
     }
     private void Update()
@@ -124,32 +128,21 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
             SetRiddle();
             _isWaitingForAnswer = true;
         }
-
-        if (_isWaitingForSkip && Input.GetKeyDown(KeyCode.Space))
+    }
+    public void SkipDialogue()
+    {
+        if (_isWaitingForSkip)
         {
             _isWaitingForSkip = false;
             if (_isGameOver)
                 EndGame();
-            return;
         }
+    }
+    public void AnswerWithButton(int answer)
+    {
         if (_isWaitingForAnswer)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                ChangeStateWithAnswer(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                ChangeStateWithAnswer(2);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                ChangeStateWithAnswer(3);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                ChangeStateWithAnswer(4);
-            }
+            ChangeStateWithAnswer(answer);
         }
     }
     public void Interact()
@@ -163,7 +156,10 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     private void BindPlayer(bool isStart)
     {
         if (isStart)
+        {
+            ControlsManager.Instance.HideAllControls();
             PlayerController.Instance.transform.position = _playerBindPoint.position;
+        }
         GameManager.Instance.BlockPlayer(isStart);
     }
     private void FirstDialogue()
@@ -171,12 +167,16 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
         _dialogueWindow.SetActive(true);
         _dialogueTextField.text = "Приветствую тебя!" + "\n" + "Я Fiend" + "\n" + " Чтобы пройти дальше, тебе нужно верно ответить на мои вопросы!";
         _isWaitingForSkip = true;
+        _skipTrigger.SetActive(true);
+        ControlsManager.Instance.HideInteractButton();
+        IsInteractive = false;
     }
     private void FinalDialogue()
     {
         _isGameOver = true;
         _dialogueTextField.text = "Ну что же..." + "\n" + "Ты умный смертный" + "\n" + "Можешь проходить дальше";
         _isWaitingForSkip = true;
+
     }
     private void RightAnswerDialogue()
     {
@@ -202,11 +202,17 @@ public class RiddlesBossManager : MonoBehaviour, IInteractive
     {
         if (_fiendState == FiendStates.PlayerLost)
             PlayerController.Instance.InflictDamage(100);
+        else
+        {
+            ControlsManager.Instance.ShowJoystick();
+            ControlsManager.Instance.ShowCrouchButton();
+        }
         BindPlayer(false);
         _frontBarrier.SetActive(false);
         _isPlaying = false;
         _isGameOver = false;
         _dialogueWindow.SetActive(false);
+        _skipTrigger.SetActive(false);
         UpdateAnimatorState();
         Destroy(gameObject);
     }

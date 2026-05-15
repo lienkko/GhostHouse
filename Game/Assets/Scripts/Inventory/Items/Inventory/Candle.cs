@@ -45,6 +45,7 @@ public class Candle : InventoryItem, IChargeableItem
                 _isactive = false;
                 _light2D.enabled = false;
                 Inventory.Instance.DropActiveItem();
+                Destroy(GetCollectableItem.gameObject);
                 Destroy(gameObject);
                 return;
             }

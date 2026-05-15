@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class NumberPuzzle : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class NumberPuzzle : MonoBehaviour
             int numberValue = numbers[Random.Range(0, numbers.Count)];
             numbers.Remove(numberValue);
 
-            _numberButtons[i].GetComponentInChildren<Text>().text = numberValue.ToString();
+            _numberButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = numberValue.ToString();
 
             _numberButtons[i].interactable = true;
             _numberButtons[i].GetComponent<Image>().color = Color.white;

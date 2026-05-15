@@ -6,7 +6,7 @@ public class Sign : MonoBehaviour, IInteractive
     [SerializeField] private GameObject _textSign;
     private BoxCollider2D _collider;
     public static bool IsSignOpened { get; private set; } = false;
-    public string HintText { get; } = "Show sign = E";
+    public string HintText { get; } = "Show";
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public bool IsInteractive { get; private set; } = true;
     public void Interact()
@@ -24,7 +24,7 @@ public class Sign : MonoBehaviour, IInteractive
     }
     private void Update()
     {
-        if (IsSignOpened && !Pause.IsPaused && Input.GetKeyDown(KeyCode.Escape))
+        if (IsSignOpened && ControlsManager.Instance.IsInteracting)
         {
             HideSign();
         }
@@ -36,6 +36,8 @@ public class Sign : MonoBehaviour, IInteractive
         _textSign.SetActive(true);
         GameManager.Instance.BlockPlayer(true);
         Inventory.Instance.HideActiveItem();
+        ControlsManager.Instance.HideAllControls();
+        ControlsManager.Instance.ShowInteractButton("Close");
     }
     private void HideSign()
     {
@@ -44,5 +46,8 @@ public class Sign : MonoBehaviour, IInteractive
         _textSign.SetActive(false);
         GameManager.Instance.BlockPlayer(false);
         Inventory.Instance.ShowActiveItem();
+        ControlsManager.Instance.ShowInteractButton(HintText);
+        ControlsManager.Instance.ShowJoystick();
+        ControlsManager.Instance.ShowCrouchButton();
     }
 }

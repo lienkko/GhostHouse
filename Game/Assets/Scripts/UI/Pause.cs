@@ -14,30 +14,32 @@ public class Pause : MonoBehaviour
     public static event GamePause OnPause;
     public static event GamePause OnResume;
 
-    private bool _inSettings = false;
+    // private bool _inSettings = false;
     public static bool IsPaused { get; private set; } = false;
 
     private void Awake()
     {
         _resumeButton.onClick.AddListener(ResumeGame);
-        _settingsButton.onClick.AddListener(Settings);
+        //_settingsButton.onClick.AddListener(Settings); --- IGNORE ---
         _menuButton.onClick.AddListener(ToMenu);
+        ControlsManager.Instance.PauseButton.onClick.AddListener(TogglePause);
     }
 
-    void Update()
+    // void Update()
+    // {
+    //     if (_inSettings && Input.GetKeyDown(KeyCode.Escape))
+    //     {
+    //         Settings();
+    //         return;
+    //     }
+
+    // }
+    public void TogglePause()
     {
-        if (_inSettings && Input.GetKeyDown(KeyCode.Escape))
-        {
-            Settings();
-            return;
-        }
-        if (!Console.Instance.IsConsoleOpened && Input.GetKeyDown(KeyCode.Escape) && !Safe.IsInPuzzle && !TreasureChest.IsInPuzzle && !Sign.IsSignOpened)
-        {
-            if (IsPaused)
-                ResumeGame();
-            else if (!IsPaused && PlayerController.Instance.IsAlive)
-                PauseGame();
-        }
+        if (IsPaused)
+            ResumeGame();
+        else if (PlayerController.Instance.IsAlive)
+            PauseGame();
     }
 
     private void PauseGame()
@@ -62,12 +64,12 @@ public class Pause : MonoBehaviour
         OnResume?.Invoke();
     }
 
-    private void Settings()
-    {
-        _inSettings = !_inSettings;
-        _settingsWindow.SetActive(_inSettings);
-        _pauseWindow.SetActive(!_inSettings);
-    }
+    // private void Settings()
+    // {
+    //     _inSettings = !_inSettings;
+    //     _settingsWindow.SetActive(_inSettings);
+    //     _pauseWindow.SetActive(!_inSettings);
+    // }
 
     private void ToMenu()
     {

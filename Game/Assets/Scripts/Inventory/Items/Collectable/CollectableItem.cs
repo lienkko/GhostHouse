@@ -5,14 +5,15 @@ public class CollectableItem : MonoBehaviour, IInteractive
     [SerializeField] private GameObject _inventoryItemPrefab;
     private InventoryItem _inventoryItem;
     public InventoryItem GetInventoryItem => _inventoryItem;
-    public string HintText { get; } = "Pick up - F";
+    public string HintText { get; } = "Pick up";
     public KeyCode KeyToInteract { get; } = KeyCode.F;
     public bool IsInteractive { get; protected set; } = true;
     protected bool _isUsable = true;
 
     protected virtual void Awake()
     {
-        _inventoryItem = Instantiate(_inventoryItemPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<InventoryItem>();
+        var inventoryItemObj = Instantiate(_inventoryItemPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform);
+        _inventoryItem = inventoryItemObj.GetComponent<InventoryItem>();
         _inventoryItem.SetCollectableItem(this);
     }
     public virtual void HideItem()

@@ -6,7 +6,7 @@ public class HideSpot : MonoBehaviour, IInteractive
     private bool _isHidingSomeone = false;
     private Vector3 _unhidePos;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
-    public string HintText { get; } = "Hide - E";
+    public string HintText { get; } = "Hide";
     public bool IsInteractive { get; protected set; } = false;
     public void Interact()
     {
@@ -18,7 +18,7 @@ public class HideSpot : MonoBehaviour, IInteractive
     }
     private void Update()
     {
-        if (!Pause.IsPaused && _isHidingSomeone && Input.GetKeyDown(KeyCode.E) && !FindAnyObjectByType<CommandLine>())
+        if (ControlsManager.Instance.IsInteracting && _isHidingSomeone)
             Unhide();
     }
 
@@ -35,6 +35,9 @@ public class HideSpot : MonoBehaviour, IInteractive
 
     private void Unhide()
     {
+        ControlsManager.Instance.HideInteractButton();
+        ControlsManager.Instance.ShowCrouchButton();
+        ControlsManager.Instance.ShowJoystick();
         StartCoroutine(SwitchIsHidingSomeone(false));
         PlayerController.Instance.transform.position = _unhidePos;
         RoomsManager.Instance.CurrentRoom.transform.Find("Lights").gameObject.SetActive(true);
@@ -47,5 +50,11 @@ public class HideSpot : MonoBehaviour, IInteractive
     {
         yield return null;
         _isHidingSomeone = state;
+
+        if (state)
+        {
+            ControlsManager.Instance.HideAllControls();
+            ControlsManager.Instance.ShowInteractButton("Unhide");
+        }
     }
 }

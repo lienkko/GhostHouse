@@ -16,7 +16,7 @@ public class Ghost : MonoBehaviour, IInteractive
 
     private MD _moveDirection = MD.Down;
     private float _flightTime = 0;
-    public string HintText { get; } = "Start game - E";
+    public string HintText { get; } = "Start";
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public bool IsInteractive { get; private set; } = true;
 

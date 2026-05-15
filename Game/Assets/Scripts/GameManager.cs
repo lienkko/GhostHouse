@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     private bool _inGame = false;
     private readonly int[,] _resolutions = { { 800, 600 }, { 1280, 960 } };
     private int _currentResolution;
+    private CollectableItem _startFlashLight;
 
     public static bool CanUseKeyboard { get; private set; }
 
@@ -96,7 +97,6 @@ public class GameManager : MonoBehaviour
         ChangeHp(0, PlayerController.Instance.HealthPoints);
         Cursor.lockState = CursorLockMode.Locked;
         CanUseKeyboard = true;
-
         PlayerInteract.Instance.Hints = PlayerPrefs.GetInt("Hints") == 1;
     }
 
@@ -155,9 +155,8 @@ public class GameManager : MonoBehaviour
             UnlockDoor();
         StartCoroutine(BlinkLights(true));
         Ghost.Instance.gameObject.SetActive(false);
-        var flashlight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<CollectableItem>();
-        Inventory.Instance.PickUp(flashlight.GetInventoryItem, true);
-        flashlight.HideItem();
+        _startFlashLight = Instantiate(_flashlightPrefab, transform.position, Quaternion.identity, RoomsManager.Instance.CurrentRoom.transform).GetComponent<CollectableItem>();
+        _startFlashLight.Interact();
     }
 
 

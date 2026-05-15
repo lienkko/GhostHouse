@@ -12,7 +12,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
 
     public static bool IsInPuzzle { get; private set; } = false;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
-    public string HintText { get; } = "Open chest - E";
+    public string HintText { get; } = "Open";
     public bool IsInteractive { get; private set; } = true;
 
 
@@ -40,14 +40,12 @@ public class TreasureChest : MonoBehaviour, IInteractive
         PlayerController.Instance.OnDeath += ClosePuzzle;
     }
 
-    private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
 
     private void Update()
     {
-        if (CanClosePuzzle())
+        if (ControlsManager.Instance.IsInteracting && IsInPuzzle)
         {
             ClosePuzzle();
-            return;
         }
     }
 
@@ -77,6 +75,8 @@ public class TreasureChest : MonoBehaviour, IInteractive
             return;
         }
         CreatePuzzle();
+        ControlsManager.Instance.HideAllControls();
+        ControlsManager.Instance.ShowInteractButton("Exit");
     }
 
     public void ClosePuzzle()
@@ -91,6 +91,9 @@ public class TreasureChest : MonoBehaviour, IInteractive
         }
         GameManager.Instance.BlockPlayer(false);
         Inventory.Instance.ShowActiveItem();
+        ControlsManager.Instance.ShowInteractButton(HintText);
+        ControlsManager.Instance.ShowJoystick();
+        ControlsManager.Instance.ShowCrouchButton();
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
@@ -98,7 +101,6 @@ public class TreasureChest : MonoBehaviour, IInteractive
         yield return null;
         IsInteractive = !state;
         IsInPuzzle = state;
-        GameManager.Instance.GameUIFields.HintFieldText.SetActive(!state);
     }
 
     private void ChestOnResume()
@@ -126,6 +128,7 @@ public class TreasureChest : MonoBehaviour, IInteractive
         {
             col.enabled = false;
         }
+        ControlsManager.Instance.HideInteractButton();
         Destroy(this);
     }
 

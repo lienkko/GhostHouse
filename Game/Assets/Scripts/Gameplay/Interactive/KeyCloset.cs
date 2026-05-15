@@ -5,7 +5,7 @@ public class KeyCloset : MonoBehaviour, IInteractive
 {
     private Light2D _keyLight;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
-    public string HintText { get; } = "Take key - E";
+    public string HintText { get; } = "Take";
     public bool IsInteractive { get; private set; } = false;
     public void Interact()
     {

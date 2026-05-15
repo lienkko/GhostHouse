@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/lienkko/UnityProjects/GhostHouse/Game/.utmp/RelWithDebInfo/4u4g526p/armeabi-v7a",
+  "command": "C:\\PROGRA~1\\Unity\\Hub\\Editor\\60000~1.71F\\Editor\\Data\\PLAYBA~1\\ANDROI~1\\NDK\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=armv7-none-linux-androideabi23 --sysroot=\"C:/Program Files/Unity/Hub/Editor/6000.0.71f1/Editor/Data/PlaybackEngines/AndroidPlayer/NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -DEXTERNAL_FRAME_PACING_CODE -Dswappywrapper_EXPORTS -IC:/Users/lienkko/UnityProjects/GhostHouse/Game/Library/Bee/Android/Prj/Mono2x/Gradle/unityLibrary/src/main/cpp/FramePacing -isystem C:/Users/lienkko/.gradle/caches/8.13/transforms/6965e52cd47ead75a4eeb76e0c3cd8ed/transformed/jetified-games-frame-pacing-1.10.0/prefab/modules/swappy_static/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D__BIONIC_NO_PAGE_SIZE_MACRO -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -Wall -Wextra -pedantic -Werror -O2 -g -DNDEBUG -fPIC -o FramePacing\\CMakeFiles\\swappywrapper.dir\\UnitySwappyWrapper.cpp.o -c C:\\Users\\lienkko\\UnityProjects\\GhostHouse\\Game\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\UnitySwappyWrapper.cpp",
+  "file": "C:\\Users\\lienkko\\UnityProjects\\GhostHouse\\Game\\Library\\Bee\\Android\\Prj\\Mono2x\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\UnitySwappyWrapper.cpp"
+}
+]

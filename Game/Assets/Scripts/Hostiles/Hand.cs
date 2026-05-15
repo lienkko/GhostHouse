@@ -25,10 +25,6 @@ public class Hand : MonoBehaviour
         {
             GameManager.Instance.BlockPlayer(true);
             _trapLeftTime -= _trapSpeed * Time.deltaTime;
-            if (Input.GetKeyDown(KeyCode.Space) && !Pause.IsPaused)
-            {
-                _trapLeftTime += _trapSpeed / 2;
-            }
             if (_trapLeftTime >= 1)
             {
                 ReleasePlayer();
@@ -37,11 +33,16 @@ public class Hand : MonoBehaviour
             {
                 _playerController.GetComponent<Animator>().SetBool(KilledByHandHash, true);
                 _playerController.InflictDamage(100);
+                ControlsManager.Instance.HideHandButton();
                 ShowSlider(false);
             }
             _trapSlider.value = _trapLeftTime;
         }
 
+    }
+    private void IncreaseTrapTime()
+    {
+        _trapLeftTime += _trapSpeed / 2;
     }
     private void CatchPlayer()
     {
@@ -58,6 +59,8 @@ public class Hand : MonoBehaviour
         IsPlayerTrapped = true;
         var am = _playerController.GetComponent<Animator>();
         am.SetBool(TrappedHash, true);
+        ControlsManager.Instance.HideAllControls();
+        ControlsManager.Instance.ShowHandButton(IncreaseTrapTime);
     }
     private void ReleasePlayer()
     {
@@ -66,6 +69,9 @@ public class Hand : MonoBehaviour
         ShowSlider(false);
         StartCoroutine(UnblockPlayer());
         Inventory.Instance.ChangeAnimation();
+        ControlsManager.Instance.HideHandButton();
+        ControlsManager.Instance.ShowJoystick();
+        ControlsManager.Instance.ShowCrouchButton();
     }
     private IEnumerator UnblockPlayer()
     {

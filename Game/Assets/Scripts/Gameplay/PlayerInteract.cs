@@ -8,7 +8,6 @@ public class PlayerInteract : MonoBehaviour
 
     private IInteractive _interactiveObj;
 
-    private IInteractive _swappingInteractive;
 
     [HideInInspector] public bool Hints;
 
@@ -20,7 +19,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (_interactiveObj != null)
         {
-            if (Input.GetKeyDown(_interactiveObj.KeyToInteract) && _interactiveObj.CanInteract())
+            if (ControlsManager.Instance.IsInteracting && _interactiveObj.CanInteract())
             {
                 _interactiveObj.Interact();
                 return;
@@ -41,11 +40,7 @@ public class PlayerInteract : MonoBehaviour
             else if (interactive.IsInteractive)
             {
                 _interactiveObj = interactive;
-                if (Hints)
-                {
-                    GameManager.Instance.GameUIFields.HintFieldText.SetActive(true);
-                    GameManager.Instance.GameUIFields.HintFieldText.GetComponent<TextMeshProUGUI>().text = _interactiveObj.HintText;
-                }
+                ControlsManager.Instance.ShowInteractButton(_interactiveObj.HintText);
             }
 
         }
@@ -56,9 +51,8 @@ public class PlayerInteract : MonoBehaviour
     {
         if (collision.TryGetComponent<IInteractive>(out _))
         {
-            GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
-            GameManager.Instance.GameUIFields.HintFieldText.GetComponent<TextMeshProUGUI>().text = "Interact";
             GameManager.Instance.GameUIFields.LockedImage.SetActive(false);
+            ControlsManager.Instance.HideInteractButton();
             _interactiveObj = null;
         }
     }

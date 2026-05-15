@@ -35,7 +35,7 @@ public class DoorController : MonoBehaviour, IInteractive
 
     public delegate void ChangeRoom(GameObject room);
     public static event ChangeRoom OnRoomChanged;
-    public string HintText { get; } = "Open door - E";
+    public string HintText { get; } = "Open";
     public KeyCode KeyToInteract { get; } = KeyCode.E;
     public bool IsInteractive { get; private set; } = true;
     public void Interact()

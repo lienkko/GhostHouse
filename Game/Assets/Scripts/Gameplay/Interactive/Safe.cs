@@ -8,7 +8,7 @@ public class Safe : MonoBehaviour, IInteractive
     private readonly string[] _puzzleNames = new string[] { "Circles", "Star", "ColorSequence" };
     public static bool IsInPuzzle { get; private set; } = false;
     public KeyCode KeyToInteract { get; } = KeyCode.E;
-    public string HintText { get; } = "Open - E";
+    public string HintText { get; } = "Open";
     public bool IsInteractive { get; private set; } = true;
 
     private GameObject _puzzle;
@@ -35,21 +35,17 @@ public class Safe : MonoBehaviour, IInteractive
         Pause.OnResume += SafeOnResume;
     }
 
+    private void Update()
+    {
+        if (ControlsManager.Instance.IsInteracting && IsInPuzzle)
+        {
+            ClosePuzzle();
+        }
+    }
 
     private void Start()
     {
         PlayerController.Instance.OnDeath += ClosePuzzle;
-    }
-
-    private bool CanClosePuzzle() { return !Pause.IsPaused && IsInPuzzle && (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape)) && !Console.Instance.IsConsoleOpened; }
-
-    private void Update()
-    {
-        if (CanClosePuzzle())
-        {
-            ClosePuzzle();
-            return;
-        }
     }
 
     public void Initialize(string pointTag, DoorController door)
@@ -82,7 +78,7 @@ public class Safe : MonoBehaviour, IInteractive
     private void CreatePuzzle()
     {
         string puzzleName = $"Prefabs/Puzzles/Puzzle{_puzzleNames[Random.Range(0, _puzzleNames.Length)]}";
-        _puzzle = Instantiate<GameObject>(Resources.Load<GameObject>(puzzleName));
+        _puzzle = Instantiate(Resources.Load<GameObject>(puzzleName));
         _puzzle.transform.SetParent(gameObject.transform);
         _puzzle.transform.Find("Canvas/CompleteButton").GetComponent<Button>().onClick.AddListener(OpenSafe);
     }
@@ -95,20 +91,22 @@ public class Safe : MonoBehaviour, IInteractive
 
         GameManager.Instance.BlockPlayer(true);
         Inventory.Instance.HideActiveItem();
-
+        ControlsManager.Instance.HideAllControls();
+        ControlsManager.Instance.HideInteractButton();
+        ControlsManager.Instance.ShowInteractButton("Exit");
         if (_puzzle)
         {
             _puzzle.SetActive(true);
             return;
         }
         CreatePuzzle();
+
     }
 
     public void ClosePuzzle()
     {
         if (PlayerController.Instance.IsAlive)
             Cursor.lockState = CursorLockMode.Locked;
-        GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
         if (_puzzle)
         {
             StartCoroutine(SwitchIsInPuzzle(false));
@@ -116,6 +114,10 @@ public class Safe : MonoBehaviour, IInteractive
         }
         GameManager.Instance.BlockPlayer(false);
         Inventory.Instance.ShowActiveItem();
+        ControlsManager.Instance.HideInteractButton();
+        ControlsManager.Instance.ShowInteractButton(HintText);
+        ControlsManager.Instance.ShowJoystick();
+        ControlsManager.Instance.ShowCrouchButton();
     }
 
     private IEnumerator SwitchIsInPuzzle(bool state)
@@ -124,7 +126,6 @@ public class Safe : MonoBehaviour, IInteractive
         yield return null;
         IsInteractive = !state;
         IsInPuzzle = state;
-        GameManager.Instance.GameUIFields.HintFieldText.SetActive(!state);
     }
 
     private void SafeOnResume()
@@ -143,10 +144,9 @@ public class Safe : MonoBehaviour, IInteractive
             ClosePuzzle();
             Destroy(_puzzle);
         }
-        else
-            GameManager.Instance.GameUIFields.HintFieldText.SetActive(false);
         IsInteractive = false;
         _doorToOpen.UnlockDoor();
+        ControlsManager.Instance.HideInteractButton();
         Destroy(this);
     }
 

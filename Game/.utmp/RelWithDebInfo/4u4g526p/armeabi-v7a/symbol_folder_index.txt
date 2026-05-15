@@ -1,0 +1,1 @@
+C:\Users\lienkko\UnityProjects\GhostHouse\Game\Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\4u4g526p\obj\armeabi-v7a

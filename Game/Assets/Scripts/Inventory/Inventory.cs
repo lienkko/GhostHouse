@@ -36,32 +36,21 @@ public class Inventory : MonoBehaviour
         if (!GameManager.CanUseKeyboard)
             return;
         UseDropActiveItemHandle();
-        ChangeSlotHandle();
     }
     private void UseDropActiveItemHandle()
     {
-        if (!_activeItem)
+        if (!_activeItem || Hand.IsPlayerTrapped || Safe.IsInPuzzle || TreasureChest.IsInPuzzle || Sign.IsSignOpened)
             return;
-        if (Input.GetKeyDown(KeyCode.Space))
+        ControlsManager.Instance.ShowUseButton();
+        ControlsManager.Instance.ShowDropButton();
+        if (ControlsManager.Instance.IsUsing)
         {
             UseActiveItem();
         }
-        else if (Input.GetKeyDown(KeyCode.G))
+        else if (ControlsManager.Instance.IsDropping)
         {
             DropActiveItem();
         }
-    }
-    private void ChangeSlotHandle()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            ChangeActiveSlot(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            ChangeActiveSlot(2);
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            ChangeActiveSlot(3);
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-            ChangeActiveSlot(4);
-        OnAddition?.Invoke();
     }
     public bool PickUp(InventoryItem item, bool isUsable)
     {
@@ -81,7 +70,7 @@ public class Inventory : MonoBehaviour
         return wasAdded;
     }
 
-    private void ChangeActiveSlot(int index)
+    public void ChangeActiveSlot(int index)
     {
         if (_activeSlot == index)
         {
@@ -93,6 +82,7 @@ public class Inventory : MonoBehaviour
         if (_activeSlot != 0)
             ShutDownSlot();
         SetActiveSlot(index);
+        OnAddition?.Invoke();
     }
     private void SetActiveSlot(int index)
     {
@@ -137,6 +127,9 @@ public class Inventory : MonoBehaviour
         }
         _activeItem.Hide();
         _activeItem = null;
+        ControlsManager.Instance.HideUseButton();
+        ControlsManager.Instance.HideDropButton();
+        OnAddition?.Invoke();
         ChangeAnimation();
     }
     private bool AddItem(InventoryItem item)
@@ -196,10 +189,14 @@ public class Inventory : MonoBehaviour
     private void UseActiveItem()
     {
         var item = _activeItem;
+        ControlsManager.Instance.HideUseButton();
         if (!_activeItem.CanKeep)
         {
             DropActiveItem();
+            Destroy(item.GetCollectableItem.gameObject);
         }
+        else
+            ControlsManager.Instance.ShowUseButton();
         item.Use();
     }
     public InventoryItem GetEmptyItem()
